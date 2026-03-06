@@ -1,0 +1,20 @@
+---
+title: "Dataset Expansion Labs"
+---
+
+This section scaffolds additional worked examples beyond `lalonde`.
+
+## Roadmap-Aligned Labs
+
+| Lab | Dataset(s) | Current status | Link |
+|---|---|---|---|
+| Black Politicians Lab | `causaldata::black_politicians` | Scaffolded | [Open](black_politicians_lab.qmd) |
+| NSW + CPS Benchmark Lab | `causaldata::nsw_mixtape`, `causaldata::cps_mixtape` | Scaffolded | [Open](nsw_cps_benchmark_lab.qmd) |
+| Titanic Teaching Lab | `causaldata::titanic` | Scaffolded | [Open](titanic_teaching_lab.qmd) |
+| Data Acquisition Lab | `causaldata` dependency and ingest workflow | Scaffolded | [Open](data_acquisition_lab.qmd) |
+
+## How To Use These Pages
+
+1. Keep each lab as a self-contained design notebook.
+2. Reuse a common diagnostics structure from the main report.
+3. Promote completed labs into the main article when ready.

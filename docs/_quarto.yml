@@ -1,6 +1,49 @@
 project:
-  type: default
+  type: website
+  output-dir: .
   render:
+    - index.qmd
     - matching_methods_report.qmd
     - matching_methods_report_full_code.qmd
     - matching_methods_report_qa_log.qmd
+    - labs/*.qmd
+    - slides/*.qmd
+
+website:
+  title: "Matching and Weighting"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: matching_methods_report.qmd
+        text: Main Article
+      - href: labs/index.qmd
+        text: Additional Labs
+      - href: slides/index.qmd
+        text: Slides
+  sidebar:
+    - id: labs
+      title: "Dataset Expansion Labs"
+      style: "docked"
+      contents:
+        - labs/index.qmd
+        - labs/black_politicians_lab.qmd
+        - labs/nsw_cps_benchmark_lab.qmd
+        - labs/titanic_teaching_lab.qmd
+        - labs/data_acquisition_lab.qmd
+    - id: slides
+      title: "Slides"
+      style: "docked"
+      contents:
+        - slides/index.qmd
+        - slides/matching_methods_slides.qmd
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    number-sections: true
+
+execute:
+  warning: false
+  message: false

@@ -1,0 +1,30 @@
+---
+title: "Lab: Black Politicians"
+---
+
+## Objective
+
+Build the first non-`lalonde` worked example using `causaldata::black_politicians`.
+
+## Design Setup
+
+- Target estimand: `ATT`
+- Candidate treatment: binary indicator from dataset (to be finalized)
+- Candidate outcome: policy-relevant binary/continuous outcome (to be finalized)
+- Adjustment covariates: pre-treatment demographics and political context (to be finalized)
+
+## Planned Analysis Blocks
+
+1. Data dictionary and variable role mapping.
+2. Pre-adjustment diagnostics with `MatchIt` (`method = NULL`).
+3. Exact matching feasibility check.
+4. Tuned CEM design and retention tradeoff.
+5. Entropy balancing with ESS and weight-dispersion checks.
+6. Post-design effect estimation and synthesis table.
+
+## Implementation Checklist
+
+- [ ] Lock treatment, outcome, and covariate specification.
+- [ ] Add reproducible data-loading chunk.
+- [ ] Add diagnostics figures and balance tables.
+- [ ] Add method comparison summary.

@@ -1,0 +1,26 @@
+---
+title: "Lab: Titanic Teaching Example"
+---
+
+## Objective
+
+Create a compact, slide-friendly example for subclassification and simple exact matching.
+
+## Design Setup
+
+- Use `causaldata::titanic` as a pedagogic dataset.
+- Keep this as a teaching appendix, not a main policy-evaluation example.
+- Prioritize visual clarity over methodological depth.
+
+## Planned Analysis Blocks
+
+1. Define treatment and outcome for a transparent classroom contrast.
+2. Show baseline imbalance and curse-of-dimensionality intuition.
+3. Demonstrate simple exact matching and basic CEM.
+4. Present concise interpretation and caveats.
+
+## Implementation Checklist
+
+- [ ] Lock treatment/outcome definitions for teaching use.
+- [ ] Add a minimal visual diagnostic set.
+- [ ] Add one-page teaching summary suitable for slides.

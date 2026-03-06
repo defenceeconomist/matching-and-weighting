@@ -1,0 +1,32 @@
+---
+title: "Matching TRG"
+subtitle: "Main Article, Dataset Expansion Labs, and Slides"
+---
+
+## Main Article
+
+The primary article for this site is:
+
+- [Matching Methods Report](matching_methods_report.qmd)
+
+Supporting pages for implementation and audit:
+
+- [Full Code Companion](matching_methods_report_full_code.qmd)
+- [QA Log](matching_methods_report_qa_log.qmd)
+
+## Dataset Expansion Labs
+
+The dataset expansion workstream is scaffolded as additional labs:
+
+- [Dataset Expansion Lab Hub](labs/index.qmd)
+- [Black Politicians Lab](labs/black_politicians_lab.qmd)
+- [NSW + CPS Benchmark Lab](labs/nsw_cps_benchmark_lab.qmd)
+- [Titanic Teaching Lab](labs/titanic_teaching_lab.qmd)
+- [Data Acquisition Lab](labs/data_acquisition_lab.qmd)
+
+## Slides Space
+
+A dedicated slides section is included for training delivery:
+
+- [Slides Hub](slides/index.qmd)
+- [Starter Slide Deck](slides/matching_methods_slides.qmd)

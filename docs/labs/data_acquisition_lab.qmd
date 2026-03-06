@@ -1,0 +1,28 @@
+---
+title: "Lab: Data Acquisition Layer"
+---
+
+## Objective
+
+Document a reproducible path for loading roadmap datasets from `causaldata`.
+
+## Acquisition Options
+
+1. Dependency-first approach:
+   - Add `causaldata` to documented package requirements.
+   - Load datasets directly in each lab.
+2. Vendored-data approach:
+   - Export required source datasets into `data/raw`.
+   - Keep versioned snapshots and import scripts.
+
+## Proposed Scaffold
+
+- Add a shared setup chunk for required packages.
+- Add a small data-loading helper block per lab.
+- Add a single provenance table documenting source dataset and extraction date.
+
+## Implementation Checklist
+
+- [ ] Decide dependency strategy (`causaldata` vs vendored raw files).
+- [ ] Add consistent data-ingest chunk template.
+- [ ] Add dataset provenance table template.

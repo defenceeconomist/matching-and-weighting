@@ -1,0 +1,41 @@
+---
+title: "Matching and Weighting for Causal Inference"
+subtitle: "Training Slide Scaffold"
+format:
+  revealjs:
+    theme: simple
+    slide-number: true
+    progress: true
+    controls: true
+---
+
+# Purpose
+
+- Summarize the main report for teaching delivery.
+- Show method tradeoffs clearly.
+- Point to reproducible labs for extensions.
+
+## Core Methods
+
+- Exact matching
+- Coarsened exact matching (CEM)
+- Entropy balancing
+
+## Design-First Workflow
+
+1. Define estimand and target population.
+2. Diagnose pre-adjustment imbalance.
+3. Build and compare design options.
+4. Estimate effects only after diagnostics are acceptable.
+
+## Dataset Expansion Labs
+
+- `black_politicians`: transportability-focused worked example.
+- `nsw_mixtape` + `cps_mixtape`: benchmark against NSW experiment.
+- `titanic`: compact teaching appendix.
+
+## Next Slide Actions
+
+- Replace placeholders with figures from the main report.
+- Add one balance plot per method.
+- Add one method comparison table.

@@ -91,39 +91,36 @@ Status labels used below:
 - `ggplot2`
 - `knitr`
 
-## Render the Report
+## Render the Website
 
 This project is configured as a Quarto project in `docs/_quarto.yml`.
 
-From the repository root, render the report with:
+From the repository root, render the full website with:
 
 ```bash
-quarto render docs --to html
+quarto render docs
 ```
 
-The rendered file is written to:
+This renders:
 
-`docs/matching_methods_report.html`
-
-If you only want to render this one document, run:
-
-```bash
-quarto render docs/matching_methods_report.qmd --to html
-```
-
-To render all current report outputs used in this project, run:
-
-```bash
-quarto render docs/matching_methods_report.qmd --to html
-quarto render docs/matching_methods_report_full_code.qmd --to html
-quarto render docs/matching_methods_report_qa_log.qmd --to html
-```
-
-This writes:
-
-- `docs/matching_methods_report.html`
+- `docs/index.html`
+- `docs/matching_methods_report.html` (main article)
+- `docs/labs/index.html` and lab scaffold pages
+- `docs/slides/index.html` and slide scaffold pages
 - `docs/matching_methods_report_full_code.html`
 - `docs/matching_methods_report_qa_log.html`
+
+If you only want the main article, run:
+
+```bash
+quarto render docs/matching_methods_report.qmd --to html
+```
+
+If you only want the slide deck, run:
+
+```bash
+quarto render docs/slides/matching_methods_slides.qmd --to revealjs
+```
 
 ## Extract R Code from QMD
 
@@ -151,4 +148,26 @@ Optional third argument customizes the chunk separator format (default: `# ---- 
 
 - Add hidden-bias sensitivity analysis beyond design diagnostics (e.g., Rosenbaum-style bounds or omitted-variable benchmarking).
 - Add a concise executive-summary output tailored for training delivery alongside the full technical report.
-- Extend the worked example to at least one additional policy-style dataset to show transportability of the workflow.
+
+## Dataset Expansion Roadmap
+
+The next dataset work should prioritize examples from *Causal Inference: The Mixtape* and *The Effect* that fit the current report's design-first framing: a binary treatment, a clearly defined outcome, enough pre-treatment covariates to make overlap and balance meaningful, and data that are easy to document and reproduce.
+
+Status labels used below:
+
+- `Next`: highest-priority implementation target for the report.
+- `Later`: useful extension once the first expansion dataset is complete.
+
+| Roadmap item | Status | Why this dataset fits |
+| --- | --- | --- |
+| 16. Add `causaldata::black_politicians` as the first non-`lalonde` worked example. | `Next` | This is the strongest immediate candidate from *The Effect* because the matching chapter already uses it for coarsened exact matching and entropy balancing. It shifts the report into a second substantive domain, keeps a binary treatment and outcome, and is well-suited to comparing pruning, balance, and weight concentration. |
+| 17. Add a benchmarking appendix using `causaldata::nsw_mixtape` plus `causaldata::cps_mixtape`. | `Next` | This comes directly from the Mixtape matching chapter and is useful even though it is close to `lalonde`. The value is not novelty of topic but benchmarking: it lets the report compare observational matching and weighting estimates against the known NSW experimental result and show more explicitly how poor overlap with observational controls can distort conclusions. |
+| 18. Add a short teaching appendix using `causaldata::titanic` for subclassification and simple exact matching. | `Later` | This is not the best policy-style example, so it should not displace the main report narrative. It is still a strong classroom dataset because the treatment, covariates, and curse-of-dimensionality problem are visually transparent and easy to explain in slides or training notes. |
+| 19. Document a small acquisition layer for book-native datasets. | `Next` | `MatchIt`, `WeightIt`, and `cobalt` are already installed locally, but `causaldata` is not. The cleanest path is either to add `causaldata` as a documented dependency or to vendor the specific source files needed for the roadmap datasets into a reproducible `data/raw` workflow. |
+
+### Planned sequence
+
+1. Implement `black_politicians` first as the main transportability example for exact matching on a reduced discrete covariate set, CEM on richer bins, and entropy balancing with explicit ESS and weight-dispersion checks.
+2. Implement `nsw_mixtape` plus `cps_mixtape` second as a validation appendix that compares adjusted observational estimates with the known experimental benchmark.
+3. Add `titanic` only as a compact pedagogic appendix or slide-friendly note, not as the main substantive extension.
+4. If dataset expansion becomes a recurring pattern, move the common data-ingest and diagnostics code into reusable helper chunks so each new example only changes the treatment, outcome, and covariate specification.

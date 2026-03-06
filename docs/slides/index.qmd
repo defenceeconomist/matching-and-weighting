@@ -1,0 +1,15 @@
+---
+title: "Slides"
+---
+
+Use this section for presentation-ready outputs connected to the report and labs.
+
+## Available Decks
+
+- [Matching Methods Starter Deck](matching_methods_slides.qmd)
+
+## Suggested Slide Pipeline
+
+1. Keep deck narrative aligned with `matching_methods_report.qmd`.
+2. Pull one worked example at a time from the labs section.
+3. Export speaker-ready slides from Quarto RevealJS.

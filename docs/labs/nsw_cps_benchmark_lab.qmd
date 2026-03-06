@@ -1,0 +1,29 @@
+---
+title: "Lab: NSW + CPS Benchmark"
+---
+
+## Objective
+
+Use `causaldata::nsw_mixtape` and `causaldata::cps_mixtape` to benchmark observational estimates against the NSW experimental reference.
+
+## Design Setup
+
+- Target estimand: `ATT` on NSW-treated units
+- Observational comparison pool: CPS units
+- Primary outcome: post-program earnings
+- Key diagnostic focus: overlap and estimand drift under aggressive adjustment
+
+## Planned Analysis Blocks
+
+1. Construct combined analysis dataset with source indicator.
+2. Compare raw observational estimate versus experimental benchmark.
+3. Apply exact matching / CEM / entropy balancing.
+4. Report balance, retention, ESS, and estimate movement.
+5. Discuss when observational adjustment fails to recover benchmark effects.
+
+## Implementation Checklist
+
+- [ ] Add reproducible merge and preprocessing code.
+- [ ] Define benchmark statistic and reporting table.
+- [ ] Add overlap and weight diagnostics.
+- [ ] Add final benchmark comparison narrative.

@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-03-06">
 
-<title>Quality Assurance Log: Matching Methods Report – Matching and Weighting</title>
+<title>Matching TRG – Matching and Weighting</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -91,7 +90,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./index.html"> 
+    <a class="nav-link active" href="./index.html" aria-current="page"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
@@ -122,10 +121,9 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#scope" id="toc-scope" class="nav-link active" data-scroll-target="#scope"><span class="header-section-number">1</span> Scope</a></li>
-  <li><a href="#outcome-summary" id="toc-outcome-summary" class="nav-link" data-scroll-target="#outcome-summary"><span class="header-section-number">2</span> Outcome Summary</a></li>
-  <li><a href="#detailed-qa-log" id="toc-detailed-qa-log" class="nav-link" data-scroll-target="#detailed-qa-log"><span class="header-section-number">3</span> Detailed QA Log</a></li>
-  <li><a href="#qa-decision" id="toc-qa-decision" class="nav-link" data-scroll-target="#qa-decision"><span class="header-section-number">4</span> QA Decision</a></li>
+  <li><a href="#main-article" id="toc-main-article" class="nav-link active" data-scroll-target="#main-article"><span class="header-section-number">1</span> Main Article</a></li>
+  <li><a href="#dataset-expansion-labs" id="toc-dataset-expansion-labs" class="nav-link" data-scroll-target="#dataset-expansion-labs"><span class="header-section-number">2</span> Dataset Expansion Labs</a></li>
+  <li><a href="#slides-space" id="toc-slides-space" class="nav-link" data-scroll-target="#slides-space"><span class="header-section-number">3</span> Slides Space</a></li>
   </ul>
 </nav>
     </div>
@@ -134,8 +132,8 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Quality Assurance Log: Matching Methods Report</h1>
-<p class="subtitle lead">Comparison Against MatchIt and WeightIt Documentation</p>
+<h1 class="title">Matching TRG</h1>
+<p class="subtitle lead">Main Article, Dataset Expansion Labs, and Slides</p>
 </div>
 
 
@@ -143,12 +141,6 @@ ul.task-list li input[type="checkbox"] {
 <div class="quarto-title-meta">
 
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">March 6, 2026</p>
-    </div>
-  </div>
   
     
   </div>
@@ -158,133 +150,36 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="scope" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="scope"><span class="header-section-number">1</span> Scope</h2>
+<section id="main-article" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="main-article"><span class="header-section-number">1</span> Main Article</h2>
+<p>The primary article for this site is:</p>
 <ul>
-<li>Report reviewed: <code>docs/matching_methods_report.qmd</code></li>
-<li>Documentation baseline:
+<li><a href="./matching_methods_report.html">Matching Methods Report</a></li>
+</ul>
+<p>Supporting pages for implementation and audit:</p>
 <ul>
-<li><code>MatchIt</code> version <code>4.7.2</code> (<code>matchit</code>, <code>method_exact</code>, <code>method_cem</code>, <code>summary.matchit</code>)</li>
-<li><code>WeightIt</code> version <code>1.5.1</code> (<code>weightit</code>, <code>method_ebal</code>, <code>glm_weightit</code>)</li>
-</ul></li>
-<li>QA date: <code>2026-03-06</code></li>
+<li><a href="./matching_methods_report_full_code.html">Full Code Companion</a></li>
+<li><a href="./matching_methods_report_qa_log.html">QA Log</a></li>
 </ul>
 </section>
-<section id="outcome-summary" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="outcome-summary"><span class="header-section-number">2</span> Outcome Summary</h2>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Outcome</th>
-<th style="text-align: right;">Count</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Checks passed</td>
-<td style="text-align: right;">8</td>
-</tr>
-<tr class="even">
-<td>Minor documentation-traceability gaps</td>
-<td style="text-align: right;">1</td>
-</tr>
-<tr class="odd">
-<td>Material mismatches</td>
-<td style="text-align: right;">0</td>
-</tr>
-</tbody>
-</table>
-<p>No material inconsistencies were found between the report implementation/interpretation and the installed <code>MatchIt</code> and <code>WeightIt</code> documentation.</p>
+<section id="dataset-expansion-labs" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="dataset-expansion-labs"><span class="header-section-number">2</span> Dataset Expansion Labs</h2>
+<p>The dataset expansion workstream is scaffolded as additional labs:</p>
+<ul>
+<li><a href="./labs/index.html">Dataset Expansion Lab Hub</a></li>
+<li><a href="./labs/black_politicians_lab.html">Black Politicians Lab</a></li>
+<li><a href="./labs/nsw_cps_benchmark_lab.html">NSW + CPS Benchmark Lab</a></li>
+<li><a href="./labs/titanic_teaching_lab.html">Titanic Teaching Lab</a></li>
+<li><a href="./labs/data_acquisition_lab.html">Data Acquisition Lab</a></li>
+</ul>
 </section>
-<section id="detailed-qa-log" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="detailed-qa-log"><span class="header-section-number">3</span> Detailed QA Log</h2>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>ID</th>
-<th>Report claim and location</th>
-<th>Documentation comparison</th>
-<th>Result</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>M1</td>
-<td><code>method = NULL</code> is used to create baseline, pre-adjustment diagnostics (<code>matching_methods_report.qmd:225-255</code>)</td>
-<td><code>MatchIt::matchit</code> documents that <code>method = NULL</code> performs no matching and can be used with <code>summary()</code> to inspect pre-match balance. Source: <a href="https://kosukeimai.github.io/MatchIt/reference/matchit.html">matchit</a>.</td>
-<td>Pass</td>
-<td>None</td>
-</tr>
-<tr class="even">
-<td>M2</td>
-<td>Exact matching described as full-cross subclasses with non-overlap subclasses dropped (<code>matching_methods_report.qmd:290-324</code>)</td>
-<td><code>MatchIt::method_exact</code> describes exact matching exactly this way and warns that discarding can change precision/target population. Source: <a href="https://kosukeimai.github.io/MatchIt/reference/method_exact.html">method_exact</a>.</td>
-<td>Pass</td>
-<td>None</td>
-</tr>
-<tr class="odd">
-<td>M3</td>
-<td>CEM described as binning plus exact matching on coarsened covariates; report uses default and custom cutpoints (<code>matching_methods_report.qmd:388-423</code>)</td>
-<td><code>MatchIt::method_cem</code> confirms this behavior, including default <code>cutpoints = "sturges"</code> and support for <code>q#</code> quantile cutpoints. Source: <a href="https://kosukeimai.github.io/MatchIt/reference/method_cem.html">method_cem</a>.</td>
-<td>Pass</td>
-<td>None</td>
-</tr>
-<tr class="even">
-<td>M4</td>
-<td>Iterative CEM tuning is framed as balancing covariate balance and retained sample size (<code>matching_methods_report.qmd:392, 470-574</code>)</td>
-<td><code>MatchIt::method_cem</code> recommends iterative adjustment of <code>grouping</code>/<code>cutpoints</code> until a balance-retention compromise is obtained. Source: <a href="https://kosukeimai.github.io/MatchIt/reference/method_cem.html">method_cem</a>.</td>
-<td>Pass</td>
-<td>None</td>
-</tr>
-<tr class="odd">
-<td>M5</td>
-<td><code>summary(..., un = TRUE)</code> interpretation is used for unmatched and adjusted diagnostics (<code>matching_methods_report.qmd:235-247, 531-543</code>)</td>
-<td><code>summary.matchit</code> documents <code>un = TRUE</code> as inclusion of unmatched-sample balance and defines reported statistics (SMD, variance ratio, ECDF). Source: <a href="https://kosukeimai.github.io/MatchIt/reference/summary.matchit.html">summary.matchit</a>.</td>
-<td>Pass</td>
-<td>None</td>
-</tr>
-<tr class="even">
-<td>W1</td>
-<td>For entropy balancing with binary treatment and <code>estimand = "ATT"</code>, treated units are focal and remain unweighted (<code>matching_methods_report.qmd:605-609</code>)</td>
-<td><code>WeightIt::weightit</code> states focal-group weights are set to 1 for ATT/ATC designs. Source: <a href="https://ngreifer.github.io/WeightIt/reference/weightit.html">weightit</a>.</td>
-<td>Pass</td>
-<td>None</td>
-</tr>
-<tr class="odd">
-<td>W2</td>
-<td><code>method = "ebal"</code> is described as entropy optimization under exact balance constraints (<code>matching_methods_report.qmd:605-607</code>)</td>
-<td><code>WeightIt::method_ebal</code> defines entropy balancing as minimizing negative entropy subject to exact moment balance constraints and exact mean balance on included terms. Source: <a href="https://ngreifer.github.io/WeightIt/reference/method_ebal.html">method_ebal</a>.</td>
-<td>Pass</td>
-<td>None</td>
-</tr>
-<tr class="even">
-<td>W3</td>
-<td>Default/tuned entropy-balancing controls (<code>moments</code>, <code>int</code>, <code>quantile</code>) are discussed as explicit tuning levers (<code>matching_methods_report.qmd:607, 675-677</code>)</td>
-<td><code>WeightIt::method_ebal</code> documents defaults (<code>moments = 1</code>, <code>int = FALSE</code>) and optional <code>quantile</code> constraints; interpretation in report is consistent. Source: <a href="https://ngreifer.github.io/WeightIt/reference/method_ebal.html">method_ebal</a>.</td>
-<td>Pass</td>
-<td>None</td>
-</tr>
-<tr class="odd">
-<td>W4</td>
-<td>Post-weighting effect model uses <code>lm_weightit()</code> to account for uncertainty from estimated weights (<code>matching_methods_report.qmd:752-772</code>)</td>
-<td><code>WeightIt::glm_weightit</code> documents that <code>glm_weightit()</code>/<code>lm_weightit()</code> compute covariance matrices that account for weight estimation when available. Source: <a href="https://ngreifer.github.io/WeightIt/reference/glm_weightit.html">glm_weightit</a>.</td>
-<td>Pass</td>
-<td>None</td>
-</tr>
-<tr class="even">
-<td>D1</td>
-<td>Report citations for key package-behavior claims rely mostly on method papers and CRAN citation entries rather than direct doc-topic links (<code>matching_methods_report.qmd</code> throughout)</td>
-<td>Technically valid, but less auditable for package-default and argument-specific claims than direct documentation links.</td>
-<td>Minor gap</td>
-<td>Optional: add direct doc-topic citations/links in methods sections for <code>method = NULL</code>, <code>method = "cem"</code>, <code>method = "ebal"</code>, and <code>lm_weightit()</code>.</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="qa-decision" class="level2" data-number="4">
-<h2 data-number="4" class="anchored" data-anchor-id="qa-decision"><span class="header-section-number">4</span> QA Decision</h2>
-<p>The report is <strong>documentation-aligned</strong> with <code>MatchIt 4.7.2</code> and <code>WeightIt 1.5.1</code> for the checked implementation and interpretation claims.</p>
+<section id="slides-space" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="slides-space"><span class="header-section-number">3</span> Slides Space</h2>
+<p>A dedicated slides section is included for training delivery:</p>
+<ul>
+<li><a href="./slides/index.html">Slides Hub</a></li>
+<li><a href="./slides/matching_methods_slides.html">Starter Slide Deck</a></li>
+</ul>
 
 
 </section>

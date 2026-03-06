@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-03-06">
 
-<title>Quality Assurance Log: Matching Methods Report – Matching and Weighting</title>
+<title>Slides – Matching and Weighting</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -24,24 +23,24 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-b337f537912f5ab074b938eebad4c5d7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-b337f537912f5ab074b938eebad4c5d7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -73,14 +72,14 @@ ul.task-list li input[type="checkbox"] {
 
 </head>
 
-<body class="nav-fixed quarto-light">
+<body class="nav-sidebar docked nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Matching and Weighting</span>
     </a>
   </div>
@@ -91,19 +90,19 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./index.html"> 
+    <a class="nav-link" href="../index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./matching_methods_report.html"> 
+    <a class="nav-link" href="../matching_methods_report.html"> 
 <span class="menu-text">Main Article</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./labs/index.html"> 
+    <a class="nav-link" href="../labs/index.html"> 
 <span class="menu-text">Additional Labs</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./slides/index.html"> 
+    <a class="nav-link active" href="../slides/index.html" aria-current="page"> 
 <span class="menu-text">Slides</span></a>
   </li>  
 </ul>
@@ -112,20 +111,47 @@ ul.task-list li input[type="checkbox"] {
 </div>
       </div> <!-- /container-fluid -->
     </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../slides/index.html">Slides</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
 </header>
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../slides/index.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Slides</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../slides/matching_methods_slides.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Matching and Weighting for Causal Inference</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#scope" id="toc-scope" class="nav-link active" data-scroll-target="#scope"><span class="header-section-number">1</span> Scope</a></li>
-  <li><a href="#outcome-summary" id="toc-outcome-summary" class="nav-link" data-scroll-target="#outcome-summary"><span class="header-section-number">2</span> Outcome Summary</a></li>
-  <li><a href="#detailed-qa-log" id="toc-detailed-qa-log" class="nav-link" data-scroll-target="#detailed-qa-log"><span class="header-section-number">3</span> Detailed QA Log</a></li>
-  <li><a href="#qa-decision" id="toc-qa-decision" class="nav-link" data-scroll-target="#qa-decision"><span class="header-section-number">4</span> QA Decision</a></li>
+  <li><a href="#available-decks" id="toc-available-decks" class="nav-link active" data-scroll-target="#available-decks"><span class="header-section-number">1</span> Available Decks</a></li>
+  <li><a href="#suggested-slide-pipeline" id="toc-suggested-slide-pipeline" class="nav-link" data-scroll-target="#suggested-slide-pipeline"><span class="header-section-number">2</span> Suggested Slide Pipeline</a></li>
   </ul>
 </nav>
     </div>
@@ -134,8 +160,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Quality Assurance Log: Matching Methods Report</h1>
-<p class="subtitle lead">Comparison Against MatchIt and WeightIt Documentation</p>
+<h1 class="title">Slides</h1>
 </div>
 
 
@@ -143,12 +168,6 @@ ul.task-list li input[type="checkbox"] {
 <div class="quarto-title-meta">
 
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">March 6, 2026</p>
-    </div>
-  </div>
   
     
   </div>
@@ -158,133 +177,20 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="scope" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="scope"><span class="header-section-number">1</span> Scope</h2>
+<p>Use this section for presentation-ready outputs connected to the report and labs.</p>
+<section id="available-decks" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="available-decks"><span class="header-section-number">1</span> Available Decks</h2>
 <ul>
-<li>Report reviewed: <code>docs/matching_methods_report.qmd</code></li>
-<li>Documentation baseline:
-<ul>
-<li><code>MatchIt</code> version <code>4.7.2</code> (<code>matchit</code>, <code>method_exact</code>, <code>method_cem</code>, <code>summary.matchit</code>)</li>
-<li><code>WeightIt</code> version <code>1.5.1</code> (<code>weightit</code>, <code>method_ebal</code>, <code>glm_weightit</code>)</li>
-</ul></li>
-<li>QA date: <code>2026-03-06</code></li>
+<li><a href="../slides/matching_methods_slides.html">Matching Methods Starter Deck</a></li>
 </ul>
 </section>
-<section id="outcome-summary" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="outcome-summary"><span class="header-section-number">2</span> Outcome Summary</h2>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Outcome</th>
-<th style="text-align: right;">Count</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Checks passed</td>
-<td style="text-align: right;">8</td>
-</tr>
-<tr class="even">
-<td>Minor documentation-traceability gaps</td>
-<td style="text-align: right;">1</td>
-</tr>
-<tr class="odd">
-<td>Material mismatches</td>
-<td style="text-align: right;">0</td>
-</tr>
-</tbody>
-</table>
-<p>No material inconsistencies were found between the report implementation/interpretation and the installed <code>MatchIt</code> and <code>WeightIt</code> documentation.</p>
-</section>
-<section id="detailed-qa-log" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="detailed-qa-log"><span class="header-section-number">3</span> Detailed QA Log</h2>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>ID</th>
-<th>Report claim and location</th>
-<th>Documentation comparison</th>
-<th>Result</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>M1</td>
-<td><code>method = NULL</code> is used to create baseline, pre-adjustment diagnostics (<code>matching_methods_report.qmd:225-255</code>)</td>
-<td><code>MatchIt::matchit</code> documents that <code>method = NULL</code> performs no matching and can be used with <code>summary()</code> to inspect pre-match balance. Source: <a href="https://kosukeimai.github.io/MatchIt/reference/matchit.html">matchit</a>.</td>
-<td>Pass</td>
-<td>None</td>
-</tr>
-<tr class="even">
-<td>M2</td>
-<td>Exact matching described as full-cross subclasses with non-overlap subclasses dropped (<code>matching_methods_report.qmd:290-324</code>)</td>
-<td><code>MatchIt::method_exact</code> describes exact matching exactly this way and warns that discarding can change precision/target population. Source: <a href="https://kosukeimai.github.io/MatchIt/reference/method_exact.html">method_exact</a>.</td>
-<td>Pass</td>
-<td>None</td>
-</tr>
-<tr class="odd">
-<td>M3</td>
-<td>CEM described as binning plus exact matching on coarsened covariates; report uses default and custom cutpoints (<code>matching_methods_report.qmd:388-423</code>)</td>
-<td><code>MatchIt::method_cem</code> confirms this behavior, including default <code>cutpoints = "sturges"</code> and support for <code>q#</code> quantile cutpoints. Source: <a href="https://kosukeimai.github.io/MatchIt/reference/method_cem.html">method_cem</a>.</td>
-<td>Pass</td>
-<td>None</td>
-</tr>
-<tr class="even">
-<td>M4</td>
-<td>Iterative CEM tuning is framed as balancing covariate balance and retained sample size (<code>matching_methods_report.qmd:392, 470-574</code>)</td>
-<td><code>MatchIt::method_cem</code> recommends iterative adjustment of <code>grouping</code>/<code>cutpoints</code> until a balance-retention compromise is obtained. Source: <a href="https://kosukeimai.github.io/MatchIt/reference/method_cem.html">method_cem</a>.</td>
-<td>Pass</td>
-<td>None</td>
-</tr>
-<tr class="odd">
-<td>M5</td>
-<td><code>summary(..., un = TRUE)</code> interpretation is used for unmatched and adjusted diagnostics (<code>matching_methods_report.qmd:235-247, 531-543</code>)</td>
-<td><code>summary.matchit</code> documents <code>un = TRUE</code> as inclusion of unmatched-sample balance and defines reported statistics (SMD, variance ratio, ECDF). Source: <a href="https://kosukeimai.github.io/MatchIt/reference/summary.matchit.html">summary.matchit</a>.</td>
-<td>Pass</td>
-<td>None</td>
-</tr>
-<tr class="even">
-<td>W1</td>
-<td>For entropy balancing with binary treatment and <code>estimand = "ATT"</code>, treated units are focal and remain unweighted (<code>matching_methods_report.qmd:605-609</code>)</td>
-<td><code>WeightIt::weightit</code> states focal-group weights are set to 1 for ATT/ATC designs. Source: <a href="https://ngreifer.github.io/WeightIt/reference/weightit.html">weightit</a>.</td>
-<td>Pass</td>
-<td>None</td>
-</tr>
-<tr class="odd">
-<td>W2</td>
-<td><code>method = "ebal"</code> is described as entropy optimization under exact balance constraints (<code>matching_methods_report.qmd:605-607</code>)</td>
-<td><code>WeightIt::method_ebal</code> defines entropy balancing as minimizing negative entropy subject to exact moment balance constraints and exact mean balance on included terms. Source: <a href="https://ngreifer.github.io/WeightIt/reference/method_ebal.html">method_ebal</a>.</td>
-<td>Pass</td>
-<td>None</td>
-</tr>
-<tr class="even">
-<td>W3</td>
-<td>Default/tuned entropy-balancing controls (<code>moments</code>, <code>int</code>, <code>quantile</code>) are discussed as explicit tuning levers (<code>matching_methods_report.qmd:607, 675-677</code>)</td>
-<td><code>WeightIt::method_ebal</code> documents defaults (<code>moments = 1</code>, <code>int = FALSE</code>) and optional <code>quantile</code> constraints; interpretation in report is consistent. Source: <a href="https://ngreifer.github.io/WeightIt/reference/method_ebal.html">method_ebal</a>.</td>
-<td>Pass</td>
-<td>None</td>
-</tr>
-<tr class="odd">
-<td>W4</td>
-<td>Post-weighting effect model uses <code>lm_weightit()</code> to account for uncertainty from estimated weights (<code>matching_methods_report.qmd:752-772</code>)</td>
-<td><code>WeightIt::glm_weightit</code> documents that <code>glm_weightit()</code>/<code>lm_weightit()</code> compute covariance matrices that account for weight estimation when available. Source: <a href="https://ngreifer.github.io/WeightIt/reference/glm_weightit.html">glm_weightit</a>.</td>
-<td>Pass</td>
-<td>None</td>
-</tr>
-<tr class="even">
-<td>D1</td>
-<td>Report citations for key package-behavior claims rely mostly on method papers and CRAN citation entries rather than direct doc-topic links (<code>matching_methods_report.qmd</code> throughout)</td>
-<td>Technically valid, but less auditable for package-default and argument-specific claims than direct documentation links.</td>
-<td>Minor gap</td>
-<td>Optional: add direct doc-topic citations/links in methods sections for <code>method = NULL</code>, <code>method = "cem"</code>, <code>method = "ebal"</code>, and <code>lm_weightit()</code>.</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="qa-decision" class="level2" data-number="4">
-<h2 data-number="4" class="anchored" data-anchor-id="qa-decision"><span class="header-section-number">4</span> QA Decision</h2>
-<p>The report is <strong>documentation-aligned</strong> with <code>MatchIt 4.7.2</code> and <code>WeightIt 1.5.1</code> for the checked implementation and interpretation claims.</p>
+<section id="suggested-slide-pipeline" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="suggested-slide-pipeline"><span class="header-section-number">2</span> Suggested Slide Pipeline</h2>
+<ol type="1">
+<li>Keep deck narrative aligned with <code>matching_methods_report.qmd</code>.</li>
+<li>Pull one worked example at a time from the labs section.</li>
+<li>Export speaker-ready slides from Quarto RevealJS.</li>
+</ol>
 
 
 </section>
