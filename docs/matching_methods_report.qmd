@@ -21,6 +21,15 @@ execute:
   message: false
 ---
 
+## Executive Summary
+
+- This report compares exact matching, coarsened exact matching (CEM), and entropy balancing as design-stage tools for estimating an `ATT` from observational data.
+- In the `lalonde` worked example, all three adjusted designs produce a positive programme-effect estimate, but they do so with different tradeoffs in transparency, covariate balance, and retained information.
+- Exact matching is the most transparent design, but it remains a partial solution here because feasible exact constraints leave residual imbalance on prior earnings.
+- The report's tuned CEM specification is the strongest matched-sample compromise: it brings all reported covariates below the conventional absolute standardized-difference threshold of `0.1`, but it does so by pruning the treated sample from `185` units to `81`.
+- Entropy balancing achieves the strongest observed mean balance and preserves all treated units, but the weighted comparison depends on a much smaller effective control sample, so the gain in balance comes with concentrated weights rather than explicit sample loss.
+- For evaluator practice, the main implication is that method choice should follow the causal question and the available overlap. In this example, entropy balancing is the strongest summary design when preserving the original treated population is the priority, while CEM is the clearest option when an auditable matched sample matters most.
+
 ## Introduction
 
 This report examines three design-stage adjustment methods for causal inference using observational data: exact matching, which keeps only treated and untreated units that are identical on selected background variables; coarsened exact matching (CEM), which first groups variables into broader categories before matching; and entropy balancing, which reweights units so the groups align on selected covariate summaries. They are grouped together not because they are interchangeable, but because each forces the evaluator to answer the same design questions early: what causal effect is being targeted, which pre-treatment covariates^[Covariates are background characteristics measured before treatment that are used to describe units and improve comparability.] belong in the design, whether treated and untreated units overlap enough to be compared, and how much information is lost when comparability is improved.^[Here, balance means how similar the groups are on observed pre-treatment characteristics, while overlap means whether the data contain genuinely comparable treated and untreated cases in the first place.] [@ho2011matchit]. That makes them useful both as teaching devices and as practical stress tests of whether an observational comparison is defensible.
