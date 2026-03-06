@@ -11,7 +11,7 @@ format:
     number-sections: true
 execute:
   echo: true
-  eval: false
+  eval: true
   warning: false
   message: false
 ---
@@ -119,72 +119,164 @@ The same caution applies when treatment is poorly defined, interference is likel
 
 ### Example Dataset
 
-Introduce the dataset used in the demonstration. Define:
+For the first worked example, this report uses `lalonde`, the demonstration dataset distributed with `MatchIt`. The data combine participants in the National Supported Work training programme with an observational comparison group and are widely used to teach matching because the treated and untreated groups are visibly different before adjustment [@ho2011matchit; @matchit_getting_started].
 
-- the treatment indicator
-- the outcome
-- the pre-treatment covariates
-- the target estimand
-- the focal group, if targeting `ATT` or `ATC`
+In this application:
+
+- `treat` indicates participation in the training programme
+- `re78` is 1978 earnings and serves as the post-treatment outcome
+- the pre-treatment covariates are `age`, `educ`, `race`, `married`, `nodegree`, `re74`, and `re75`
+- the target estimand is the `ATT`
+- the focal group is the treated sample, that is, units with `treat = 1`
+
+This is a useful teaching dataset because it mirrors a common evaluator problem: a programme has already been delivered, a comparison group exists in the data, but the comparison is not credible without careful design work on observed pre-treatment characteristics.
 
 ### Evaluation Use Case
 
-Briefly describe the kind of evaluation question the example is meant to represent, such as a programme participation effect, a policy exposure effect, or an intervention uptake effect. This keeps the methods grounded in evaluator practice rather than abstract statistical comparison.
+Substantively, the example can be read as a retrospective employment-programme evaluation. The causal question is whether participation in the training programme increased later earnings for the people who actually enrolled. That makes the `ATT` the natural starting estimand, because the policy-relevant contrast is the earnings those participants observed in 1978 versus the earnings they would plausibly have had without the programme.
+
+The covariate set is also instructive for evaluator practice. Demographic variables such as age, education, and race are combined with marital status, degree completion, and two lagged earnings measures (`re74` and `re75`) that proxy prior labour-market attachment and earnings potential. In a real evaluation, the equivalent task would be to identify pre-treatment variables that are plausibly related both to programme take-up and to later outcomes.
 
 ### Package Setup
 
 ```{r}
-library(MatchIt)
-library(WeightIt)
-library(cobalt)
-library(dplyr)
-library(ggplot2)
+required_packages <- c(
+  "MatchIt",
+  "WeightIt",
+  "cobalt",
+  "dplyr",
+  "ggplot2"
+)
+
+missing_packages <- required_packages[!vapply(
+  required_packages,
+  requireNamespace,
+  logical(1),
+  quietly = TRUE
+)]
+
+if (length(missing_packages) > 0) {
+  install.packages(missing_packages)
+}
+
+invisible(lapply(required_packages, library, character.only = TRUE))
+
 ```
 
 ### Data Preparation
 
 ```{r}
-# Replace this with the project dataset or a reproducible example.
-# dat <- read.csv("path/to/data.csv")
+data("lalonde", package = "MatchIt")
 
-# Example structure expected by the report:
-# dat <- dat |>
-#   mutate(
-#     treat = as.integer(treat),
-#     outcome = outcome
-#   )
+dat <- lalonde |>
+  mutate(
+    treat = as.integer(treat),
+    outcome = re78,
+    married = factor(married, levels = c(0, 1), labels = c("not_married", "married")),
+    nodegree = factor(nodegree, levels = c(0, 1), labels = c("has_degree", "no_degree"))
+  )
+
+design_covariates <- c(
+  "age", "educ", "race", "married", "nodegree", "re74", "re75"
+)
+
+dat |>
+  select(treat, outcome, all_of(design_covariates)) |>
+  glimpse()
 ```
 
 ## Pre-Match Diagnostics
 
 ### Descriptive Comparison
 
-Summarize the treated and control groups before adjustment.
+The first step is to inspect the raw treated and untreated groups before any adjustment is attempted. This descriptive comparison does not by itself establish whether the design is usable, but it does show whether the untreated group looks remotely plausible as a stand-in for the treated group. In the `lalonde` data, that initial comparison already suggests a problem: the groups differ on several pre-treatment characteristics that are closely related to later earnings, especially marital status, race, and prior labour-market attachment [@ho2007matching; @matchit_getting_started].
 
 ```{r}
-# dat |>
-#   group_by(treat) |>
-#   summarise(
-#     n = n(),
-#     mean_outcome = mean(outcome, na.rm = TRUE)
-#   )
+pre_match_summary <- dat |>
+  group_by(treat) |>
+  summarise(
+    n = n(),
+    mean_outcome = mean(outcome, na.rm = TRUE),
+    mean_age = mean(age, na.rm = TRUE),
+    mean_educ = mean(educ, na.rm = TRUE),
+    prop_married = mean(married == "married", na.rm = TRUE),
+    prop_no_degree = mean(nodegree == "no_degree", na.rm = TRUE),
+    mean_re74 = mean(re74, na.rm = TRUE),
+    mean_re75 = mean(re75, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  mutate(group = if_else(treat == 1L, "Treated", "Control")) |>
+  select(
+    group, n, mean_outcome, mean_age, mean_educ,
+    prop_married, prop_no_degree, mean_re74, mean_re75
+  ) |>
+  mutate(across(-c(group, n), ~ round(.x, 3)))
+
+pre_match_summary
 ```
+
+The descriptive table is useful because it makes the substantive differences easy to see. The treated sample is younger on average, much less likely to be married, somewhat more likely to lack a degree, and has substantially lower earnings in both 1974 and 1975. Those are not minor baseline differences; they suggest that the untreated group is not yet a credible counterfactual for the treated group. The next step is therefore to move from raw descriptives to formal balance diagnostics on a common scale.
 
 ### Balance Diagnostics Before Adjustment
 
-Use `MatchIt` to construct a pre-match object and then inspect imbalance before any design choices are imposed [@matchit_getting_started].
+`MatchIt` can be used with `method = NULL` to create a design object without yet changing the sample. That is useful because it creates a baseline against which the later exact matching, CEM, and entropy balancing results can be judged [@matchit_getting_started]. The companion argument `un = TRUE` means "show the unadjusted balance", so the diagnostics reported here describe the raw sample rather than a matched or weighted version of it. Later in the report, the same functions will be able to display both unadjusted and adjusted balance, making it easier to see whether the design has genuinely improved.
 
 ```{r}
-# m_out0 <- matchit(
-#   treat ~ age + sex + race + education + income,
-#   data = dat,
-#   method = NULL,
-#   distance = "glm"
-# )
-#
-# summary(m_out0)
-# bal.tab(m_out0, un = TRUE)
+m_out0 <- matchit(
+  treat ~ age + educ + race + married + nodegree + re74 + re75,
+  data = dat,
+  method = NULL,
+  estimand = "ATT"
+)
+
+summary(m_out0, un = TRUE)
 ```
+
+The `summary(m_out0, un = TRUE)` output gives a detailed baseline diagnostic. The main columns are:
+
+- `Means Treated` is the sample mean for treated units.
+- `Means Control` is the sample mean for untreated units.
+- `Std. Mean Diff.` is the standardized mean difference, the main balance statistic. Values close to zero indicate better balance, while larger absolute values indicate greater treated-control separation.
+- `Var. Ratio` is the treated-group variance divided by the control-group variance for continuous covariates. Values near `1` are generally preferable.
+- `eCDF Mean` and `eCDF Max` compare the full empirical distributions of a variable rather than just their means. Larger values indicate that the treated and control distributions differ more strongly.
+
+For binary indicators, the reported means are proportions rather than arithmetic means. So if `Means Treated` for `marriedmarried` is about `0.19`, that means roughly 19 percent of the treated group is married. The `Sample Sizes` block reports how many units are in the data before and after adjustment; because this object is still unadjusted, all units remain in the sample. This output is helpful when a reader wants the full set of balance statistics for each covariate.
+
+```{r}
+unadjusted_balance <- bal.tab(
+  m_out0,
+  un = TRUE,
+  binary = "std",
+  disp.v.ratio = TRUE,
+  m.threshold = 0.1
+)
+
+unadjusted_balance
+```
+
+The `bal.tab()` output from `cobalt` presents the same underlying idea in a more compact format that is often easier to scan:
+
+- `Type` identifies whether the variable is continuous, binary, or the estimated distance measure.
+- `Diff.Un` is the unadjusted standardized mean difference. This plays the same role as `Std. Mean Diff.` in the `summary()` output.
+- `V.Ratio.Un` is the unadjusted variance ratio for continuous variables.
+- `M.Threshold.Un` shows whether the absolute unadjusted mean difference passes the threshold supplied to `bal.tab()`. In this report, a threshold of `0.1` is used as a rough rule of thumb, so entries marked `Not Balanced, >0.1` remain meaningfully imbalanced before adjustment.
+
+This table is especially useful for a quick audit. It makes clear that most included covariates exceed the chosen imbalance threshold before any design work is done.
+
+```{r fig.height=5.5}
+love.plot(
+  m_out0,
+  stats = "mean.diffs",
+  abs = TRUE,
+  binary = "std",
+  thresholds = c(m = 0.1),
+  var.order = "unadjusted"
+)
+```
+
+The love plot turns the same information into a single visual diagnostic. Each point is the absolute standardized mean difference for one covariate, so points farther to the right indicate worse imbalance and points closer to zero indicate better balance. The vertical reference line at `0.1` is the same rule-of-thumb threshold used in the balance table: covariates to the left of that line are closer to acceptable balance, while those to the right still need work.
+
+Taken together, the descriptive table, the `summary()` output, the `bal.tab()` audit, and the love plot all point to the same conclusion. The unadjusted sample is badly imbalanced, especially on race, marital status, and prior earnings, while education is the only included covariate that is close to balanced at baseline. That is exactly the situation in which design-stage adjustment is needed. The next sections therefore ask whether exact matching, coarsened exact matching, or entropy balancing can reduce those imbalances enough to support a more credible `ATT` analysis.
 
 ## Exact Matching
 
