@@ -58,7 +58,7 @@ The framing is aligned with the Evaluation Academy's train-the-trainer model: pr
 
 ## Roadmap Progress
 
-The report scaffold and most of the conceptual narrative are now in place. The main gap is the empirical layer: a concrete example dataset, runnable code chunks, rendered diagnostics, and final comparison outputs.
+The report scaffold and most of the conceptual narrative are now in place. The empirical layer has started to move from placeholder structure to runnable analysis: the report now uses the `lalonde` example dataset, includes executable setup and pre-match diagnostics, and renders baseline balance outputs. The main remaining gaps are the post-adjustment analyses, treatment-effect estimates, and final cross-method comparison.
 
 Status labels used below:
 
@@ -67,12 +67,12 @@ Status labels used below:
 
 | Roadmap item | Status | Current state |
 | --- | --- | --- |
-| 1. Introduce the causal question, estimand, and observational setting. | `In progress` | Estimands and the observational framing are introduced, but the concrete study question and dataset are still placeholders. |
+| 1. Introduce the causal question, estimand, and observational setting. | `Done` | The report now frames the worked example as a retrospective employment-programme evaluation targeting the `ATT` with the `lalonde` data. |
 | 2. Summarize the causal inference background. | `Done` | The report covers potential outcomes, confounding, exchangeability, positivity, common support, consistency, and SUTVA. |
 | 3. Introduce subclassification as a motivating conditioning strategy and explain the curse of dimensionality. | `Done` | Both topics are drafted in the causal inference background section. |
 | 4. Position matching within the wider quasi-experimental design toolbox and explain when other designs may be preferable. | `Done` | The report includes a dedicated positioning section tied to the Evaluation Academy framing. |
-| 5. Define the data structure, treatment, outcome, adjustment covariates, and focal group for the estimand. | `In progress` | The section structure exists, but the example dataset and variable definitions are not yet filled in. |
-| 6. Check initial imbalance before matching using `MatchIt` with `method = NULL`. | `In progress` | The pre-match diagnostics section and example code skeleton are present, but not yet runnable. |
+| 5. Define the data structure, treatment, outcome, adjustment covariates, and focal group for the estimand. | `Done` | The report defines the `lalonde` treatment indicator, outcome, design covariates, and treated focal group for the `ATT`. |
+| 6. Check initial imbalance before matching using `MatchIt` with `method = NULL`. | `Done` | The pre-match diagnostics section is now runnable and includes descriptive comparisons, `summary(m_out0, un = TRUE)`, `bal.tab()`, and a love plot. |
 | 7. Demonstrate exact matching with `MatchIt` using `method = "exact"`. | `In progress` | Method overview and commented implementation are drafted. |
 | 8. Demonstrate coarsened exact matching with `MatchIt` using `method = "cem"`. | `In progress` | Method overview and commented implementation are drafted. |
 | 9. Demonstrate entropy balancing as a weighting method that targets exact moment balance. | `In progress` | Method overview and commented `WeightIt` implementation are drafted. |
@@ -81,7 +81,7 @@ Status labels used below:
 | 12. Compare methods on transparency, feasibility, precision, and target population. | `In progress` | Comparison headings are in place, but the synthesis still needs completed analyses. |
 | 13. Translate the methods into evaluator-facing guidance for programme and policy evaluation practice. | `In progress` | Guidance sections are outlined and reporting recommendations are partly drafted. |
 | 14. Discuss limitations, sensitivity to design choices, and practical guidance. | `In progress` | Limitations are listed, but the full discussion remains to be written. |
-| 15. Provide a reproducible appendix with package setup, references, and full code. | `In progress` | Package setup, glossary, and references are present; full runnable code and session information are still pending. |
+| 15. Provide a reproducible appendix with package setup, references, and full code. | `In progress` | Package setup, references, and a runnable pre-match example are present; the appendix still needs the completed end-to-end code and any session-information details. |
 
 ## Proposed Package Stack
 
@@ -114,6 +114,6 @@ quarto render docs/matching_methods_report.qmd --to html
 
 ## Next Steps
 
-- Add a concrete demonstration dataset, treatment definition, outcome, and target estimand.
-- Replace commented code scaffolds with runnable chunks and render the resulting diagnostics and estimates.
-- Finish the comparison, evaluator guidance, limitations, and appendix using outputs from the completed example.
+- Replace the remaining commented matching and weighting scaffolds with runnable exact matching, CEM, and entropy balancing examples.
+- Add post-adjustment diagnostics, retained-sample summaries, and treatment-effect estimates for each design.
+- Finish the comparison, evaluator guidance, limitations, and appendix using outputs from the completed analyses.
