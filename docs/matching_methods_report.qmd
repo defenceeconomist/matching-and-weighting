@@ -145,6 +145,7 @@ The covariate set is also instructive for evaluator practice. Demographic variab
 ### Package Setup
 
 ```{r}
+# Declare analysis dependencies used across matching, weighting, and diagnostics.
 required_packages <- c(
   "MatchIt",
   "WeightIt",
@@ -153,6 +154,7 @@ required_packages <- c(
   "ggplot2"
 )
 
+# Identify packages that are not yet available in the current R library.
 missing_packages <- required_packages[!vapply(
   required_packages,
   requireNamespace,
@@ -160,10 +162,12 @@ missing_packages <- required_packages[!vapply(
   quietly = TRUE
 )]
 
+# Install only the missing packages to keep setup idempotent.
 if (length(missing_packages) > 0) {
   install.packages(missing_packages, repos = "https://cloud.r-project.org")
 }
 
+# Attach packages for use in the remainder of the report.
 invisible(lapply(required_packages, library, character.only = TRUE))
 
 ```
@@ -171,8 +175,10 @@ invisible(lapply(required_packages, library, character.only = TRUE))
 ### Data Preparation
 
 ```{r}
+# Load the built-in demonstration dataset from MatchIt.
 data("lalonde", package = "MatchIt")
 
+# Standardize variable types and create a single outcome alias used throughout.
 dat <- lalonde |>
   mutate(
     treat = as.integer(treat),
@@ -181,10 +187,12 @@ dat <- lalonde |>
     nodegree = factor(nodegree, levels = c(0, 1), labels = c("has_degree", "no_degree"))
   )
 
+# Store the adjustment set in one place for reusable reporting and checks.
 design_covariates <- c(
   "age", "educ", "race", "married", "nodegree", "re74", "re75"
 )
 
+# Quick schema check for treatment, outcome, and all design covariates.
 dat |>
   select(treat, outcome, all_of(design_covariates)) |>
   glimpse()
@@ -197,6 +205,7 @@ dat |>
 The first step is to inspect the raw treated and untreated groups before any adjustment is attempted. This descriptive comparison does not by itself establish whether the design is usable, but it does show whether the untreated group looks remotely plausible as a stand-in for the treated group. In the `lalonde` data, that initial comparison already suggests a problem: the groups differ on several pre-treatment characteristics that are closely related to later earnings, especially marital status, race, and prior labour-market attachment [@ho2007matching; @ho2011matchit].
 
 ```{r}
+# Summarize baseline group differences before any adjustment is applied.
 pre_match_summary <- dat |>
   group_by(treat) |>
   summarise(
@@ -227,6 +236,7 @@ The descriptive table is useful because it makes the substantive differences eas
 `MatchIt` can be used with `method = NULL` to create a design object without yet changing the sample. That is useful because it creates a baseline against which the later exact matching, CEM, and entropy balancing results can be judged [@ho2011matchit]. The companion argument `un = TRUE` means "show the unadjusted balance", so the diagnostics reported here describe the raw sample rather than a matched or weighted version of it. Later in the report, the same functions will be able to display both unadjusted and adjusted balance, making it easier to see whether the design has genuinely improved.
 
 ```{r}
+# Build an unadjusted MatchIt object as the baseline design benchmark.
 m_out0 <- matchit(
   treat ~ age + educ + race + married + nodegree + re74 + re75,
   data = dat,
@@ -248,6 +258,7 @@ The `summary(m_out0, un = TRUE)` output gives a detailed baseline diagnostic. Th
 For binary indicators, the reported means are proportions rather than arithmetic means. So if `Means Treated` for `marriedmarried` is about `0.19`, that means roughly 19 percent of the treated group is married. The `Sample Sizes` block reports how many units are in the data before and after adjustment; because this object is still unadjusted, all units remain in the sample. This output is helpful when a reader wants the full set of balance statistics for each covariate.
 
 ```{r}
+# Produce a compact cobalt balance table for unadjusted diagnostics.
 unadjusted_balance <- bal.tab(
   m_out0,
   un = TRUE,
@@ -269,6 +280,7 @@ The `bal.tab()` output from `cobalt` presents the same underlying idea in a more
 This table is especially useful for a quick audit. It makes clear that most included covariates exceed the chosen imbalance threshold before any design work is done.
 
 ```{r fig.height=5.5}
+# Visualize absolute standardized differences against the 0.1 threshold.
 love.plot(
   m_out0,
   stats = "mean.diffs",
@@ -294,6 +306,7 @@ That tradeoff is visible in the `lalonde` example. Exact matching on the full de
 ### R Implementation with `MatchIt`
 
 ```{r}
+# Fit exact matching on a reduced discrete covariate set.
 m_exact <- matchit(
   treat ~ race + married + nodegree + educ,
   data = dat,
@@ -303,6 +316,7 @@ m_exact <- matchit(
 
 matched_exact <- match.data(m_exact)
 
+# Report sample retention and subclass count after exact matching.
 exact_retention <- tibble(
   metric = c(
     "Treated units in full sample",
@@ -330,10 +344,12 @@ This specification retains most treated cases while making the exact constraints
 The first diagnostic below shows what exact matching does to the covariates that were explicitly included in the match. The second diagnostic uses `cobalt` to check both the exact-matched covariates and the omitted pre-treatment covariates `age`, `re74`, and `re75`, which matter substantively even though they were not part of the exact constraints.
 
 ```{r}
+# Full MatchIt diagnostic for exact matching.
 summary(m_exact, un = TRUE)
 ```
 
 ```{r}
+# Evaluate exact-match balance, including omitted continuous diagnostics.
 exact_balance <- bal.tab(
   m_exact,
   data = dat,
@@ -348,6 +364,7 @@ exact_balance
 ```
 
 ```{r fig.height=5.5}
+# Plot exact-match imbalance before and after adjustment.
 love.plot(
   m_exact,
   data = dat,
@@ -365,8 +382,10 @@ The diagnostics show the defining strength and weakness of exact matching. The i
 ### Effect Estimation After Exact Matching
 
 ```{r}
+# Estimate the ATT using match weights from the exact-matched sample.
 fit_exact <- lm(outcome ~ treat, data = matched_exact, weights = weights)
 
+# Extract and format the treatment effect for the summary table.
 exact_effect <- {
   exact_coef <- coef(summary(fit_exact))["treat", ]
   tibble(
@@ -613,6 +632,7 @@ That discipline matters because weighting preserves rows more easily than it pre
 ### R Implementation
 
 ```{r}
+# Compare default entropy balancing against a tuned second-moment variant.
 w_ebal_default <- weightit(
   treat ~ age + educ + race + married + nodegree + re74 + re75,
   data = dat,
@@ -628,9 +648,11 @@ w_ebal_moments <- weightit(
   moments = c(age = 2, re74 = 2, re75 = 2)
 )
 
+# Cache model summaries used for ESS and weight diagnostics.
 ebal_default_summary <- summary(w_ebal_default)
 ebal_moments_summary <- summary(w_ebal_moments)
 
+# Check mean and selected squared-term balance under each specification.
 ebal_default_tuning_balance <- bal.tab(
   w_ebal_default,
   un = TRUE,
@@ -645,8 +667,10 @@ ebal_moments_tuning_balance <- bal.tab(
   addl = ~ I(age^2) + I(re74^2) + I(re75^2)
 )
 
+# Define the squared terms tracked in the tuning comparison table.
 second_moment_terms <- c("I(age^2)", "I(re74^2)", "I(re75^2)")
 
+# Summarize the balance-versus-information tradeoff across specifications.
 ebal_tuning_comparison <- tibble(
   specification = c(
     "Default means only",
@@ -679,13 +703,16 @@ The `WeightIt` documentation exposes several meaningful tuning arguments for ent
 The table above shows one concrete tuning exercise. The default specification balances the included covariate means exactly, which is what entropy balancing guarantees by default for a binary `ATT` analysis. The tuned specification adds second-moment constraints for the three most substantively important continuous covariates in this report: `age`, `re74`, and `re75`. That additional tuning nearly eliminates imbalance in the selected squared terms, but it does so by sharply reducing the effective control sample size and inflating the largest control weights. For that reason, the remainder of the report keeps the default entropy-balancing design as the main specification. It already achieves exact mean balance, and the more aggressive second-moment design buys relatively little for this teaching example once its information cost is taken into account.
 
 ```{r}
+# Set the default entropy-balancing design as the final weighting specification.
 w_ebal <- w_ebal_default
 
 ebal_summary <- ebal_default_summary
 
+# Attach analysis weights to the working dataset for diagnostics.
 dat_ebal <- dat |>
   mutate(ebal_weight = w_ebal$weights)
 
+# Report retained sample sizes, ESS, and weight dispersion indicators.
 ebal_weight_diagnostics <- tibble(
   metric = c(
     "Treated units",
@@ -714,10 +741,12 @@ The final implementation retained for the report is therefore still simple, but 
 ### Post-Weighting Diagnostics
 
 ```{r}
+# Print the WeightIt summary for the retained entropy-balancing design.
 ebal_summary
 ```
 
 ```{r}
+# Generate compact post-weighting balance diagnostics.
 ebal_balance <- bal.tab(
   w_ebal,
   un = TRUE,
@@ -730,6 +759,7 @@ ebal_balance
 ```
 
 ```{r fig.height=5.5}
+# Plot weighted absolute standardized differences after entropy balancing.
 love.plot(
   w_ebal,
   stats = "mean.diffs",
@@ -741,6 +771,7 @@ love.plot(
 ```
 
 ```{r fig.height=4.8}
+# Inspect the weight distribution and implied information concentration.
 plot(ebal_summary)
 ```
 
@@ -751,12 +782,14 @@ The package's own weight-distribution plot makes that tradeoff easier to interpr
 ### Effect Estimation After Weighting
 
 ```{r}
+# Fit ATT outcome model with variance estimation that accounts for weight fitting.
 fit_ebal <- lm_weightit(
   outcome ~ treat,
   data = dat,
   weightit = w_ebal
 )
 
+# Extract and format the entropy-balancing treatment effect.
 ebal_effect <- {
   ebal_coef <- coef(summary(fit_ebal))["treat", ]
   tibble(
@@ -790,6 +823,7 @@ The `MatchIt` documentation also emphasizes that support restrictions and other 
 The earlier sections evaluated each method on its own terms. The next step is to compare them directly against the same design benchmarks: how far they reduce observed imbalance, how much of the treated population they preserve, and what they imply about the population represented by the final `ATT`. This matters because the methods do not fail in the same way. Exact matching risks leaving important continuous covariates outside the design, CEM risks narrowing the treated population through pruning, and entropy balancing risks concentrating too much influence on a limited subset of controls.
 
 ```{r}
+# Compare worst-case imbalance and threshold exceedances across all methods.
 comparison_balance <- tibble(
   method = c(
     "Unadjusted sample",
@@ -824,6 +858,7 @@ The custom CEM design improves on that compromise. It brings the largest adjuste
 Observed balance is only half of the design problem. The other half is how much information remains once that balance has been achieved and whether the final design still corresponds to the policy-relevant treated population.
 
 ```{r}
+# Compare retention and information remaining under each design.
 comparison_information <- tibble(
   method = c(
     "Exact matching",
@@ -931,8 +966,10 @@ This report does not use propensity score matching as the main teaching route fo
 The final comparison should place the adjusted outcome estimates beside the design costs needed to obtain them. A table that reports only the point estimates would hide the core lesson of the report: the methods differ not just in the size of the estimated `ATT`, but in how much pruning or weight concentration sits behind that estimate.
 
 ```{r}
+# Helper to extract a consistent treatment-effect row from model summaries.
 extract_treat_effect <- function(model, method) {
   coef_table <- coef(summary(model))
+  # Robustly locate the p-value column across lm/lm_weightit summary formats.
   p_value_col <- grep("^Pr\\(", colnames(coef_table), value = TRUE)
 
   if (length(p_value_col) == 0) {
@@ -943,6 +980,7 @@ extract_treat_effect <- function(model, method) {
 
   treat_row <- coef_table["treat", ]
 
+  # Return one standardized row for downstream comparison tables.
   tibble(
     method = method,
     estimate = unname(treat_row["Estimate"]),
@@ -953,6 +991,7 @@ extract_treat_effect <- function(model, method) {
   )
 }
 
+# Bind method-specific effect rows and append design-context metadata.
 treatment_effect_summary <- bind_rows(
   extract_treat_effect(fit_exact, "Exact matching"),
   extract_treat_effect(fit_cem, "Coarsened exact matching"),
@@ -1050,6 +1089,9 @@ A matching method that temporarily bins covariates into substantively meaningful
 `Confounding`  
 Bias that arises when the estimated effect of treatment is mixed together with the effects of pre-existing differences between groups because some factors influence both treatment assignment and the outcome.
 
+`Confounder`  
+A variable that influences both treatment assignment and the outcome, creating bias if it is not adequately accounted for in the design or analysis.
+
 `Counterfactual`  
 The outcome that would have been observed for the same unit under the treatment state that did not occur.
 
@@ -1070,6 +1112,9 @@ A method that retains only units that can be matched exactly on the selected cov
 
 `Effective sample size`  
 A summary of how much information remains after weighting, accounting for the uneven distribution of weights.
+
+`Empirical cumulative distribution function (eCDF)`  
+A distribution-based diagnostic that compares treated and comparison groups across the full covariate distribution rather than only their means.
 
 `Difference-in-differences`  
 A design that estimates an intervention effect by comparing how outcomes changed over time in a treated group relative to a comparison group.
@@ -1094,6 +1139,9 @@ Summary features of a distribution, usually the mean and sometimes the variance 
 
 `Natural experiment`  
 A setting where an external rule, shock, or administrative process creates treatment variation that is plausibly closer to random assignment.
+
+`No unmeasured confounding`  
+The assumption that all important common causes of treatment assignment and outcomes are observed and conditioned on in the design.
 
 `Outcome model`  
 The statistical model used after the design stage to estimate the treatment effect.
@@ -1137,12 +1185,16 @@ A subgroup of units defined by the matching variables and used for within-group 
 `SUTVA`  
 The assumption that one unit's treatment does not affect another unit's outcome and that the treatment label does not hide multiple versions of the intervention.
 
+`Variance ratio`  
+A balance diagnostic for continuous covariates defined as treated-group variance divided by comparison-group variance; values near 1 generally indicate better dispersion balance.
+
 `Weighting`  
 An adjustment approach that assigns units analytic weights so one group better represents a target population or matches another group on observed covariates.
 
 ### Session Information
 
 ```{r}
+# Capture the R session state for reproducibility.
 sessionInfo()
 ```
 
