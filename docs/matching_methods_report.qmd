@@ -9,6 +9,11 @@ format:
     toc: true
     toc-depth: 3
     number-sections: true
+    code-links:
+      - text: Full Code
+        href: matching_methods_report_full_code.html
+      - text: QA Log (MatchIt vs WeightIt)
+        href: matching_methods_report_qa_log.html
 execute:
   echo: true
   eval: true
@@ -18,11 +23,11 @@ execute:
 
 ## Introduction
 
-This report examines three design-stage adjustment methods for causal inference using observational data: exact matching, which keeps only treated and untreated units that are identical on selected background variables; coarsened exact matching (CEM), which first groups variables into broader categories before matching; and entropy balancing, which reweights units so the groups align on selected covariate summaries. They are grouped together not because they are interchangeable, but because each forces the evaluator to answer the same design questions early: what causal effect is being targeted, which pre-treatment covariates^[Covariates are background characteristics measured before treatment that are used to describe units and improve comparability.] belong in the design, whether treated and untreated units overlap enough to be compared, and how much information is lost when comparability is improved.^[Here, balance means how similar the groups are on observed pre-treatment characteristics, while overlap means whether the data contain genuinely comparable treated and untreated cases in the first place.] [@ho2011matchit; @matchit_getting_started]. That makes them useful both as teaching devices and as practical stress tests of whether an observational comparison is defensible.
+This report examines three design-stage adjustment methods for causal inference using observational data: exact matching, which keeps only treated and untreated units that are identical on selected background variables; coarsened exact matching (CEM), which first groups variables into broader categories before matching; and entropy balancing, which reweights units so the groups align on selected covariate summaries. They are grouped together not because they are interchangeable, but because each forces the evaluator to answer the same design questions early: what causal effect is being targeted, which pre-treatment covariates^[Covariates are background characteristics measured before treatment that are used to describe units and improve comparability.] belong in the design, whether treated and untreated units overlap enough to be compared, and how much information is lost when comparability is improved.^[Here, balance means how similar the groups are on observed pre-treatment characteristics, while overlap means whether the data contain genuinely comparable treated and untreated cases in the first place.] [@ho2011matchit]. That makes them useful both as teaching devices and as practical stress tests of whether an observational comparison is defensible.
 
-The methods should also be assessed critically rather than taught as a menu of equivalent options. Exact matching is highly transparent, but it often becomes unusable once the covariate set contains several variables or any meaningful granularity. CEM is usually more workable because it relaxes exact matching through binning, but the analyst's coarsening choices can materially change who is retained and what "similarity" means. Entropy balancing can exactly balance the included covariate moments, but when overlap is limited the resulting weights may become highly variable and reduce effective sample size, so balance tables should be interpreted alongside overlap and weight-dispersion diagnostics.^[In plain English, the method can make the treated and untreated groups look very similar on paper, but only by giving a lot of influence to a small number of cases. If the groups were not really comparable to begin with, those large weights can make the results fragile and easy to distort, even when the balance statistics look good.] [@hainmueller2012entropy; @matchit_matching_methods]. The point of comparing these methods is therefore to make those tradeoffs explicit, not to identify a universal best practice.
+The methods should also be assessed critically rather than taught as a menu of equivalent options. Exact matching is highly transparent, but it often becomes unusable once the covariate set contains several variables or any meaningful granularity. CEM is usually more workable because it relaxes exact matching through binning, but the analyst's coarsening choices can materially change who is retained and what "similarity" means. Entropy balancing can exactly balance the included covariate moments, but when overlap is limited the resulting weights may become highly variable and reduce effective sample size, so balance tables should be interpreted alongside overlap and weight-dispersion diagnostics.^[In plain English, the method can make the treated and untreated groups look very similar on paper, but only by giving a lot of influence to a small number of cases. If the groups were not really comparable to begin with, those large weights can make the results fragile and easy to distort, even when the balance statistics look good.] [@hainmueller2012entropy; @ho2011matchit]. The point of comparing these methods is therefore to make those tradeoffs explicit, not to identify a universal best practice.
 
-The report does not use propensity score matching as the main teaching example. That omission is deliberate. Propensity scores remain widely used, but in an introductory evaluation setting they can compress the design problem into a single modeled quantity^[A propensity score is the estimated probability of receiving treatment given the observed background variables. In plain English, it turns many characteristics into one score, which can make the design easier to run but harder to inspect.] and can distract attention from whether specific covariates are actually balanced. For evaluator training, the selected methods better expose the relationship between covariate balance, sample retention, and the target population [@matchit_matching_methods; @govuk_qed_slides].
+The report does not use propensity score matching as the main teaching example. That omission is deliberate. Propensity scores remain widely used, but in an introductory evaluation setting they can compress the design problem into a single modeled quantity^[A propensity score is the estimated probability of receiving treatment given the observed background variables. In plain English, it turns many characteristics into one score, which can make the design easier to run but harder to inspect.] and can distract attention from whether specific covariates are actually balanced. For evaluator training, the selected methods better expose the relationship between covariate balance, sample retention, and the target population [@ho2011matchit; @govuk_qed_slides].
 
 The report is written for an evaluation training context, with particular relevance for programme and policy evaluation in government. That framing matters. The Evaluation Task Force presents matching as one option within a wider quasi-experimental toolkit^[A quasi-experimental design estimates causal effects without random assignment, usually by exploiting timing, thresholds, policy rules, or carefully constructed comparison groups.] that also includes difference-in-differences, regression discontinuity, synthetic control, and interrupted time-series analysis^[In plain English: difference-in-differences compares changes over time, regression discontinuity uses an eligibility cutoff, synthetic control builds a weighted comparison case, and interrupted time-series tracks outcomes before and after a change.] [@govuk_evaluation_academy_resources; @govuk_qed_slides]. A good methods report should therefore do more than explain how matching works; it should also explain when matching is the strongest available design, when it is a second-best compromise, and when it should be rejected in favour of a more credible alternative.
 
@@ -36,9 +41,9 @@ But the practical value of these methods depends on using them skeptically. They
 
 ### Define the Estimand Before Adjustment
 
-Any adjustment strategy should begin with a clear statement of the target estimand^[The estimand is the exact causal quantity the analysis is trying to learn.] rather than with a preferred algorithm. In practice, that usually means deciding whether the analysis targets the average treatment effect (`ATE`), the average treatment effect on the treated (`ATT`), or the average treatment effect on the controls (`ATC`). This choice is not a technical afterthought. It affects which group is treated as focal, how weights are constructed, what kind of mismatch counts as a problem, and which population the final estimate describes [@matchit_getting_started; @matchit_matching_methods].
+Any adjustment strategy should begin with a clear statement of the target estimand^[The estimand is the exact causal quantity the analysis is trying to learn.] rather than with a preferred algorithm. In practice, that usually means deciding whether the analysis targets the average treatment effect (`ATE`), the average treatment effect on the treated (`ATT`), or the average treatment effect on the controls (`ATC`). This choice is not a technical afterthought. It affects which group is treated as focal, how weights are constructed, what kind of mismatch counts as a problem, and which population the final estimate describes [@ho2011matchit].
 
-This is also where many weak applications begin to drift [@matchit_getting_started]. Analysts sometimes choose a method first and only later describe the target population. That reverses the logic of causal design. If the policy question concerns current participants, an `ATT`-oriented design may be appropriate; if it concerns a universal rollout, an `ATE` may matter more. Without that decision, apparently good balance can still be answering the wrong question.
+This is also where many weak applications begin to drift [@ho2011matchit]. Analysts sometimes choose a method first and only later describe the target population. That reverses the logic of causal design. If the policy question concerns current participants, an `ATT`-oriented design may be appropriate; if it concerns a universal rollout, an `ATE` may matter more. Without that decision, apparently good balance can still be answering the wrong question.
 
 ### Matching and Weighting as Design-Stage Tools
 
@@ -48,7 +53,7 @@ That said, design-stage adjustment should not be oversold. These methods can onl
 
 ### Balance and Precision Must Be Considered Together
 
-A successful design is not defined by covariate balance alone. Very small standardized mean differences^[A standardized mean difference is a way of expressing how far apart the treated and untreated groups are on a covariate after putting them on a common scale. Smaller values usually mean better balance, but they do not tell you everything that matters.] can coexist with heavy pruning^[Pruning means dropping units that are too dissimilar to compare credibly after matching or weighting.], a very small effective sample size^[Effective sample size is the amount of usable information left after matching or weighting. If a few cases receive very large weights, the analysis may behave as if it were based on far fewer observations than the raw sample size suggests.], or extreme weights that make estimates unstable. Better balance can therefore be purchased at the price of noisier estimates and a narrower target population [@matchit_getting_started; @hainmueller2012entropy].
+A successful design is not defined by covariate balance alone. Very small standardized mean differences^[A standardized mean difference is a way of expressing how far apart the treated and untreated groups are on a covariate after putting them on a common scale. Smaller values usually mean better balance, but they do not tell you everything that matters.] can coexist with heavy pruning^[Pruning means dropping units that are too dissimilar to compare credibly after matching or weighting.], a very small effective sample size^[Effective sample size is the amount of usable information left after matching or weighting. If a few cases receive very large weights, the analysis may behave as if it were based on far fewer observations than the raw sample size suggests.], or extreme weights that make estimates unstable. Better balance can therefore be purchased at the price of noisier estimates and a narrower target population [@ho2011matchit; @hainmueller2012entropy].
 
 For that reason, diagnostics should report at least four things together: covariate balance, overlap/common support^[Overlap or common support means the treated and untreated groups share enough of the same covariate range to support a direct comparison. If treated cases are concentrated in parts of the data where no similar controls exist, the analysis is extrapolating rather than comparing like with like.], retained sample or effective sample size, and the implied target population. Treating any one of those metrics as sufficient is a methodological mistake.
 
@@ -64,7 +69,7 @@ That ranking matters because matching only addresses bias from observed differen
 
 The starting point for causal inference is the potential outcomes framework. For each unit, we imagine one outcome under treatment and another under no treatment^[A potential outcome is the result we would see for the same unit under one specific treatment state. The difficulty is that we never observe both states for the same person, place, or organisation.]. The causal effect for that unit is the difference between those two potential outcomes. The central problem is that only one of them is ever observed, so the other is counterfactual^[Counterfactual just means "what would have happened instead." Causal inference is difficult because that missing outcome can never be observed directly.] [@cunningham2021mixtape]. All matching and weighting methods are attempts to build a more credible stand-in for that missing outcome.
 
-This framework also makes the estimand explicit. `ATE`, `ATT`, and `ATC` are not interchangeable labels but answers to different policy questions. They refer to different target populations, imply different weighting or matching priorities, and can produce different substantive conclusions. A design-stage adjustment method is therefore only meaningful once the report has stated which estimand it is trying to recover [@cunningham2021mixtape; @matchit_getting_started].
+This framework also makes the estimand explicit. `ATE`, `ATT`, and `ATC` are not interchangeable labels but answers to different policy questions. They refer to different target populations, imply different weighting or matching priorities, and can produce different substantive conclusions. A design-stage adjustment method is therefore only meaningful once the report has stated which estimand it is trying to recover [@cunningham2021mixtape; @ho2011matchit].
 
 ### Why Adjustment Is Needed
 
@@ -78,7 +83,7 @@ For adjusted comparisons to support causal interpretation, several assumptions m
 
 - `Consistency` means that the observed outcome under the treatment actually received corresponds to the relevant potential outcome. This requires treatment to be defined clearly enough that "receiving treatment" has a coherent substantive meaning [@cunningham2021mixtape]. If one site delivers a light-touch service and another delivers an intensive intervention under the same label, the causal contrast is already blurred.
 - `Exchangeability`, often framed as no unmeasured confounding^[In plain English, this means that once you account for the chosen background variables, the treated and untreated groups are comparable enough that treatment status is not just a marker for pre-existing advantage or disadvantage.], means that after conditioning on the selected pre-treatment covariates, treatment assignment is as good as independent of the potential outcomes. This is usually the hardest assumption and cannot be verified from balance tables alone [@cunningham2021mixtape].
-- `Positivity`, or overlap^[In plain English, each important type of case needs at least some treated and some untreated examples. If all severe cases are treated and all mild cases are untreated, the design has no direct basis for comparison.], means that units with a given covariate profile must have a non-zero chance of appearing in each treatment condition. If some kinds of units appear only among the treated or only among the controls, no matching or weighting procedure can create a credible comparison for those cases [@matchit_getting_started].
+- `Positivity`, or overlap^[In plain English, each important type of case needs at least some treated and some untreated examples. If all severe cases are treated and all mild cases are untreated, the design has no direct basis for comparison.], means that units with a given covariate profile must have a non-zero chance of appearing in each treatment condition. If some kinds of units appear only among the treated or only among the controls, no matching or weighting procedure can create a credible comparison for those cases [@ho2011matchit].
 - `SUTVA` (stable unit treatment value assumption)^[In plain English, one unit's treatment should not change another unit's outcome, and "the treatment" should not hide several substantively different versions of the intervention.] is commonly used to refer to the requirement that one unit's treatment status does not alter another unit's outcome, and that there are not multiple hidden versions of treatment bundled into the same label. In evaluation settings, spillovers and displacement^[Spillovers occur when one unit's treatment affects other units who were not supposed to be treated directly. Displacement occurs when the benefits or harms of an intervention are shifted from treated units onto others, rather than creating a net new effect.] or inconsistent programme delivery can threaten this assumption [@cunningham2021mixtape].
 
 Taken together, these assumptions clarify what matching and weighting can and cannot do. They can improve comparability on observed covariates and make overlap problems visible, but they cannot rescue a design that lacks a defensible treatment definition, suffers from interference, or omits key confounders. A credible matching exercise therefore depends as much on substantive knowledge of the programme and assignment process as on statistical implementation.
@@ -93,7 +98,7 @@ This perspective is especially helpful for exact matching and CEM. Exact matchin
 
 The main limitation of subclassification is that it becomes harder to implement as the number of covariates grows. Each additional covariate increases the number of possible strata, and with several continuous or finely coded variables the data quickly fragment into many sparse cells. In practice, evaluators then encounter strata with only treated units, only controls, or too few observations to support stable within-stratum comparisons [@cunningham2021subclassification].
 
-This is the curse of dimensionality in design form. It weakens common support, increases sample loss, and can shift the target population away from the one originally intended. Exact matching is therefore most defensible when the adjustment set is limited, clearly justified, and measured at a level of detail that still leaves overlap. Coarsening can relieve the problem by collapsing continuous variables into broader bins, but that creates a visible tradeoff: coarser bins improve retention while allowing less precise similarity within strata. There is no purely technical way around that tradeoff; it has to be managed transparently [@iacus2012cem; @matchit_matching_methods].
+This is the curse of dimensionality in design form. It weakens common support, increases sample loss, and can shift the target population away from the one originally intended. Exact matching is therefore most defensible when the adjustment set is limited, clearly justified, and measured at a level of detail that still leaves overlap. Coarsening can relieve the problem by collapsing continuous variables into broader bins, but that creates a visible tradeoff: coarser bins improve retention while allowing less precise similarity within strata. There is no purely technical way around that tradeoff; it has to be managed transparently [@iacus2012cem; @ho2011matchit].
 
 ### Matching Versus Weighting
 
@@ -119,7 +124,7 @@ The same caution applies when treatment is poorly defined, interference is likel
 
 ### Example Dataset
 
-For the first worked example, this report uses `lalonde`, the demonstration dataset distributed with `MatchIt`. The data combine participants in the National Supported Work training programme with an observational comparison group and are widely used to teach matching because the treated and untreated groups are visibly different before adjustment [@ho2011matchit; @matchit_getting_started].
+For the first worked example, this report uses `lalonde`, the demonstration dataset distributed with `MatchIt`. The data combine participants in the National Supported Work training programme with an observational comparison group and are widely used to teach matching because the treated and untreated groups are visibly different before adjustment [@ho2011matchit].
 
 In this application:
 
@@ -156,7 +161,7 @@ missing_packages <- required_packages[!vapply(
 )]
 
 if (length(missing_packages) > 0) {
-  install.packages(missing_packages)
+  install.packages(missing_packages, repos = "https://cloud.r-project.org")
 }
 
 invisible(lapply(required_packages, library, character.only = TRUE))
@@ -189,7 +194,7 @@ dat |>
 
 ### Descriptive Comparison
 
-The first step is to inspect the raw treated and untreated groups before any adjustment is attempted. This descriptive comparison does not by itself establish whether the design is usable, but it does show whether the untreated group looks remotely plausible as a stand-in for the treated group. In the `lalonde` data, that initial comparison already suggests a problem: the groups differ on several pre-treatment characteristics that are closely related to later earnings, especially marital status, race, and prior labour-market attachment [@ho2007matching; @matchit_getting_started].
+The first step is to inspect the raw treated and untreated groups before any adjustment is attempted. This descriptive comparison does not by itself establish whether the design is usable, but it does show whether the untreated group looks remotely plausible as a stand-in for the treated group. In the `lalonde` data, that initial comparison already suggests a problem: the groups differ on several pre-treatment characteristics that are closely related to later earnings, especially marital status, race, and prior labour-market attachment [@ho2007matching; @ho2011matchit].
 
 ```{r}
 pre_match_summary <- dat |>
@@ -219,7 +224,7 @@ The descriptive table is useful because it makes the substantive differences eas
 
 ### Balance Diagnostics Before Adjustment
 
-`MatchIt` can be used with `method = NULL` to create a design object without yet changing the sample. That is useful because it creates a baseline against which the later exact matching, CEM, and entropy balancing results can be judged [@matchit_getting_started]. The companion argument `un = TRUE` means "show the unadjusted balance", so the diagnostics reported here describe the raw sample rather than a matched or weighted version of it. Later in the report, the same functions will be able to display both unadjusted and adjusted balance, making it easier to see whether the design has genuinely improved.
+`MatchIt` can be used with `method = NULL` to create a design object without yet changing the sample. That is useful because it creates a baseline against which the later exact matching, CEM, and entropy balancing results can be judged [@ho2011matchit]. The companion argument `un = TRUE` means "show the unadjusted balance", so the diagnostics reported here describe the raw sample rather than a matched or weighted version of it. Later in the report, the same functions will be able to display both unadjusted and adjusted balance, making it easier to see whether the design has genuinely improved.
 
 ```{r}
 m_out0 <- matchit(
@@ -282,182 +287,740 @@ Taken together, the descriptive table, the `summary()` output, the `bal.tab()` a
 
 ### Method Overview
 
-Explain exact matching as stratum matching on the raw covariates. Note that exact matching removes imbalance on the included covariates within retained strata but can discard many units and shift the target population when support is limited [@matchit_matching_methods; @matchit_method_exact].
+Exact matching groups units into strata that are identical on the selected covariates and only compares treated and control units within those strata [@ho2011matchit]. Its main attraction is transparency: the analyst can say exactly which characteristics must line up before a comparison is allowed. Its main limitation is feasibility. When the covariate set includes several variables, especially continuous ones, the data quickly fragment into many sparse cells and units without exact counterparts are lost.
+
+That tradeoff is visible in the `lalonde` example. Exact matching on the full design set would be too restrictive because continuous prior earnings would create many unique covariate profiles. For that reason, this worked example uses exact matching on a smaller set of substantively central and mostly discrete covariates: `race`, `married`, `nodegree`, and `educ`. The remaining pre-treatment variables, especially age and lagged earnings, are then treated as diagnostics rather than exact constraints. This is a realistic evaluator workflow: exact matching can be useful, but only if the analyst is explicit about which covariates are being matched exactly and which are merely being checked afterward.
 
 ### R Implementation with `MatchIt`
 
 ```{r}
-# m_exact <- matchit(
-#   treat ~ sex + race + education + region,
-#   data = dat,
-#   method = "exact",
-#   estimand = "ATT"
-# )
-#
-# summary(m_exact)
-# matched_exact <- match.data(m_exact)
+m_exact <- matchit(
+  treat ~ race + married + nodegree + educ,
+  data = dat,
+  method = "exact",
+  estimand = "ATT"
+)
+
+matched_exact <- match.data(m_exact)
+
+exact_retention <- tibble(
+  metric = c(
+    "Treated units in full sample",
+    "Treated units retained",
+    "Control units in full sample",
+    "Control units retained",
+    "Matched subclasses"
+  ),
+  value = c(
+    sum(dat$treat == 1),
+    sum(matched_exact$treat == 1),
+    sum(dat$treat == 0),
+    sum(matched_exact$treat == 0),
+    n_distinct(matched_exact$subclass)
+  )
+)
+
+exact_retention
 ```
+
+This specification retains most treated cases while making the exact constraints auditable. In this run, 183 of the 185 treated units are retained, along with 284 controls, spread across 35 exact-match subclasses. That is a relatively favourable result for exact matching, but it still illustrates an important point: even a modest increase in the number or granularity of matched covariates can sharply reduce overlap and sample retention.
 
 ### Post-Match Diagnostics
 
-Assess covariate balance, the number of matched subclasses, and the number of units retained after exact matching.
+The first diagnostic below shows what exact matching does to the covariates that were explicitly included in the match. The second diagnostic uses `cobalt` to check both the exact-matched covariates and the omitted pre-treatment covariates `age`, `re74`, and `re75`, which matter substantively even though they were not part of the exact constraints.
 
 ```{r}
-# bal.tab(m_exact, un = TRUE)
-# love.plot(m_exact, stats = "mean.diffs")
+summary(m_exact, un = TRUE)
 ```
+
+```{r}
+exact_balance <- bal.tab(
+  m_exact,
+  data = dat,
+  un = TRUE,
+  binary = "std",
+  disp.v.ratio = TRUE,
+  m.threshold = 0.1,
+  addl = ~ age + re74 + re75
+)
+
+exact_balance
+```
+
+```{r fig.height=5.5}
+love.plot(
+  m_exact,
+  data = dat,
+  stats = "mean.diffs",
+  abs = TRUE,
+  binary = "std",
+  thresholds = c(m = 0.1),
+  var.order = "unadjusted",
+  addl = ~ age + re74 + re75
+)
+```
+
+The diagnostics show the defining strength and weakness of exact matching. The included covariates are balanced exactly by construction: their matched standardized mean differences are zero. Balance also improves on `age` and `re75`, even though those variables were not included directly in the match. But `re74` remains above the `0.1` rule-of-thumb threshold after matching, which is a reminder that exact matching only guarantees balance on the variables used to define the strata. If important continuous predictors are omitted from those constraints, they can remain meaningfully imbalanced even after a seemingly successful exact match.
 
 ### Effect Estimation After Exact Matching
 
 ```{r}
-# fit_exact <- lm(outcome ~ treat, data = matched_exact, weights = weights)
-# summary(fit_exact)
+fit_exact <- lm(outcome ~ treat, data = matched_exact, weights = weights)
+
+exact_effect <- {
+  exact_coef <- coef(summary(fit_exact))["treat", ]
+  tibble(
+    method = "Exact matching",
+    estimate = unname(exact_coef["Estimate"]),
+    std_error = unname(exact_coef["Std. Error"]),
+    p_value = unname(exact_coef["Pr(>|t|)"])
+  )
+} |>
+  mutate(across(c(estimate, std_error, p_value), ~ round(.x, 3)))
+
+exact_effect
 ```
+
+The outcome model is estimated in the matched sample using the matching weights returned by `MatchIt`. In this example, exact matching produces an estimated positive `ATT`, but the estimate is imprecise. That is not surprising. Exact matching has improved transparency and removed imbalance on the constrained covariates, but it has also narrowed the comparison to a subset of the original sample and left at least one substantively important prior-earnings measure (`re74`) imperfectly balanced. The next section therefore turns to coarsened exact matching, which is designed to retain the subclassification logic while making the design more flexible for mixed and continuous covariates.
 
 ## Coarsened Exact Matching
 
 ### Method Overview
 
-Explain how coarsening makes stratum matching feasible for continuous covariates and how cutpoints control the tradeoff between exact balance and sample retention [@iacus2012cem; @matchit_method_cem].
+Coarsened exact matching (CEM) keeps the subclassification logic of exact matching but makes it workable for mixed and continuous covariates by temporarily binning them into broader categories before matching [@iacus2012cem; @ho2011matchit]. Instead of requiring treated and control units to be identical on raw age or raw prior earnings, the analyst requires them to fall into the same substantively chosen ranges. That relaxes the rigidity of exact matching while preserving its main design virtue: the rules that define comparability remain visible and auditable.
+
+This is especially useful in the `lalonde` example because the exact-matching section showed the core problem already. Exact matching produced a transparent design, but it could only do so by matching exactly on a reduced set of mostly discrete covariates and treating age and prior earnings as post-hoc diagnostics. CEM provides a middle ground. It keeps those continuous covariates inside the design itself, but it does so at a level of granularity that still leaves treated and control units in overlapping subclasses.
+
+The practical question is therefore not whether to coarsen, but how aggressively. If the bins are too fine, the design collapses back toward infeasible exact matching and many treated units are lost. If they are too coarse, the matched sample is larger but comparability within subclasses becomes weaker. The workflow below treats the default `MatchIt` coarsening as a baseline, then compares it with a custom specification that uses documented `cutpoints` choices: a fixed number of bins for `educ` and quantile-based bins for `age`, `re74`, and `re75`. That makes the final specification interpretable as a design decision rather than a black-box search routine.
 
 ### R Implementation with `MatchIt`
 
 ```{r}
-# m_cem <- matchit(
-#   treat ~ age + income + bmi + sex,
-#   data = dat,
-#   method = "cem",
-#   cutpoints = list(
-#     age = c(30, 40, 50, 60),
-#     income = c(30000, 50000, 80000),
-#     bmi = c(18.5, 25, 30)
-#   )
-# )
-#
-# summary(m_cem)
-# matched_cem <- match.data(m_cem)
+# Baseline CEM using MatchIt's default coarsening rules.
+m_cem_default <- matchit(
+  treat ~ age + educ + race + married + nodegree + re74 + re75,
+  data = dat,
+  method = "cem",
+  estimand = "ATT"
+)
+
+# Materialize the retained matched sample for summary counts.
+matched_cem_default <- match.data(m_cem_default)
+
+# Custom coarsening that relaxes the default enough to retain more treated units.
+cem_cutpoints <- list(
+  age = "q5",
+  educ = 4,
+  re74 = "q4",
+  re75 = "q4"
+)
+
+# Refit CEM with analyst-specified bins for key numeric covariates.
+m_cem <- matchit(
+  treat ~ age + educ + race + married + nodegree + re74 + re75,
+  data = dat,
+  method = "cem",
+  estimand = "ATT",
+  cutpoints = cem_cutpoints
+)
+
+# Extract the final CEM-adjusted sample used later for estimation.
+matched_cem <- match.data(m_cem)
+
+# Compute balance diagnostics for the default and custom specifications.
+cem_default_balance <- bal.tab(
+  m_cem_default,
+  un = TRUE,
+  binary = "std",
+  disp.v.ratio = TRUE,
+  m.threshold = 0.1
+)
+
+cem_balance <- bal.tab(
+  m_cem,
+  un = TRUE,
+  binary = "std",
+  disp.v.ratio = TRUE,
+  m.threshold = 0.1
+)
+
+# Put retention and worst adjusted imbalance side by side for comparison.
+cem_comparison <- tibble(
+  specification = c("Default CEM", "Documented custom cutpoints"),
+  treated_retained = c(
+    sum(matched_cem_default$treat == 1),
+    sum(matched_cem$treat == 1)
+  ),
+  control_retained = c(
+    sum(matched_cem_default$treat == 0),
+    sum(matched_cem$treat == 0)
+  ),
+  matched_subclasses = c(
+    n_distinct(matched_cem_default$subclass),
+    n_distinct(matched_cem$subclass)
+  ),
+  max_abs_adjusted_smd = c(
+    max(abs(cem_default_balance$Balance$Diff.Adj), na.rm = TRUE),
+    max(abs(cem_balance$Balance$Diff.Adj), na.rm = TRUE)
+  )
+) |>
+  mutate(across(where(is.numeric), ~ round(.x, 3)))
+
+cem_comparison
 ```
+
+The comparison table makes the CEM tradeoff concrete. The default specification produces very strong adjusted balance, but it does so by trimming the treated sample sharply. The custom specification relaxes the coarsening enough to retain more treated units while still keeping every reported adjusted standardized mean difference below `0.1`. Because the target estimand is the `ATT`, that retention result matters substantively: a design that balances perfectly only after excluding a large share of treated cases risks shifting the estimate away from the population the evaluation is supposed to describe.
+
+The next chart shows that retention tradeoff directly for the default and custom specifications.
+
+```{r fig.height=4.8}
+# Build plotting data that separates retained and unmatched units by design.
+cem_retention_plot_data <- bind_rows(
+  tibble(
+    specification = "Default CEM",
+    group = "Treated",
+    status = c("Retained", "Unmatched"),
+    n = c(
+      sum(matched_cem_default$treat == 1),
+      sum(dat$treat == 1) - sum(matched_cem_default$treat == 1)
+    )
+  ),
+  tibble(
+    specification = "Default CEM",
+    group = "Control",
+    status = c("Retained", "Unmatched"),
+    n = c(
+      sum(matched_cem_default$treat == 0),
+      sum(dat$treat == 0) - sum(matched_cem_default$treat == 0)
+    )
+  ),
+  tibble(
+    specification = "Documented custom cutpoints",
+    group = "Treated",
+    status = c("Retained", "Unmatched"),
+    n = c(
+      sum(matched_cem$treat == 1),
+      sum(dat$treat == 1) - sum(matched_cem$treat == 1)
+    )
+  ),
+  tibble(
+    specification = "Documented custom cutpoints",
+    group = "Control",
+    status = c("Retained", "Unmatched"),
+    n = c(
+      sum(matched_cem$treat == 0),
+      sum(dat$treat == 0) - sum(matched_cem$treat == 0)
+    )
+  )
+)
+
+# Visualize the retention tradeoff for treated and control units.
+ggplot(cem_retention_plot_data, aes(x = specification, y = n, fill = status)) +
+  geom_col() +
+  facet_wrap(~ group) +
+  labs(
+    x = NULL,
+    y = "Number of units",
+    fill = NULL
+  )
+```
+
+The chart makes that cost easier to see than a balance table alone. The default CEM design removes a large fraction of treated units, which is hard to justify when the goal is to learn about programme participants. The custom cutpoints still impose meaningful overlap restrictions, but they preserve a broader treated population while keeping observed imbalance within a conventional rule-of-thumb threshold. For an evaluator, that is usually the more defensible compromise: accept slightly less aggressive pruning in exchange for a design that still speaks to the treated group of interest.
 
 ### Post-Match Diagnostics
 
 ```{r}
-# bal.tab(m_cem, un = TRUE)
-# love.plot(m_cem, stats = "mean.diffs")
+# Full MatchIt summary for the default CEM specification.
+summary(m_cem_default, un = TRUE)
 ```
+
+```{r}
+# Full MatchIt summary for the custom CEM specification.
+summary(m_cem, un = TRUE)
+```
+
+```{r fig.height=5.5}
+# Plot absolute standardized mean differences against the 0.1 threshold.
+plot(summary(m_cem, un = TRUE), abs = TRUE, threshold = 0.1)
+```
+
+Beyond standardized mean differences, it is useful to inspect the full covariate distributions before and after CEM. The `MatchIt` plotting methods below show the treated and control distributions in the unmatched sample and in the CEM-adjusted sample for key continuous covariates.
+
+```{r fig.height=4.8, fig.width=7.5}
+# Compare unmatched and matched density overlays for key continuous covariates.
+plot(
+  m_cem,
+  type = "density",
+  interactive = FALSE,
+  which.xs = c("age", "educ", "re74", "re75")
+)
+```
+
+```{r fig.height=4.8, fig.width=7.5}
+# Compare unmatched and matched empirical CDFs for the same covariates.
+plot(
+  m_cem,
+  type = "ecdf",
+  interactive = FALSE,
+  which.xs = c("age", "educ", "re74", "re75")
+)
+```
+
+```{r}
+# Compact cobalt balance table for the final custom CEM design.
+cem_balance
+```
+
+The diagnostics support a clear conclusion. The default CEM design is not invalid, but it is too restrictive for the substantive goal here because it achieves its balance partly by narrowing the treated sample too sharply. The custom specification still improves balance markedly relative to the raw data, keeps every reported adjusted standardized mean difference under `0.1`, and preserves more treated units. On those terms, it is the stronger final design for this report.
+
+Taken together, the standardized-difference plot and the distribution plots provide a stronger diagnostic than either alone: mean differences shrink, and the treated and control distributions also line up more closely on the key continuous covariates. The substantive lesson is not that one universal set of bins exists. It is that coarsening choices are part of the causal design and should be justified in terms of overlap, retained sample, and the target population, not chosen only to optimize a single balance statistic.
 
 ### Effect Estimation After CEM
 
 ```{r}
-# fit_cem <- lm(outcome ~ treat, data = matched_cem, weights = weights)
-# summary(fit_cem)
+# Estimate the ATT in the matched sample using the CEM weights.
+fit_cem <- lm(outcome ~ treat, data = matched_cem, weights = weights)
+
+# Pull the treatment coefficient into a compact reporting table.
+cem_effect <- {
+  cem_coef <- coef(summary(fit_cem))["treat", ]
+  tibble(
+    method = "Coarsened exact matching",
+    estimate = unname(cem_coef["Estimate"]),
+    std_error = unname(cem_coef["Std. Error"]),
+    p_value = unname(cem_coef["Pr(>|t|)"])
+  )
+} |>
+  mutate(across(c(estimate, std_error, p_value), ~ round(.x, 3)))
+
+cem_effect
 ```
+
+The CEM estimate is again positive but imprecise in this worked example. That fits the broader pattern of the report: design-stage adjustment can make the comparison more credible, but it does not eliminate uncertainty and often leaves estimates sensitive to overlap and sample-retention choices. Relative to exact matching, CEM offers a more workable way to keep continuous pre-treatment covariates inside the design rather than treating them only as diagnostics. The next section shifts from matching to weighting and asks whether entropy balancing can improve observed balance while preserving more of the original sample.
 
 ## Entropy Balancing for Weighting
 
 ### Method Overview
 
-Explain entropy balancing as a multivariate reweighting method that directly enforces balance constraints on selected covariate moments. Emphasize that it belongs in the report as a weighting approach rather than a matching method [@hainmueller2012entropy]. Note that the Evaluation Academy quasi-experimental design slides list entropy balancing as the recommended option among the matching-method choices presented to learners [@govuk_qed_slides].
+The previous sections improved comparability by restricting the sample: exact matching discarded units without exact counterparts, and CEM kept that same subclassification logic while relaxing it through coarsening. Entropy balancing moves to a different design strategy. Instead of searching for matched strata, it keeps the full sample and reweights it so that the control group resembles the treated group on the selected pre-treatment covariates. The design principles emphasized in the `MatchIt` documentation still apply: define the estimand first, treat adjustment as a design-stage exercise, and judge the result by balance together with the amount of information left after adjustment [@ho2011matchit].
+
+Entropy balancing^[Here, entropy refers to a measure of how uneven the weights are. The method chooses weights that satisfy the balance constraints while staying as close as possible to the original weighting scheme.] is therefore best understood as a weighting method, not a matching method. In this report it is implemented with `WeightIt` [@greifer2025weightit], whose `method = "ebal"` documentation describes it as choosing weights that minimize negative entropy subject to exact balance constraints [@greifer2025weightit; @hainmueller2012entropy]. For a binary treatment with `estimand = "ATT"`, the treated units remain at weight `1` and the control weights are chosen so that the weighted control group matches the treated group on the included terms [@greifer2025weightit].
+
+That default target is narrower than it can first appear. With the settings used below, entropy balancing imposes exact balance on included covariate means, because `moments = 1`, `int = FALSE`, and no quantile constraints are added unless the analyst requests them explicitly [@greifer2025weightit]. Higher-order moments, interactions, and quantiles can also be balanced, but those are tuning choices rather than automatic properties of the method. This is why entropy balancing can be attractive when exact matching or CEM would discard too much of the treated group while still requiring the same discipline about design quality.
+
+That discipline matters because weighting preserves rows more easily than it preserves information. If good balance is achieved only by assigning very large weights to a small subset of controls, the effective sample size can fall sharply and the estimate can become unstable even when the weighted balance table looks excellent [@ho2011matchit; @greifer2025weightit]. For this reason, the design again targets the `ATT`: the objective is to construct the most credible counterfactual for the programme participants, not to rebalance both groups toward a different target population. The Evaluation Academy slides also present entropy balancing as the recommended option among the matching-related methods shown to learners, which makes it a useful contrast with the more sample-restrictive approaches above [@govuk_qed_slides].
 
 ### R Implementation
 
 ```{r}
-# w_ebal <- weightit(
-#   treat ~ age + income + bmi + sex + education,
-#   data = dat,
-#   method = "ebal",
-#   estimand = "ATT"
-# )
-#
-# summary(w_ebal)
-# dat$w_ebal <- w_ebal$weights
+w_ebal_default <- weightit(
+  treat ~ age + educ + race + married + nodegree + re74 + re75,
+  data = dat,
+  method = "ebal",
+  estimand = "ATT"
+)
+
+w_ebal_moments <- weightit(
+  treat ~ age + educ + race + married + nodegree + re74 + re75,
+  data = dat,
+  method = "ebal",
+  estimand = "ATT",
+  moments = c(age = 2, re74 = 2, re75 = 2)
+)
+
+ebal_default_summary <- summary(w_ebal_default)
+ebal_moments_summary <- summary(w_ebal_moments)
+
+ebal_default_tuning_balance <- bal.tab(
+  w_ebal_default,
+  un = TRUE,
+  binary = "std",
+  addl = ~ I(age^2) + I(re74^2) + I(re75^2)
+)
+
+ebal_moments_tuning_balance <- bal.tab(
+  w_ebal_moments,
+  un = TRUE,
+  binary = "std",
+  addl = ~ I(age^2) + I(re74^2) + I(re75^2)
+)
+
+second_moment_terms <- c("I(age^2)", "I(re74^2)", "I(re75^2)")
+
+ebal_tuning_comparison <- tibble(
+  specification = c(
+    "Default means only",
+    "Tuned squares for age and prior earnings"
+  ),
+  control_ess = c(
+    ebal_default_summary$effective.sample.size["Weighted", "Control"],
+    ebal_moments_summary$effective.sample.size["Weighted", "Control"]
+  ),
+  max_control_weight = c(
+    max(w_ebal_default$weights[dat$treat == 0]),
+    max(w_ebal_moments$weights[dat$treat == 0])
+  ),
+  max_abs_adj_smd_means = c(
+    max(abs(ebal_default_tuning_balance$Balance[setdiff(rownames(ebal_default_tuning_balance$Balance), second_moment_terms), "Diff.Adj"]), na.rm = TRUE),
+    max(abs(ebal_moments_tuning_balance$Balance[setdiff(rownames(ebal_moments_tuning_balance$Balance), second_moment_terms), "Diff.Adj"]), na.rm = TRUE)
+  ),
+  max_abs_adj_smd_selected_squares = c(
+    max(abs(ebal_default_tuning_balance$Balance[second_moment_terms, "Diff.Adj"]), na.rm = TRUE),
+    max(abs(ebal_moments_tuning_balance$Balance[second_moment_terms, "Diff.Adj"]), na.rm = TRUE)
+  )
+) |>
+  mutate(across(where(is.numeric), ~ round(.x, 3)))
+
+ebal_tuning_comparison
 ```
+
+The `WeightIt` documentation exposes several meaningful tuning arguments for entropy balancing [@greifer2025weightit]. The most important substantive ones are `moments`, which adds higher-order powers of selected covariates to the balance constraints, `int`, which adds first-order interactions, and `quantile`, which adds quantile constraints for continuous covariates. Other arguments such as `solver`, `maxit`, and `reltol` tune the optimization routine rather than the target balance itself. In practice, the design question is not whether to turn every dial to its most aggressive setting, but whether a tighter balance target improves the design enough to justify the resulting weight concentration.
+
+The table above shows one concrete tuning exercise. The default specification balances the included covariate means exactly, which is what entropy balancing guarantees by default for a binary `ATT` analysis. The tuned specification adds second-moment constraints for the three most substantively important continuous covariates in this report: `age`, `re74`, and `re75`. That additional tuning nearly eliminates imbalance in the selected squared terms, but it does so by sharply reducing the effective control sample size and inflating the largest control weights. For that reason, the remainder of the report keeps the default entropy-balancing design as the main specification. It already achieves exact mean balance, and the more aggressive second-moment design buys relatively little for this teaching example once its information cost is taken into account.
+
+```{r}
+w_ebal <- w_ebal_default
+
+ebal_summary <- ebal_default_summary
+
+dat_ebal <- dat |>
+  mutate(ebal_weight = w_ebal$weights)
+
+ebal_weight_diagnostics <- tibble(
+  metric = c(
+    "Treated units",
+    "Control units",
+    "Treated effective sample size",
+    "Control effective sample size",
+    "Maximum control weight",
+    "Control coefficient of variation"
+  ),
+  value = c(
+    sum(dat$treat == 1),
+    sum(dat$treat == 0),
+    ebal_summary$effective.sample.size["Weighted", "Treated"],
+    ebal_summary$effective.sample.size["Weighted", "Control"],
+    max(dat_ebal$ebal_weight[dat_ebal$treat == 0]),
+    unname(ebal_summary$coef.of.var["control"])
+  )
+) |>
+  mutate(value = round(value, 3))
+
+ebal_weight_diagnostics
+```
+
+The final implementation retained for the report is therefore still simple, but now for an explicit reason rather than by default. The formula matches the report's main design covariates, the estimand remains the `ATT`, and the default mean-balance specification is kept because it offers a stronger balance-information tradeoff than the more aggressive second-moment alternative. In this run, all treated units remain in the design and the control sample is also retained, but the effective control sample size still falls substantially once the balancing weights are applied. That is the weighting analogue of sample loss in matching: the raw number of controls stays the same, but only a much smaller amount of usable information remains after the weights are concentrated on the controls most similar to the treated group.
 
 ### Post-Weighting Diagnostics
 
 ```{r}
-# bal.tab(w_ebal, un = TRUE)
-# love.plot(w_ebal, stats = "mean.diffs")
+ebal_summary
 ```
+
+```{r}
+ebal_balance <- bal.tab(
+  w_ebal,
+  un = TRUE,
+  binary = "std",
+  disp.v.ratio = TRUE,
+  m.threshold = 0.1
+)
+
+ebal_balance
+```
+
+```{r fig.height=5.5}
+love.plot(
+  w_ebal,
+  stats = "mean.diffs",
+  abs = TRUE,
+  binary = "std",
+  thresholds = c(m = 0.1),
+  var.order = "unadjusted"
+)
+```
+
+```{r fig.height=4.8}
+plot(ebal_summary)
+```
+
+The balance diagnostics show why entropy balancing is often appealing in practice. The adjusted standardized mean differences are driven to zero for the included covariates, which is exactly what the default `WeightIt` entropy-balancing specification is designed to achieve for a binary `ATT` analysis [@greifer2025weightit]. But the summary output also shows the cost clearly: the control weights are fairly dispersed, the largest control weights are much larger than `1`, and the weighted control effective sample size drops from the raw control count to a much smaller number. That is the central tradeoff of entropy balancing in the `MatchIt` design frame. It can deliver excellent observed balance while preserving all units nominally, but the analyst still has to judge whether the resulting weights imply a credible and sufficiently informative comparison.
+
+The package's own weight-distribution plot makes that tradeoff easier to interpret. Because the design targets the `ATT`, the plot focuses on the non-focal control weights, which are the weights doing the balancing work [@greifer2025weightit]. In substantive terms, the method is not finding "all controls" equally informative; it is assigning most of the design influence to the subset of controls that best reconstruct the treated group's covariate profile. That is often a reasonable design choice, but it should be reported transparently rather than hidden behind the fact that no units were literally discarded.
 
 ### Effect Estimation After Weighting
 
 ```{r}
-# fit_ebal <- glm(outcome ~ treat, data = dat, weights = w_ebal$weights)
-# summary(fit_ebal)
+fit_ebal <- lm_weightit(
+  outcome ~ treat,
+  data = dat,
+  weightit = w_ebal
+)
+
+ebal_effect <- {
+  ebal_coef <- coef(summary(fit_ebal))["treat", ]
+  tibble(
+    method = "Entropy balancing",
+    estimate = unname(ebal_coef["Estimate"]),
+    std_error = unname(ebal_coef["Std. Error"]),
+    p_value = unname(ebal_coef[4])
+  )
+} |>
+  mutate(across(c(estimate, std_error, p_value), ~ round(.x, 3)))
+
+ebal_effect
 ```
+
+For estimation after weighting, the package documentation recommends `lm_weightit()` or `glm_weightit()` rather than a plain weighted regression when the analyst wants standard errors that account for weight estimation [@greifer2025weightit]. That matters here. The entropy-balancing estimate remains positive, but once uncertainty is computed using the documented robust variance that adjusts for estimation of the weights, the result is less decisive than a naive weighted regression would suggest. That is the right interpretation for evaluator-facing work: entropy balancing can improve observed design quality substantially, but the final estimate still depends on a concentrated set of control observations and its uncertainty should be reported on those terms.
 
 ## Iterating on Design Quality
 
-If covariates remain imbalanced after adjustment, treat the design as unsuccessful and revise the specification rather than moving directly to effect estimation. Potential revisions include changing the covariate set, tightening or relaxing coarsening, altering support restrictions, or reconsidering the target estimand [@matchit_getting_started].
+The `MatchIt` documentation presents design as an iterative process rather than a one-shot procedure. A typical workflow is to choose a provisional specification, inspect balance and remaining sample size, revise the design, and only move to effect estimation once the specification has been settled [@ho2011matchit]. That sequencing matters because a matched or weighted analysis can look technically complete while still failing the basic design test: the treated and untreated groups may remain too different on important pre-treatment covariates, or balance may have been improved only by discarding so many units that the resulting estimate no longer answers the original policy question.
+
+This is also why balance thresholds should be treated as guides rather than stopping rules. In the `MatchIt` workflow, the goal is not simply to cross below a conventional threshold such as an absolute standardized mean difference of `0.1`, but to get as close as possible to good balance without creating an unacceptably small or distorted analytic sample [@ho2011matchit]. An apparently acceptable first design is therefore not necessarily the final one. If another specification can improve balance further at a manageable cost in sample retention or weight dispersion, that stronger design is usually preferable.
+
+For this report, iteration means revisiting the design choices that each method exposes. With exact matching, poor retention may indicate that too many variables have been forced into exact constraints or that some variables are coded too finely for the available overlap. With CEM, the main tuning lever is the coarsening itself: bins can be tightened where important imbalance remains or relaxed where the design is losing too many treated units. With entropy balancing, the key question is whether exact balance on the chosen moments is being achieved with stable enough weights to preserve an informative effective sample size. In each case, the specification should be revised because the diagnostics show a design problem, not because the outcome estimate is inconvenient.
+
+The `MatchIt` documentation also emphasizes that support restrictions and other pruning decisions can change the population represented by the final estimate [@ho2011matchit]. That point is especially important in evaluator-facing work. If treated units are dropped because no comparable controls exist, the result is no longer cleanly interpretable as the original `ATT` for all treated units; it instead applies to a narrower matched sample whose substantive meaning must be reported explicitly. Iteration is therefore not just about improving statistics on a balance table. It is about checking whether the adjusted design still corresponds to the evaluation question, and being willing to conclude that the available data cannot support that question if acceptable balance and overlap cannot be achieved together.
 
 ## Comparing the Methods
 
 ### Covariate Balance
 
-Compare pre- and post-adjustment balance across exact matching, CEM, and entropy balancing.
+The earlier sections evaluated each method on its own terms. The next step is to compare them directly against the same design benchmarks: how far they reduce observed imbalance, how much of the treated population they preserve, and what they imply about the population represented by the final `ATT`. This matters because the methods do not fail in the same way. Exact matching risks leaving important continuous covariates outside the design, CEM risks narrowing the treated population through pruning, and entropy balancing risks concentrating too much influence on a limited subset of controls.
+
+```{r}
+comparison_balance <- tibble(
+  method = c(
+    "Unadjusted sample",
+    "Exact matching",
+    "Coarsened exact matching",
+    "Entropy balancing"
+  ),
+  max_abs_smd = c(
+    max(abs(unadjusted_balance$Balance$Diff.Un), na.rm = TRUE),
+    max(abs(exact_balance$Balance$Diff.Adj), na.rm = TRUE),
+    max(abs(cem_balance$Balance$Diff.Adj), na.rm = TRUE),
+    max(abs(ebal_balance$Balance$Diff.Adj), na.rm = TRUE)
+  ),
+  covariates_over_0_1 = c(
+    sum(abs(unadjusted_balance$Balance$Diff.Un) > 0.1, na.rm = TRUE),
+    sum(abs(exact_balance$Balance$Diff.Adj) > 0.1, na.rm = TRUE),
+    sum(abs(cem_balance$Balance$Diff.Adj) > 0.1, na.rm = TRUE),
+    sum(abs(ebal_balance$Balance$Diff.Adj) > 0.1, na.rm = TRUE)
+  )
+) |>
+  mutate(max_abs_smd = round(max_abs_smd, 3))
+
+comparison_balance
+```
+
+The comparison table makes the ranking on observed mean balance clear. In the raw sample, the largest absolute standardized mean difference is about `1.882`, and nine reported covariates or covariate terms exceed the `0.1` threshold. Exact matching reduces imbalance sharply, but one covariate remains above that threshold after adjustment, with a largest absolute standardized mean difference of about `0.130`. That is consistent with the earlier diagnostic: the exact-matching design is transparent, but because it could only be implemented on a reduced set of mostly discrete covariates, it does not fully resolve imbalance on all substantively important pre-treatment variables.
+
+The custom CEM design improves on that compromise. It brings the largest adjusted standardized mean difference down to about `0.077` and leaves no reported covariate above `0.1`. On this metric, it is the strongest matching-based design in the report because it keeps the full set of design covariates inside the adjustment while still leaving a matched sample to inspect directly. Entropy balancing goes one step further by driving the included mean differences essentially to zero, which is exactly what the method is designed to do under the default `ATT` specification [@greifer2025weightit]. But that should be interpreted carefully. It means entropy balancing is strongest here on observed mean balance, not that it dominates the other methods on every dimension of design quality.
 
 ### Sample Retention and Effective Sample Size
 
-Discuss discarded units for matching approaches and effective sample size for the weighting approach.
+Observed balance is only half of the design problem. The other half is how much information remains once that balance has been achieved and whether the final design still corresponds to the policy-relevant treated population.
+
+```{r}
+comparison_information <- tibble(
+  method = c(
+    "Exact matching",
+    "Coarsened exact matching",
+    "Entropy balancing"
+  ),
+  treated_units_used = c(
+    sum(matched_exact$treat == 1),
+    sum(matched_cem$treat == 1),
+    sum(dat$treat == 1)
+  ),
+  control_units_used = c(
+    sum(matched_exact$treat == 0),
+    sum(matched_cem$treat == 0),
+    sum(dat$treat == 0)
+  ),
+  treated_share_of_full_sample = c(
+    sum(matched_exact$treat == 1) / sum(dat$treat == 1),
+    sum(matched_cem$treat == 1) / sum(dat$treat == 1),
+    1
+  ),
+  control_share_of_full_sample = c(
+    sum(matched_exact$treat == 0) / sum(dat$treat == 0),
+    sum(matched_cem$treat == 0) / sum(dat$treat == 0),
+    1
+  ),
+  control_effective_sample_size = c(
+    NA_real_,
+    NA_real_,
+    ebal_summary$effective.sample.size["Weighted", "Control"]
+  )
+) |>
+  mutate(
+    treated_share_of_full_sample = round(treated_share_of_full_sample, 3),
+    control_share_of_full_sample = round(control_share_of_full_sample, 3),
+    control_effective_sample_size = round(control_effective_sample_size, 3)
+  )
+
+comparison_information
+```
+
+This table shows why method comparison cannot stop at balance. Exact matching retains `183` of the `185` treated units, so it stays close to the original `ATT` population, but it does so partly by relaxing the design to exclude some important continuous covariates from the exact constraints. CEM solves more of the balance problem inside the design itself, but it pays for that with heavy pruning: only `81` treated units and `68` controls remain in the final custom CEM sample. That is a substantively meaningful shift. The estimate is no longer about anything close to all programme participants; it is about the subset of treated units who still have comparable controls after coarsening and support restrictions.
+
+Entropy balancing looks different because no units are literally dropped. All `185` treated units and all `429` controls remain in the weighted dataset. But the weighted control effective sample size falls to about `98.458`, and earlier diagnostics showed a maximum control weight of about `9.421`. In other words, the method retains rows more easily than it retains information. Relative to matching, the information cost is hidden in weight concentration rather than in explicit sample loss. That makes entropy balancing appealing when preserving the treated population is the priority, but it also means that a nominally full sample can still behave like a much smaller and more fragile comparison.
 
 ### Practical Tradeoffs
 
-Discuss transparency, feasibility, tuning choices, target population, and robustness in moderate-dimensional settings.
+Taken together, the three methods illustrate a genuine design triangle rather than a simple performance ranking. Exact matching is the most transparent. It forces the analyst to say exactly which covariates define comparability, and the resulting subclasses are easy to explain. But that same transparency exposes its main weakness in moderate-dimensional settings: once the covariate set includes continuous or finely coded variables, the design becomes infeasible unless the analyst either drops variables from the exact constraints or accepts severe support loss. In this worked example, exact matching remained useful as a teaching device and as a narrow design option, but it was not the strongest final design on the full covariate set.
+
+CEM is the most balanced compromise within the matching family. It preserves the subclassification logic and audit trail of exact matching while allowing continuous covariates to remain inside the design through explicit coarsening choices [@iacus2012cem; @ho2011matchit]. That makes it especially attractive for evaluator training, because it keeps the design decisions legible. The main cost is that tuning is substantive rather than automatic. Analysts must justify the coarsening rules and must be willing to accept that different cutpoints can materially change retention, balance, and the treated population represented by the estimate. Here, CEM is the strongest option if the priority is an inspectable matched design with all reported imbalance below a conventional threshold.
+
+Entropy balancing is strongest when the main objective is to preserve the treated population while imposing very strong observed balance on the included covariate moments. It avoids the severe pruning that often makes exact matching or CEM unattractive for an `ATT` analysis, and in this report it delivers the best observed balance of all three methods. But its tradeoff is less visible unless weight diagnostics are reported carefully. The design becomes harder to explain in unit-level terms, and the estimate can depend heavily on a relatively small subset of controls with large weights. For evaluator-facing practice, that makes entropy balancing highly useful, but only when overlap and weight dispersion are checked as seriously as balance itself [@hainmueller2012entropy; @greifer2025weightit].
+
+The broader lesson is that no method dominates on transparency, feasibility, and information retention simultaneously. For this example, exact matching is easiest to audit but weakest on full-covariate balance; CEM provides the clearest matched-sample compromise but narrows the treated population substantially; entropy balancing preserves the original treated group and nearly eliminates observed mean imbalance, but only by accepting a weighted control sample that is effectively much smaller than the raw number of controls. All three designs therefore push the analyst back to the same practical question: what balance improvement is enough to justify the loss of sample or information required to achieve it?
 
 ## Guidance for Evaluators
 
-Translate the methods into evaluator-facing advice.
+The evaluator-facing lesson is to choose the design from the causal question and the assignment process, not from whichever adjustment routine is easiest to run. Before any matching or weighting specification is finalized, the analyst should establish four things clearly: whether a stronger quasi-experimental design is available, which estimand matters for the policy question, which pre-treatment covariates are substantively necessary for design, and whether treated and untreated units overlap enough to support comparison at all [@govuk_qed_slides; @ho2011matchit]. If those conditions are weak, a technically successful adjustment can still produce a poor evaluation.
+
+That framing also helps keep method choice proportional to the practical constraints of real programme and policy work. Exact matching, CEM, and entropy balancing are not rival brands of the same design. They answer slightly different needs. Exact matching prioritizes interpretability, CEM prioritizes an auditable subclassification design that remains workable with mixed covariate types, and entropy balancing prioritizes strong observed balance while preserving the focal population in a weighting framework. The right choice depends on which of those objectives is most important in the evaluation and what the data can support.
 
 ### When Exact Matching Is Appropriate
 
-Discuss settings with a small number of discrete and substantively central covariates, where interpretability is a priority and sample loss is acceptable.
+Exact matching is most appropriate when comparability can be defined using a small set of discrete, policy-relevant covariates and when the main audience needs a design that is easy to inspect and explain [@ho2011matchit]. Typical examples include evaluations built around clearly coded eligibility bands, jurisdiction, provider type, or a limited number of demographic or institutional characteristics that stakeholders already recognize as central to treatment assignment. In those settings, the appeal of exact matching is not just statistical. It creates a visibly constrained comparison: treated and untreated units are only compared within the same observed covariate pattern.
+
+That transparency is useful in evaluator training and in commissioned work where the design must survive challenge from non-specialist audiences. But it is only a good choice when the resulting sample still answers the policy question. If key pre-treatment confounders are continuous, finely coded, or numerous, exact matching will usually either discard too many units or force the analyst to leave important variables out of the exact constraints. Once that happens, the apparent simplicity can become misleading. Exact matching should therefore be treated as the right tool for narrow, interpretable design problems, not as a general default for observational evaluation.
 
 ### When CEM Is Appropriate
 
-Discuss settings where evaluators need a more feasible subclassification-based design for mixed covariate types and want explicit control over coarsening decisions.
+CEM is often the strongest option when the evaluator wants to preserve the logic and audit trail of matching but exact matching is too restrictive for the available data [@iacus2012cem; @ho2011matchit]. It is particularly useful when the design includes both discrete and continuous covariates and when the analyst can define substantively defensible bins for the continuous variables. In practice, that makes CEM attractive for many government and programme evaluations, because variables such as age, prior earnings, deprivation score, or prior service use can be grouped into categories that are both policy-legible and analytically workable.
+
+Its main advantage is that the tradeoff between balance and retention remains explicit. The evaluator can show how coarsening choices affect which treated units remain comparable to which controls, and can revise those choices in response to diagnostics rather than hiding the problem inside a black-box algorithm. That said, CEM is only as credible as the coarsening rules. If the bins are arbitrary, too coarse to preserve meaningful similarity, or so tight that the treated sample collapses, the method loses its value. CEM is therefore best used when the analyst can defend the bins in substantive terms and is willing to report how sensitive retention and balance are to those choices.
 
 ### When Entropy Balancing Is Appropriate
 
-Discuss settings where preserving units and achieving strong covariate balance is more important than producing an explicitly matched analytic sample.
+Entropy balancing is most appropriate when the evaluation priority is to preserve the focal population, usually the treated group under an `ATT`, while imposing very strong observed balance on selected covariate moments [@hainmueller2012entropy; @greifer2025weightit]. It is especially useful when discarding treated units would weaken the policy relevance of the estimate, but a sufficiently rich pool of controls is available to be reweighted into a credible comparison. In those circumstances, entropy balancing can improve observed design quality much more aggressively than a matched-sample approach without forcing the analyst to redefine the treated population through pruning.
+
+The caution is that the design cost appears in the weights rather than in the row count. For evaluator-facing work, entropy balancing should only be used when weight dispersion, effective sample size, and overlap diagnostics remain credible [@greifer2025weightit]. A weighted control group that contains all original units can still behave like a much smaller sample if a few observations receive very large weights. Entropy balancing is therefore strongest when overlap is already reasonably good and the evaluator is prepared to explain the resulting weighted comparison transparently, not when it is being used to rescue a fundamentally weak support problem.
 
 ### Reporting Recommendations
 
-Specify that evaluator-facing reporting should include:
+Evaluator-facing reporting should make the design auditable rather than merely reproducible. At minimum, the report should state:
 
 - the estimand
 - the covariates used for design
+- why those covariates were chosen and why post-treatment variables were excluded
+- the exact matching variables, CEM cutpoints, or entropy-balancing moments and constraints used
 - balance before and after adjustment
-- discarded units or effective sample size
+- overlap diagnostics, including any common-support restrictions
+- discarded units, retained treated share, or effective sample size as appropriate
+- the distribution of weights when weighting is used, especially any extreme values
+- the outcome model used after adjustment and whether uncertainty accounts for weight estimation
 - how design choices may change the population represented by the estimate
 
 ### Choosing Among Matching Options
 
-Use the Evaluation Academy slide deck to motivate a practical comparison among propensity score matching, coarsened exact matching, and entropy balancing. Make clear that this report focuses on exact matching, CEM, and entropy balancing because they provide a more transparent and modern teaching pathway than relying on PSM as the main example [@govuk_qed_slides; @matchit_matching_methods].
+The practical sequence for evaluators is straightforward. First, ask whether matching or weighting should be used at all. If the data support a stronger design such as difference-in-differences, regression discontinuity, or another quasi-experimental strategy tied more directly to the assignment process, that design will often be preferable [@govuk_qed_slides]. Only when matching or weighting is genuinely the strongest defensible option should the analyst move on to choosing among these methods.
+
+Within that narrower choice set, exact matching is best when interpretability is paramount and the design problem is genuinely low-dimensional. CEM is usually the better default when the evaluator wants an inspectable matched design but must accommodate mixed covariate types and make the balance-retention tradeoff visible. Entropy balancing is strongest when preserving the treated population matters most and the available control pool is large enough to support stable reweighting.
+
+This report does not use propensity score matching as the main teaching route for a reason. In evaluator training, propensity scores can encourage analysts to focus on the estimated score rather than on the covariates, overlap, and retained population that actually determine design quality. The more transparent path is to teach exact matching and CEM as explicit design tools and entropy balancing as a weighting method with direct balance constraints [@govuk_qed_slides; @ho2011matchit]. Propensity score methods still exist within the broader toolkit, but they should not be treated as the automatic entry point for applied evaluation.
 
 ## Treatment Effect Summary
 
-Present the treatment effect estimates from each method in a comparable table and discuss the extent to which conclusions depend on design choices.
+The final comparison should place the adjusted outcome estimates beside the design costs needed to obtain them. A table that reports only the point estimates would hide the core lesson of the report: the methods differ not just in the size of the estimated `ATT`, but in how much pruning or weight concentration sits behind that estimate.
 
 ```{r}
-# tibble(
-#   method = c("Exact matching", "CEM", "Entropy balancing"),
-#   estimate = c(NA_real_, NA_real_, NA_real_)
-# )
+extract_treat_effect <- function(model, method) {
+  coef_table <- coef(summary(model))
+  p_value_col <- grep("^Pr\\(", colnames(coef_table), value = TRUE)
+
+  if (length(p_value_col) == 0) {
+    p_value_col <- tail(colnames(coef_table), 1)
+  } else {
+    p_value_col <- p_value_col[1]
+  }
+
+  treat_row <- coef_table["treat", ]
+
+  tibble(
+    method = method,
+    estimate = unname(treat_row["Estimate"]),
+    std_error = unname(treat_row["Std. Error"]),
+    conf_low = unname(treat_row["Estimate"] - 1.96 * treat_row["Std. Error"]),
+    conf_high = unname(treat_row["Estimate"] + 1.96 * treat_row["Std. Error"]),
+    p_value = unname(treat_row[p_value_col])
+  )
+}
+
+treatment_effect_summary <- bind_rows(
+  extract_treat_effect(fit_exact, "Exact matching"),
+  extract_treat_effect(fit_cem, "Coarsened exact matching"),
+  extract_treat_effect(fit_ebal, "Entropy balancing")
+) |>
+  mutate(
+    treated_units_used = c(
+      sum(matched_exact$treat == 1),
+      sum(matched_cem$treat == 1),
+      sum(dat$treat == 1)
+    ),
+    control_basis = c(
+      paste(sum(matched_exact$treat == 0), "matched controls"),
+      paste(sum(matched_cem$treat == 0), "matched controls"),
+      paste(
+        sum(dat$treat == 0),
+        "controls; ESS",
+        round(ebal_summary$effective.sample.size["Weighted", "Control"], 3)
+      )
+    ),
+    design_note = c(
+      "Residual imbalance remains on re74",
+      "Best balance among matched samples, but strongest pruning",
+      "Preserves all treated units, but relies on concentrated control weights"
+    )
+  ) |>
+  mutate(across(c(estimate, std_error, conf_low, conf_high, p_value), ~ round(.x, 3)))
+
+treatment_effect_summary |>
+  rename(
+    `Std. error` = std_error,
+    `95% CI low` = conf_low,
+    `95% CI high` = conf_high,
+    `P-value` = p_value,
+    `Treated units used` = treated_units_used,
+    `Control basis` = control_basis,
+    `Design note` = design_note
+  ) |>
+  knitr::kable()
 ```
+
+All three adjusted designs yield positive point estimates for the `ATT`, which is reassuring at the level of direction. Exact matching produces the smallest estimated gain at `r treatment_effect_summary$estimate[treatment_effect_summary$method == "Exact matching"]`, the custom CEM design is somewhat larger at `r treatment_effect_summary$estimate[treatment_effect_summary$method == "Coarsened exact matching"]`, and entropy balancing produces the largest at `r treatment_effect_summary$estimate[treatment_effect_summary$method == "Entropy balancing"]`.
+
+But the table also shows why the treatment-effect comparison cannot be separated from the design diagnostics. The CEM estimate is attached to a much narrower treated population because only `r treatment_effect_summary$treated_units_used[treatment_effect_summary$method == "Coarsened exact matching"]` treated units remain after pruning. Exact matching retains far more treated units, but it does so with a weaker design on the full covariate set because imbalance remains on `re74`. Entropy balancing preserves all treated units, yet its comparison rests on a weighted control sample with effective sample size `r round(ebal_summary$effective.sample.size["Weighted", "Control"], 3)`, so the estimate depends on a concentrated subset of controls rather than on the full raw control pool in any substantive sense.
+
+The appropriate evaluator-facing conclusion is therefore qualified rather than categorical. In this worked example, the sign of the estimated programme effect is stable across methods, but the magnitude and represented population are not. If preserving the original treated population is the priority, entropy balancing gives the most defensible summary estimate. If the priority is an auditable matched sample with all reported mean imbalance below a conventional threshold, the custom CEM design is the stronger matched-sample result. Either way, the report should present the treatment effect together with the retention or weighting costs that make that estimate possible.
 
 ## Limitations
 
-Discuss:
+The main limitation of all three adjustment strategies is that they only address differences on observed pre-treatment covariates. If the programme's participants differed from non-participants in motivation, local labour-market opportunities, caseworker discretion, health, or other factors that were not measured well in the data, the adjusted estimates can still be biased even when the balance diagnostics look strong [@ho2007matching; @cunningham2021mixtape]. This is the central point that balance tables cannot resolve. They can show whether the treated and comparison groups have been aligned on the variables included in the design, but they cannot show whether the design has captured the variables that actually drove both participation and later earnings.
 
-- residual confounding from omitted variables
-- lack of protection against hidden bias
-- overlap problems
-- sensitivity to cutpoints, exact constraints, and estimand choice
-- estimand drift when units are dropped due to limited support
+Relatedly, none of the methods in this report protects against hidden bias from unmeasured confounding. Exact matching, CEM, and entropy balancing differ in how they trade transparency, pruning, and weighting, but they all rely on the same exchangeability assumption once the chosen covariates have been conditioned on [@ho2011matchit]. That means the worked example should not be read as proving a causal effect in any strong experimental sense. It shows how the design can be made more credible with observed data, not how the untestable no-unmeasured-confounding assumption can be verified. In evaluator-facing work, that limitation should usually be acknowledged directly and, where feasible, complemented with sensitivity analysis or comparison against evidence from stronger designs.
+
+Overlap is a second substantive limitation. The earlier diagnostics showed that the untreated group is not naturally a close stand-in for the treated group in the raw `lalonde` sample, especially on prior earnings and some demographic characteristics. Each method handles that problem differently, but none removes it entirely. Exact matching only remained workable by restricting the exact constraints to a reduced covariate set, which left residual imbalance on `re74`. CEM achieved better full-design balance, but only by pruning the treated group down to a much narrower subset of participants. Entropy balancing preserved all treated units, but did so with a weighted control sample whose effective sample size was much smaller than the raw number of controls and whose largest weights were substantial. Those are three different expressions of the same underlying limitation: when common support is weak, the analysis is forced either to narrow the population, weaken the design constraints, or rely heavily on a small set of influential comparison units [@iacus2012cem; @hainmueller2012entropy; @greifer2025weightit].
+
+The results are also sensitive to analyst choices that are partly substantive and partly technical. In this report, exact matching depends on which variables are forced into exact agreement; CEM depends on the coarsening rules and cutpoints; and entropy balancing depends on which moments are balanced and how much weight concentration is tolerated. Those choices are not innocent implementation details. They determine who remains comparable to whom, which covariates are prioritized, and how closely the final estimate corresponds to the policy question [@ho2011matchit; @greifer2025weightit]. The comparison in the CEM and entropy-balancing sections already showed this sensitivity directly: alternative cutpoints or tighter balance constraints materially changed retention and effective sample size. A reader should therefore treat the reported estimates as design-contingent rather than as mechanically recovered truths.
+
+That design sensitivity creates a final limitation: estimand drift. The report is framed around the `ATT`, but when limited overlap causes units to be dropped or heavily down-weighted, the practical target can shift away from the original population of treated units. This is clearest in the CEM example, where the final matched sample represents only the subset of treated cases with comparable controls under the chosen coarsening, but a milder version of the same issue appears in entropy balancing when the estimate is driven disproportionately by the part of the control group that can be weighted to resemble the treated group [@ho2011matchit; @greifer2025weightit]. For evaluator practice, that means the limitation is not just statistical uncertainty. It is also interpretive uncertainty about who the estimate actually describes once the design has imposed support restrictions or concentrated analytic influence on a small subset of units.
+
+Taken together, these limitations reinforce the report's broader argument. Matching and weighting are useful design tools for making observational comparisons more transparent and more disciplined, but they do not turn weak observational data into an experiment. Their strongest contribution is to reveal where the data support a credible comparison, where they do not, and how much design cost must be paid to improve comparability. That is valuable, but it is a more modest claim than saying the adjusted estimate is free from hidden bias or robust to all reasonable design choices.
 
 ## Conclusion
 
-Summarize the main lessons from the comparison and provide practical guidance on method selection.
+This report compared exact matching, coarsened exact matching, and entropy balancing as design-stage tools for observational causal inference, not as interchangeable algorithms. The central lesson is that method choice should follow the causal question rather than precede it. In practice, that means defining the estimand first, choosing defensible pre-treatment covariates, checking overlap before trusting any adjusted estimate, and evaluating balance together with retained sample size or effective sample size rather than treating any one diagnostic as sufficient [@ho2011matchit]. Matching and weighting are most useful when they make the comparison problem more visible and more disciplined, not when they are used to hide a weak design behind better-looking tables.
+
+The worked example also clarifies the tradeoffs among the methods. Exact matching is the most transparent, but it becomes restrictive quickly and can leave important continuous covariates outside the design. CEM is often the strongest compromise within the matching family because it keeps the subclassification logic auditable while allowing continuous covariates to remain inside the design through explicit coarsening choices. Entropy balancing achieved the strongest observed mean balance in this report and preserved the full treated group, but it did so by concentrating influence on a smaller effective control sample. There is therefore no universal winner. If the priority is an inspectable matched sample with visible design rules, CEM is the stronger choice here. If the priority is to preserve the original treated population while achieving very strong observed balance, entropy balancing is the more defensible summary design.
+
+For evaluator practice, the practical implication is straightforward. Matching and weighting should be used when they are the strongest defensible option within the wider quasi-experimental toolkit, not as the default response to non-randomized data [@govuk_qed_slides]. When acceptable balance requires severe pruning, unstable weights, or major drift from the original estimand, the right conclusion may be that the available data do not support the policy question cleanly enough. That is not a failure of the workflow; it is one of its main virtues. Used well, these methods improve evaluation not by manufacturing certainty, but by making the limits of the available comparison explicit.
 
 ## Appendix
 
@@ -577,14 +1140,10 @@ The assumption that one unit's treatment does not affect another unit's outcome 
 `Weighting`  
 An adjustment approach that assigns units analytic weights so one group better represents a target population or matches another group on observed covariates.
 
-### Full Code
-
-Add the final runnable code here or link to companion scripts.
-
 ### Session Information
 
 ```{r}
-# sessionInfo()
+sessionInfo()
 ```
 
 ## References

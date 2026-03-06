@@ -2,3 +2,5 @@ project:
   type: default
   render:
     - matching_methods_report.qmd
+    - matching_methods_report_full_code.qmd
+    - matching_methods_report_qa_log.qmd
