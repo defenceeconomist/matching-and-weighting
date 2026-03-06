@@ -2,14 +2,17 @@
 title: "Slides"
 ---
 
-Use this section for presentation-ready outputs connected to the report and labs.
+Use this section for presentation-ready outputs connected to the report, the lab bundle, and the code companions.
 
 ## Available Decks
 
-- [Matching Methods Starter Deck](matching_methods_slides.qmd)
+- [Matching and Weighting Training Deck](matching_methods_slides.qmd)
+- [From Report to Labs: Background Lecture](pre_lab_background_lecture.qmd)
 
 ## Suggested Slide Pipeline
 
 1. Keep deck narrative aligned with `matching_methods_report.qmd`.
-2. Pull one worked example at a time from the labs section.
-3. Export speaker-ready slides from Quarto RevealJS.
+2. Use the main report deck first, then the background lecture deck before opening the labs.
+3. Pair the main report example with one lab extension at a time.
+4. Link slides back to full-code, evaluated-code, and QA outputs so the deck stays auditable.
+5. Export speaker-ready slides from Quarto RevealJS.

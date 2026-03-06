@@ -176,7 +176,7 @@ quarto render docs/labs/black_politicians_lab_qa_log.qmd --to html
 ## Next Steps
 
 - Add hidden-bias sensitivity analysis beyond design diagnostics (e.g., Rosenbaum-style bounds or omitted-variable benchmarking).
-- Add a concise executive-summary output tailored for training delivery alongside the full technical report.
+- Tighten the slide-to-lab handoff with any remaining lecture refinements that emerge during delivery testing.
 
 ## Dataset Expansion Roadmap
 
@@ -193,11 +193,14 @@ Status labels used below:
 | 16. Add `causaldata::black_politicians` as the first non-`lalonde` worked example. | `Done` | Implemented as a training aid with linked full-code, evaluated-code, and QA-log outputs. The current implementation keeps the design-first comparison focus (exact/CEM/entropy balancing) and includes a chapter-alignment QA trace against *The Effect*. |
 | 17. Add a benchmarking appendix using `causaldata::nsw_mixtape` plus `causaldata::cps_mixtape`. | `Done` | Implemented as a full lab bundle with linked lab, full-code, evaluated-code, and QA-log outputs. The workflow benchmarks observational estimates against the NSW experimental reference and reports benchmark gaps across raw, exact, CEM, and entropy-balancing designs. |
 | 18. Add a short teaching appendix using `causaldata::titanic` for subclassification and simple exact matching. | `Done` | Implemented as a compact teaching lab with an executed narrative page and a linked full-code companion. The workflow focuses on visible support cells, exact matching on discrete covariates, and a simple subclassification comparison. |
-| 19. Document a small acquisition layer for book-native datasets. | `Next` | `MatchIt`, `WeightIt`, and `cobalt` are already installed locally, but `causaldata` is not. The cleanest path is either to add `causaldata` as a documented dependency or to vendor the specific source files needed for the roadmap datasets into a reproducible `data/raw` workflow. |
+| 19. Add slide outputs that bridge the main report into the lab bundle. | `Done` | The repo now includes a main report training deck plus a separate pre-lab background lecture with speaker notes, both rendered in `docs/slides/` and linked from the site navigation. |
+| 20. Add sensitivity-analysis extensions beyond balance and retention diagnostics. | `Next` | This is the main remaining methods gap: the report currently explains design limitations clearly, but it does not yet include a formal hidden-bias or omitted-variable sensitivity workflow. |
+
 
 ### Planned sequence
 
-1. Maintain `black_politicians` as the primary non-`lalonde` training example and keep chapter-alignment QA checks current as lab code evolves.
-2. Keep the NSW/CPS benchmark lab aligned with the Mixtape objective as code evolves and rerun benchmark-gap QA after substantive method changes.
-3. Add `titanic` only as a compact pedagogic appendix or slide-friendly note, not as the main substantive extension.
-4. If dataset expansion becomes a recurring pattern, move the common data-ingest and diagnostics code into reusable helper chunks so each new example only changes the treatment, outcome, and covariate specification.
+1. Use the main report and slide decks as the teaching entry point: report deck first, then the pre-lab background lecture, then the labs.
+2. Maintain `black_politicians` as the primary non-`lalonde` training example and keep chapter-alignment QA checks current as lab code evolves.
+3. Keep the NSW/CPS benchmark lab aligned with the Mixtape objective as code evolves and rerun benchmark-gap QA after substantive method changes.
+4. Keep `titanic` as a compact pedagogic appendix or slide-friendly note, not as the main substantive extension.
+5. Prioritize sensitivity-analysis additions next so the methods workflow extends beyond observed-balance diagnostics.

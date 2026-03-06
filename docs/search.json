@@ -125,7 +125,7 @@
     "href": "slides/matching_methods_slides.html#black-politicians-exact-matching",
     "title": "Matching and Weighting for Causal Inference",
     "section": "Black Politicians: Exact Matching",
-    "text": "Black Politicians: Exact Matching\n\nStrongest feature: serves as a transparent feasibility check\nResult in this training branch: retains all 364 treated units\nMain warning: retained rows do not guarantee strong continuous comparability",
+    "text": "Black Politicians: Exact Matching\n\nBest used here as a feasibility check, not the preferred final design.\nIt retains all 364 treated units on the chosen discrete covariates.\nIt still leaves open the question of continuous comparability on district composition and resources.\n\n\nConnect this back to the report’s exact matching discussion. Retention alone is not evidence of a good design. Explain that exact agreement on a few discrete variables can still miss large continuous differences.",
     "crumbs": [
       "Slides",
       "Matching and Weighting for Causal Inference"
@@ -136,7 +136,7 @@
     "href": "slides/matching_methods_slides.html#black-politicians-cem",
     "title": "Matching and Weighting for Causal Inference",
     "section": "Black Politicians: CEM",
-    "text": "Black Politicians: CEM\n\nStrongest feature: cuts adjusted imbalance while keeping the design legible\nResult: max adjusted abs. SMD falls to 0.093\nCost: treated sample falls from 364 to 300",
+    "text": "Black Politicians: CEM\n\nCEM keeps the matching logic visible while handling continuous covariates through bins.\nMax adjusted absolute SMD falls to 0.093.\nThe treated sample falls from 364 to 300.\n\nThis is the lab’s clearest matched-sample compromise.\n\nMake the parallel to the main report explicit: CEM again plays the role of the most legible matched-sample design. Note that the cost is visible sample pruning, which shifts the practical target toward treated units with support.",
     "crumbs": [
       "Slides",
       "Matching and Weighting for Causal Inference"
@@ -147,7 +147,7 @@
     "href": "slides/matching_methods_slides.html#black-politicians-entropy-balancing",
     "title": "Matching and Weighting for Causal Inference",
     "section": "Black Politicians: Entropy Balancing",
-    "text": "Black Politicians: Entropy Balancing\n\nStrongest feature: drives included adjusted mean differences to 0.000\nCost: control ESS falls to 74.8\nAdditional warning: max control weight rises to about 209\n\nThe weighted design looks excellent on balance, but it becomes much more fragile.",
+    "text": "Black Politicians: Entropy Balancing\n\nIncluded adjusted mean differences are driven to 0.000.\nThe control ESS falls to about 74.8.\nThe maximum control weight rises to about 209.\n\nThe balance table improves, but the weighted comparison becomes fragile.\n\nThis is the same caution as in the report, but sharper. Tell the audience that entropy balancing solves the observed mean-balance problem while moving the design cost into a much more concentrated weighted comparison.",
     "crumbs": [
       "Slides",
       "Matching and Weighting for Causal Inference"
@@ -191,7 +191,7 @@
     "href": "slides/matching_methods_slides.html#read-run-audit",
     "title": "Matching and Weighting for Causal Inference",
     "section": "Read / Run / Audit",
-    "text": "Read / Run / Audit\n\nMain report\nMain report full code\nBlack Politicians lab\nBlack Politicians evaluated code\nBlack Politicians QA log",
+    "text": "Read / Run / Audit\n\nMain report\nMain report full code\nBlack Politicians lab\nBlack Politicians evaluated code\nBlack Politicians QA log\n\n\nClose by pointing the audience to the materials that support the claims in the slides. If presenting live, mention which page to use for teaching delivery and which page to use for code auditing.",
     "crumbs": [
       "Slides",
       "Matching and Weighting for Causal Inference"
@@ -590,7 +590,7 @@
     "href": "index.html#slides-space",
     "title": "Matching TRG",
     "section": "3 Slides Space",
-    "text": "3 Slides Space\nA dedicated slides section is included for training delivery:\n\nSlides Hub\nMatching and Weighting Training Deck"
+    "text": "3 Slides Space\nA dedicated slides section is included for training delivery:\n\nSlides Hub\nMatching and Weighting Training Deck\nFrom Report to Labs: Background Lecture"
   },
   {
     "objectID": "matching_methods_report.html",
@@ -1151,7 +1151,7 @@
     "href": "slides/index.html#available-decks",
     "title": "Slides",
     "section": "1 Available Decks",
-    "text": "1 Available Decks\n\nMatching and Weighting Training Deck",
+    "text": "1 Available Decks\n\nMatching and Weighting Training Deck\nFrom Report to Labs: Background Lecture",
     "crumbs": [
       "Slides"
     ]
@@ -1161,7 +1161,7 @@
     "href": "slides/index.html#suggested-slide-pipeline",
     "title": "Slides",
     "section": "2 Suggested Slide Pipeline",
-    "text": "2 Suggested Slide Pipeline\n\nKeep deck narrative aligned with matching_methods_report.qmd.\nPair the main report example with one lab extension at a time.\nLink slides back to full-code, evaluated-code, and QA outputs so the deck stays auditable.\nExport speaker-ready slides from Quarto RevealJS.",
+    "text": "2 Suggested Slide Pipeline\n\nKeep deck narrative aligned with matching_methods_report.qmd.\nUse the main report deck first, then the background lecture deck before opening the labs.\nPair the main report example with one lab extension at a time.\nLink slides back to full-code, evaluated-code, and QA outputs so the deck stays auditable.\nExport speaker-ready slides from Quarto RevealJS.",
     "crumbs": [
       "Slides"
     ]
@@ -1186,6 +1186,259 @@
     "crumbs": [
       "Additional Labs",
       "Dataset Expansion Labs"
+    ]
+  },
+  {
+    "objectID": "slides/matching_methods_slides.html#executive-summary",
+    "href": "slides/matching_methods_slides.html#executive-summary",
+    "title": "Matching and Weighting for Causal Inference",
+    "section": "Executive Summary",
+    "text": "Executive Summary\n\nStart with the causal question and estimand, not the method.\nJudge balance together with overlap, retention, and weight concentration.\nExact matching, CEM, and entropy balancing solve different design problems.\n\n\nOpen with the report’s core claim: there is no default winner across methods. The audience should leave with a decision rule, not a favorite algorithm. Emphasize that the comparison is about design tradeoffs, not software output.",
+    "crumbs": [
+      "Slides",
+      "Matching and Weighting for Causal Inference"
+    ]
+  },
+  {
+    "objectID": "slides/matching_methods_slides.html#why-this-comparison-matters",
+    "href": "slides/matching_methods_slides.html#why-this-comparison-matters",
+    "title": "Matching and Weighting for Causal Inference",
+    "section": "Why This Comparison Matters",
+    "text": "Why This Comparison Matters\n\nThese are design-stage tools for making treated and untreated units more comparable before outcome analysis.\nThey improve transparency more reliably than they guarantee validity.\nA balanced design can still be weak if overlap is poor or key confounders are unobserved.\n\n\nThis slide aligns with the report’s early framing. Stress that matching and weighting are useful because they force explicit decisions about comparability. Also make the limit explicit: none of these methods solves unmeasured confounding.",
+    "crumbs": [
+      "Slides",
+      "Matching and Weighting for Causal Inference"
+    ]
+  },
+  {
+    "objectID": "slides/matching_methods_slides.html#report-workflow",
+    "href": "slides/matching_methods_slides.html#report-workflow",
+    "title": "Matching and Weighting for Causal Inference",
+    "section": "Report Workflow",
+    "text": "Report Workflow\n\nDefine the estimand and focal population.\nChoose defensible pre-treatment covariates.\nDiagnose raw imbalance and overlap.\nCompare methods on the same target.\nEstimate effects only after the design is credible.\n\n\nWalk through this as the report’s organizing logic. If the audience remembers one process point, it should be that outcome modeling comes after design diagnostics, not before them.",
+    "crumbs": [
+      "Slides",
+      "Matching and Weighting for Causal Inference"
+    ]
+  },
+  {
+    "objectID": "slides/matching_methods_slides.html#the-core-tradeoff",
+    "href": "slides/matching_methods_slides.html#the-core-tradeoff",
+    "title": "Matching and Weighting for Causal Inference",
+    "section": "The Core Tradeoff",
+    "text": "The Core Tradeoff\nYou usually cannot maximize all three at once:\n\ntransparent comparison rules\nstrong observed balance\npreservation of the original treated population\n\nThat tradeoff is the report’s main theme.\n\nThis is the design triangle from the report in plain language. Set up the rest of the deck by saying each method sits in a different part of this tradeoff space.",
+    "crumbs": [
+      "Slides",
+      "Matching and Weighting for Causal Inference"
+    ]
+  },
+  {
+    "objectID": "slides/matching_methods_slides.html#main-worked-example",
+    "href": "slides/matching_methods_slides.html#main-worked-example",
+    "title": "Matching and Weighting for Causal Inference",
+    "section": "Main Worked Example",
+    "text": "Main Worked Example\nThe main article uses MatchIt::lalonde to estimate an ATT.\n\nFocal group: programme participants\nPre-treatment covariates include age, education, race, marital status, degree status, and prior earnings\nTeaching goal: compare balance gains against information loss\n\nMain report\n\nKeep this brief. The purpose is not to reteach the whole dataset, but to remind the audience that the report’s substantive question is the earnings effect for the treated group.",
+    "crumbs": [
+      "Slides",
+      "Matching and Weighting for Causal Inference"
+    ]
+  },
+  {
+    "objectID": "slides/matching_methods_slides.html#what-the-main-report-finds",
+    "href": "slides/matching_methods_slides.html#what-the-main-report-finds",
+    "title": "Matching and Weighting for Causal Inference",
+    "section": "What The Main Report Finds",
+    "text": "What The Main Report Finds\n\n\n\n\n\n\n\n\nMethod\nMain strength\nMain cost\n\n\n\n\nExact matching\nMost auditable design\nResidual imbalance on prior earnings\n\n\nCEM\nClearest matched-sample compromise\nTreated sample shrinks from 185 to 81\n\n\nEntropy balancing\nPreserves all treated units\nEffective control sample falls to about 98.5\n\n\n\n\nPresent this as the report’s headline comparison. Use the numbers to make the cost concrete. Do not oversell any one method: exact matching is transparent, CEM is the strongest matched-sample compromise, and entropy balancing is strongest when preserving the treated population is the priority.",
+    "crumbs": [
+      "Slides",
+      "Matching and Weighting for Causal Inference"
+    ]
+  },
+  {
+    "objectID": "slides/matching_methods_slides.html#main-report-decision-rule",
+    "href": "slides/matching_methods_slides.html#main-report-decision-rule",
+    "title": "Matching and Weighting for Causal Inference",
+    "section": "Main Report Decision Rule",
+    "text": "Main Report Decision Rule\n\nUse exact matching when the design is genuinely low-dimensional and auditability matters most.\nUse CEM when you want an inspectable matched sample across mixed covariate types.\nUse entropy balancing when retaining the original treated population matters most and the weights stay credible.\n\n\nThis slide translates the report into evaluator guidance. Say explicitly that method choice follows the question and overlap conditions, not analyst preference.",
+    "crumbs": [
+      "Slides",
+      "Matching and Weighting for Causal Inference"
+    ]
+  },
+  {
+    "objectID": "slides/matching_methods_slides.html#why-add-a-second-dataset",
+    "href": "slides/matching_methods_slides.html#why-add-a-second-dataset",
+    "title": "Matching and Weighting for Causal Inference",
+    "section": "Why Add A Second Dataset",
+    "text": "Why Add A Second Dataset\nThe Black Politicians lab tests whether the same logic holds outside the lalonde example.\n\nData: causaldata::black_politicians\nTraining comparison: leg_black\nOutcome: responded\nShared target: ATT\n\nLab page\n\nFrame this as a stress test of the report’s narrative. The point is not that leg_black is a policy treatment; the point is to teach comparability, overlap, and estimand drift on a second dataset.",
+    "crumbs": [
+      "Slides",
+      "Matching and Weighting for Causal Inference"
+    ]
+  },
+  {
+    "objectID": "slides/matching_methods_slides.html#black-politicians-design-problem",
+    "href": "slides/matching_methods_slides.html#black-politicians-design-problem",
+    "title": "Matching and Weighting for Causal Inference",
+    "section": "Black Politicians: Design Problem",
+    "text": "Black Politicians: Design Problem\n\nRaw response rate is 0.393 for Black legislators versus 0.425 for non-Black legislators.\nMean district Black share is 0.517 versus 0.063.\nDemocratic share is 0.978 versus 0.501.\nRaw max absolute SMD across the audited covariates is 2.247.\n\nThis is a structural comparability problem, not a small baseline mismatch.\n\nUse this slide to slow down and show why the design burden is real. The audience should see that raw group differences are substantial before any method is applied.",
+    "crumbs": [
+      "Slides",
+      "Matching and Weighting for Causal Inference"
+    ]
+  },
+  {
+    "objectID": "slides/matching_methods_slides.html#what-changes-across-designs",
+    "href": "slides/matching_methods_slides.html#what-changes-across-designs",
+    "title": "Matching and Weighting for Causal Inference",
+    "section": "What Changes Across Designs",
+    "text": "What Changes Across Designs\n\nThe simple treat estimate is not stable across raw, exact, CEM, and entropy-balanced designs.\nThat instability is the point of the exercise, not a nuisance.\nDesign diagnostics need to be interpreted before any substantive effect claim.\n\nEvaluated lab output\n\nUse this slide to explain why the report separates design from effect interpretation. If the estimate moves materially when the comparison group changes, the design choice is doing real work and must be defended.",
+    "crumbs": [
+      "Slides",
+      "Matching and Weighting for Causal Inference"
+    ]
+  },
+  {
+    "objectID": "slides/matching_methods_slides.html#practical-evaluator-takeaway",
+    "href": "slides/matching_methods_slides.html#practical-evaluator-takeaway",
+    "title": "Matching and Weighting for Causal Inference",
+    "section": "Practical Evaluator Takeaway",
+    "text": "Practical Evaluator Takeaway\n\nMatching and weighting are useful when rich pre-treatment covariates are available and stronger quasi-experimental designs are not.\nBetter balance is not enough if the design no longer represents the intended ATT.\nThe right question is not “which method wins?” but “which cost is acceptable for this causal question?”\n\n\nBring the deck back to the report’s evaluator framing. Mention that matching should sit inside a wider quasi-experimental toolkit rather than act as the default response to observational data.",
+    "crumbs": [
+      "Slides",
+      "Matching and Weighting for Causal Inference"
+    ]
+  },
+  {
+    "objectID": "slides/pre_lab_background_lecture.html#why-this-lecture-exists",
+    "href": "slides/pre_lab_background_lecture.html#why-this-lecture-exists",
+    "title": "From Report to Labs",
+    "section": "Why This Lecture Exists",
+    "text": "Why This Lecture Exists\n\nIt follows the main report rather than replacing it.\nIt turns the report’s argument into a reusable lab checklist.\nIt gives the group a shared standard before the datasets change.\n\n\nFrame this as a bridge session. The audience has already seen the main report, so the job here is not to repeat every method detail. The job is to stabilize the design logic they should carry into the labs.",
+    "crumbs": [
+      "Slides",
+      "From Report to Labs"
+    ]
+  },
+  {
+    "objectID": "slides/pre_lab_background_lecture.html#what-the-main-report-already-established",
+    "href": "slides/pre_lab_background_lecture.html#what-the-main-report-already-established",
+    "title": "From Report to Labs",
+    "section": "What The Main Report Already Established",
+    "text": "What The Main Report Already Established\n\nStart with the causal question and estimand, not the software.\nJudge balance together with overlap, retention, and weight concentration.\nTreat matching as one option inside a wider quasi-experimental toolkit.\nRead every adjusted estimate as design-contingent rather than automatic.\n\n\nThis slide should sound familiar. Use it to remind the room that the labs are extensions of the same argument, not separate exercises with a different standard.",
+    "crumbs": [
+      "Slides",
+      "From Report to Labs"
+    ]
+  },
+  {
+    "objectID": "slides/pre_lab_background_lecture.html#what-the-labs-are-for",
+    "href": "slides/pre_lab_background_lecture.html#what-the-labs-are-for",
+    "title": "From Report to Labs",
+    "section": "What The Labs Are For",
+    "text": "What The Labs Are For\n\nRe-run the same design-first workflow on new datasets.\nSee how method costs change when overlap is weaker or the data structure changes.\nPractice defending design choices out loud, not just running code to completion.\n\n\nMake the pedagogic point explicit: the labs are for judgement. A technically correct script that skips the design argument is still a weak answer.",
+    "crumbs": [
+      "Slides",
+      "From Report to Labs"
+    ]
+  },
+  {
+    "objectID": "slides/pre_lab_background_lecture.html#the-non-negotiable-workflow",
+    "href": "slides/pre_lab_background_lecture.html#the-non-negotiable-workflow",
+    "title": "From Report to Labs",
+    "section": "The Non-Negotiable Workflow",
+    "text": "The Non-Negotiable Workflow\n\nDefine treatment, outcome, covariates, and estimand.\nInspect raw imbalance before adjusting anything.\nUse exact matching as a transparency check where feasible.\nCompare CEM and entropy balancing on the same target.\nEstimate effects only after the design is defensible.\n\n\nDeliver this as the lab contract. If participants jump straight to the outcome model or the final coefficient, bring them back to this sequence.",
+    "crumbs": [
+      "Slides",
+      "From Report to Labs"
+    ]
+  },
+  {
+    "objectID": "slides/pre_lab_background_lecture.html#four-questions-to-ask-in-every-lab",
+    "href": "slides/pre_lab_background_lecture.html#four-questions-to-ask-in-every-lab",
+    "title": "From Report to Labs",
+    "section": "Four Questions To Ask In Every Lab",
+    "text": "Four Questions To Ask In Every Lab\n\nWho is the treated group we are trying to learn about?\nWhat makes a control unit comparable before treatment?\nHow much design cost are we paying to improve comparability?\nAfter adjustment, what population does the estimate actually describe?\n\n\nThese four questions are useful because they work across all three datasets. They also surface estimand drift early, before people get attached to a particular estimate.",
+    "crumbs": [
+      "Slides",
+      "From Report to Labs"
+    ]
+  },
+  {
+    "objectID": "slides/pre_lab_background_lecture.html#reading-balance-without-fooling-yourself",
+    "href": "slides/pre_lab_background_lecture.html#reading-balance-without-fooling-yourself",
+    "title": "From Report to Labs",
+    "section": "Reading Balance Without Fooling Yourself",
+    "text": "Reading Balance Without Fooling Yourself\n\nStandardized mean differences near zero are useful, not sufficient.\nLove plots help show whether imbalance is broad or concentrated.\nContinuous covariates also need distribution checks, not just mean checks.\nGood balance on the wrong covariates is still a weak design.\n\n\nSlow down on the last point. Many learners assume a neat balance table proves design quality. Stress that the covariate set still has to be causally defensible and measured before treatment.",
+    "crumbs": [
+      "Slides",
+      "From Report to Labs"
+    ]
+  },
+  {
+    "objectID": "slides/pre_lab_background_lecture.html#reading-design-cost",
+    "href": "slides/pre_lab_background_lecture.html#reading-design-cost",
+    "title": "From Report to Labs",
+    "section": "Reading Design Cost",
+    "text": "Reading Design Cost\n\n\n\n\n\n\n\n\nDesign move\nWhat improves\nWhat you must still check\n\n\n\n\nMatching\nVisible comparability rules\nWho got dropped and whether the treated target narrowed\n\n\nWeighting\nRetains the original rows\nEffective sample size and whether a few units now dominate\n\n\n\n\nThis is the cleanest way to explain the matching-versus-weighting difference before the hands-on work starts. Matching makes sample restriction visible. Weighting keeps rows but can hide information loss inside the weights.",
+    "crumbs": [
+      "Slides",
+      "From Report to Labs"
+    ]
+  },
+  {
+    "objectID": "slides/pre_lab_background_lecture.html#method-choice-in-lab-terms",
+    "href": "slides/pre_lab_background_lecture.html#method-choice-in-lab-terms",
+    "title": "From Report to Labs",
+    "section": "Method Choice In Lab Terms",
+    "text": "Method Choice In Lab Terms\n\n\n\n\n\n\n\n\nMethod\nBest use in the labs\nMain warning sign\n\n\n\n\nExact matching\nFeasibility check and clear audit trail\nImportant continuous differences can remain outside the match\n\n\nCEM\nMost legible matched-sample compromise\nCutpoints change who remains comparable\n\n\nEntropy balancing\nStrong observed mean balance with treated retention\nExtreme weights and low control ESS can make the design fragile\n\n\n\n\nKeep this practical rather than abstract. The point is not to rank methods universally. The point is to teach what each method is buying and where the hidden cost tends to appear.",
+    "crumbs": [
+      "Slides",
+      "From Report to Labs"
+    ]
+  },
+  {
+    "objectID": "slides/pre_lab_background_lecture.html#common-failure-modes",
+    "href": "slides/pre_lab_background_lecture.html#common-failure-modes",
+    "title": "From Report to Labs",
+    "section": "Common Failure Modes",
+    "text": "Common Failure Modes\n\nChoosing a method before naming the estimand.\nPulling in variables that are post-treatment or ambiguous in timing.\nReporting the adjusted effect without reporting balance and overlap.\nTreating nominal retention as proof that the target population stayed intact.\nIgnoring weight dispersion because the balance table looks perfect.\n\n\nUse this slide to inoculate the room against the most common shortcuts. If you want to make it concrete, mention that entropy balancing can keep every row while still reducing the effective control sample sharply.",
+    "crumbs": [
+      "Slides",
+      "From Report to Labs"
+    ]
+  },
+  {
+    "objectID": "slides/pre_lab_background_lecture.html#how-the-lab-bundle-is-sequenced",
+    "href": "slides/pre_lab_background_lecture.html#how-the-lab-bundle-is-sequenced",
+    "title": "From Report to Labs",
+    "section": "How The Lab Bundle Is Sequenced",
+    "text": "How The Lab Bundle Is Sequenced\n\n\n\n\n\n\n\nLab\nWhat it is best for\n\n\n\n\nBlack Politicians\nStructural imbalance, thin comparability, and method fragility\n\n\nNSW + CPS Benchmark\nComparing observational designs against an experimental reference\n\n\nTitanic\nCompact teaching on support cells, exact matching, and subclassification\n\n\n\n\nExplain the logic of the sequence. Black Politicians is the best immediate follow-on from the report because it keeps the design-first comparison visible. NSW plus CPS adds a benchmark question. Titanic is the short appendix when you want a simpler classroom example.",
+    "crumbs": [
+      "Slides",
+      "From Report to Labs"
+    ]
+  },
+  {
+    "objectID": "slides/pre_lab_background_lecture.html#what-a-defensible-lab-answer-looks-like",
+    "href": "slides/pre_lab_background_lecture.html#what-a-defensible-lab-answer-looks-like",
+    "title": "From Report to Labs",
+    "section": "What A Defensible Lab Answer Looks Like",
+    "text": "What A Defensible Lab Answer Looks Like\n\nIt states the estimand before any adjustment output.\nIt explains why the chosen covariates belong in the design.\nIt reports raw and adjusted diagnostics on the same scale.\nIt names the retention or weighting cost directly.\nIt says what causal claim is still out of reach.\n\n\nThis is the marking guide in slide form. End by reminding participants that a careful negative conclusion, such as “the data do not support this comparison cleanly enough,” is a good answer if the diagnostics point that way.",
+    "crumbs": [
+      "Slides",
+      "From Report to Labs"
+    ]
+  },
+  {
+    "objectID": "slides/pre_lab_background_lecture.html#transition-to-the-labs",
+    "href": "slides/pre_lab_background_lecture.html#transition-to-the-labs",
+    "title": "From Report to Labs",
+    "section": "Transition To The Labs",
+    "text": "Transition To The Labs\n\nStart with the Black Politicians lab.\nMove to the NSW + CPS benchmark lab when you want an external reference point.\nUse the Titanic teaching lab for the shortest support-focused exercise.\nKeep the main report open as the design reference.\n\n\nClose with a simple handoff. Tell the audience which page to open first and what standard to keep in mind: define the target, inspect the raw comparison, then decide whether the design cost is acceptable.",
+    "crumbs": [
+      "Slides",
+      "From Report to Labs"
     ]
   }
 ]

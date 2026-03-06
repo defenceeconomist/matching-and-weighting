@@ -29,3 +29,4 @@ A dedicated slides section is included for training delivery:
 
 - [Slides Hub](slides/index.qmd)
 - [Matching and Weighting Training Deck](slides/matching_methods_slides.qmd)
+- [From Report to Labs: Background Lecture](slides/pre_lab_background_lecture.qmd)

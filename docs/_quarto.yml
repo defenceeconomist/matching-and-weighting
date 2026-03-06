@@ -36,6 +36,7 @@ website:
       contents:
         - slides/index.qmd
         - slides/matching_methods_slides.qmd
+        - slides/pre_lab_background_lecture.qmd
 
 format:
   html:
