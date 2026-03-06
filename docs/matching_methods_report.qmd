@@ -1,0 +1,498 @@
+---
+title: "Matching and Weighting for Causal Inference"
+subtitle: "Exact Matching, Coarsened Exact Matching, and Entropy Balancing"
+author: "Luke Heley"
+bibliography: references.bib
+link-citations: true
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+execute:
+  echo: true
+  eval: false
+  warning: false
+  message: false
+---
+
+## Introduction
+
+This report examines three design-stage adjustment methods for causal inference using observational data: exact matching, which keeps only treated and untreated units that are identical on selected background variables; coarsened exact matching (CEM), which first groups variables into broader categories before matching; and entropy balancing, which reweights units so the groups align on selected covariate summaries. They are grouped together not because they are interchangeable, but because each forces the evaluator to answer the same design questions early: what causal effect is being targeted, which pre-treatment covariates^[Covariates are background characteristics measured before treatment that are used to describe units and improve comparability.] belong in the design, whether treated and untreated units overlap enough to be compared, and how much information is lost when comparability is improved.^[Here, balance means how similar the groups are on observed pre-treatment characteristics, while overlap means whether the data contain genuinely comparable treated and untreated cases in the first place.] [@ho2011matchit; @matchit_getting_started]. That makes them useful both as teaching devices and as practical stress tests of whether an observational comparison is defensible.
+
+The methods should also be assessed critically rather than taught as a menu of equivalent options. Exact matching is highly transparent, but it often becomes unusable once the covariate set contains several variables or any meaningful granularity. CEM is usually more workable because it relaxes exact matching through binning, but the analyst's coarsening choices can materially change who is retained and what "similarity" means. Entropy balancing can exactly balance the included covariate moments, but when overlap is limited the resulting weights may become highly variable and reduce effective sample size, so balance tables should be interpreted alongside overlap and weight-dispersion diagnostics.^[In plain English, the method can make the treated and untreated groups look very similar on paper, but only by giving a lot of influence to a small number of cases. If the groups were not really comparable to begin with, those large weights can make the results fragile and easy to distort, even when the balance statistics look good.] [@hainmueller2012entropy; @matchit_matching_methods]. The point of comparing these methods is therefore to make those tradeoffs explicit, not to identify a universal best practice.
+
+The report does not use propensity score matching as the main teaching example. That omission is deliberate. Propensity scores remain widely used, but in an introductory evaluation setting they can compress the design problem into a single modeled quantity^[A propensity score is the estimated probability of receiving treatment given the observed background variables. In plain English, it turns many characteristics into one score, which can make the design easier to run but harder to inspect.] and can distract attention from whether specific covariates are actually balanced. For evaluator training, the selected methods better expose the relationship between covariate balance, sample retention, and the target population [@matchit_matching_methods; @govuk_qed_slides].
+
+The report is written for an evaluation training context, with particular relevance for programme and policy evaluation in government. That framing matters. The Evaluation Task Force presents matching as one option within a wider quasi-experimental toolkit^[A quasi-experimental design estimates causal effects without random assignment, usually by exploiting timing, thresholds, policy rules, or carefully constructed comparison groups.] that also includes difference-in-differences, regression discontinuity, synthetic control, and interrupted time-series analysis^[In plain English: difference-in-differences compares changes over time, regression discontinuity uses an eligibility cutoff, synthetic control builds a weighted comparison case, and interrupted time-series tracks outcomes before and after a change.] [@govuk_evaluation_academy_resources; @govuk_qed_slides]. A good methods report should therefore do more than explain how matching works; it should also explain when matching is the strongest available design, when it is a second-best compromise, and when it should be rejected in favour of a more credible alternative.
+
+### Relevance for Evaluation Practice
+
+In many applied evaluations, treatment assignment is shaped by need, geography, eligibility decisions, or self-selection rather than randomization. In those settings, matching and weighting methods can improve design transparency because they force the analyst to state what makes units comparable and to inspect whether that comparability is actually present on observed covariates that were determined before treatment, even when the evaluation itself is conducted retrospectively using post-intervention outcome data.^[For matching, what matters is not when the analyst receives the data, but whether the covariates were determined before the programme or policy could affect them. If a variable may already have been changed by treatment, it should not usually be used to construct the match or weights.] [@govuk_evaluation_academy_resources; @govuk_qed_slides]. This is a genuine practical advantage over moving straight to an outcome model^[An outcome model is the statistical model used after the design stage to estimate the relationship between treatment and the outcome.], because a regression can adjust for observed differences without first showing whether treated and untreated units were meaningfully comparable to begin with. Design-stage adjustment makes the comparison problem visible: it reveals whether balance can be achieved, how much sample is lost or reweighted to achieve it, and whether the remaining analytic sample still corresponds to the population the evaluation is supposed to inform. That does not remove the need for outcome modelling, but it does reduce the risk that a well-specified regression is treated as a substitute for checking whether a defensible comparison group exists at all.
+
+But the practical value of these methods depends on using them skeptically. They help when the adjustment set captures the main observable drivers of selection and when the retained sample still corresponds to a policy-relevant population. They help far less when key confounders^[Confounders are factors that influence both who receives treatment and what outcome they would have had anyway.] are missing, when overlap is poor, or when a stronger quasi-experimental design is available. The aim of this report is therefore not to promote matching as a default solution, but to show evaluators how to use it as a disciplined design exercise and how to recognise when the data cannot support the causal question being asked.
+
+## Design Principles
+
+### Define the Estimand Before Adjustment
+
+Any adjustment strategy should begin with a clear statement of the target estimand^[The estimand is the exact causal quantity the analysis is trying to learn.] rather than with a preferred algorithm. In practice, that usually means deciding whether the analysis targets the average treatment effect (`ATE`), the average treatment effect on the treated (`ATT`), or the average treatment effect on the controls (`ATC`). This choice is not a technical afterthought. It affects which group is treated as focal, how weights are constructed, what kind of mismatch counts as a problem, and which population the final estimate describes [@matchit_getting_started; @matchit_matching_methods].
+
+This is also where many weak applications begin to drift [@matchit_getting_started]. Analysts sometimes choose a method first and only later describe the target population. That reverses the logic of causal design. If the policy question concerns current participants, an `ATT`-oriented design may be appropriate; if it concerns a universal rollout, an `ATE` may matter more. Without that decision, apparently good balance can still be answering the wrong question.
+
+### Matching and Weighting as Design-Stage Tools
+
+Matching and weighting are best understood as design-stage tools for improving comparability before outcome analysis begins. Exact matching and CEM do this by restricting comparisons to units with the same or similar covariate profiles, while entropy balancing does so by reweighting units until selected features of the covariate distributions align [@huntingtonklein_matching; @hainmueller2012entropy]. Keeping design and outcome analysis conceptually separate is useful because it reduces the temptation to keep tuning the design until the treatment effect looks convenient.
+
+That said, design-stage adjustment should not be oversold. These methods can only balance observed covariates that have been measured well and included for defensible reasons. Matching and weighting often improve transparency more reliably than validity because they make the design assumptions and comparison group visible, but they cannot by themselves address unmeasured confounding^[Confounding means the estimated effect of treatment is mixed together with the effects of pre-existing differences between groups. Unmeasured confounding refers to this problem when the relevant differences are not observed in the data.], poor treatment definition, or weak overlap. A balanced design on the wrong covariates is still a weak design, and no software output can compensate for a poor causal story about how treatment was assigned.
+
+### Balance and Precision Must Be Considered Together
+
+A successful design is not defined by covariate balance alone. Very small standardized mean differences^[A standardized mean difference is a way of expressing how far apart the treated and untreated groups are on a covariate after putting them on a common scale. Smaller values usually mean better balance, but they do not tell you everything that matters.] can coexist with heavy pruning^[Pruning means dropping units that are too dissimilar to compare credibly after matching or weighting.], a very small effective sample size^[Effective sample size is the amount of usable information left after matching or weighting. If a few cases receive very large weights, the analysis may behave as if it were based on far fewer observations than the raw sample size suggests.], or extreme weights that make estimates unstable. Better balance can therefore be purchased at the price of noisier estimates and a narrower target population [@matchit_getting_started; @hainmueller2012entropy].
+
+For that reason, diagnostics should report at least four things together: covariate balance, overlap/common support^[Overlap or common support means the treated and untreated groups share enough of the same covariate range to support a direct comparison. If treated cases are concentrated in parts of the data where no similar controls exist, the analysis is extrapolating rather than comparing like with like.], retained sample or effective sample size, and the implied target population. Treating any one of those metrics as sufficient is a methodological mistake.
+
+### Matching Within the Quasi-Experimental Toolkit
+
+Matching should be positioned as one option within a broader quasi-experimental toolkit rather than as the default solution for observational data. The Evaluation Academy materials place it alongside difference-in-differences, regression discontinuity, synthetic control, and pre-post approaches^[A pre-post design compares outcomes before and after an intervention, often without a separate comparison group.], each of which relies on different assumptions and data structures [@govuk_qed_slides]. In practice, the relevant question is not simply whether matching can be done, but whether it is the strongest defensible design available for the evaluation problem at hand.
+
+That ranking matters because matching only addresses bias from observed differences between groups. If the data contain a credible threshold, a phased rollout, or repeated pre-treatment outcomes, other designs may offer stronger leverage against unobserved confounding. Matching is often most valuable when the assignment mechanism is messy but rich covariates determined before treatment are available; it is least valuable when the main threats to validity are precisely the things the data do not observe.
+
+## Causal Inference Background
+
+### Potential Outcomes and Estimands
+
+The starting point for causal inference is the potential outcomes framework. For each unit, we imagine one outcome under treatment and another under no treatment^[A potential outcome is the result we would see for the same unit under one specific treatment state. The difficulty is that we never observe both states for the same person, place, or organisation.]. The causal effect for that unit is the difference between those two potential outcomes. The central problem is that only one of them is ever observed, so the other is counterfactual^[Counterfactual just means "what would have happened instead." Causal inference is difficult because that missing outcome can never be observed directly.] [@cunningham2021mixtape]. All matching and weighting methods are attempts to build a more credible stand-in for that missing outcome.
+
+This framework also makes the estimand explicit. `ATE`, `ATT`, and `ATC` are not interchangeable labels but answers to different policy questions. They refer to different target populations, imply different weighting or matching priorities, and can produce different substantive conclusions. A design-stage adjustment method is therefore only meaningful once the report has stated which estimand it is trying to recover [@cunningham2021mixtape; @matchit_getting_started].
+
+### Why Adjustment Is Needed
+
+In observational studies, treatment assignment is usually related to characteristics that also affect outcomes. Participants may seek out a programme because they are more motivated, administrators may target services toward higher-need cases, or policy exposure may vary systematically by place, timing, or institutional rules. If treated and untreated units differ in these pre-treatment characteristics, a raw outcome difference combines the effect of treatment with the effect of those pre-existing differences. That is the core confounding problem^[Confounding means the estimated effect of treatment is mixed together with the effects of pre-existing differences between groups. A confounder is a variable that affects both who gets treated and what outcome they would have had anyway.].
+
+Adjustment is needed because the untreated group is rarely a credible stand-in for the treated group without further design work. Matching and weighting can make the comparison more defensible by aligning treated and untreated units on observed pre-treatment covariates, but that qualifier matters. They do nothing for important factors that were never measured, measured badly, or left out of the design. A well-balanced analysis on the wrong variables is still biased [@ho2007matching; @ho2011matchit].
+
+### Core Assumptions
+
+For adjusted comparisons to support causal interpretation, several assumptions must be taken seriously:
+
+- `Consistency` means that the observed outcome under the treatment actually received corresponds to the relevant potential outcome. This requires treatment to be defined clearly enough that "receiving treatment" has a coherent substantive meaning [@cunningham2021mixtape]. If one site delivers a light-touch service and another delivers an intensive intervention under the same label, the causal contrast is already blurred.
+- `Exchangeability`, often framed as no unmeasured confounding^[In plain English, this means that once you account for the chosen background variables, the treated and untreated groups are comparable enough that treatment status is not just a marker for pre-existing advantage or disadvantage.], means that after conditioning on the selected pre-treatment covariates, treatment assignment is as good as independent of the potential outcomes. This is usually the hardest assumption and cannot be verified from balance tables alone [@cunningham2021mixtape].
+- `Positivity`, or overlap^[In plain English, each important type of case needs at least some treated and some untreated examples. If all severe cases are treated and all mild cases are untreated, the design has no direct basis for comparison.], means that units with a given covariate profile must have a non-zero chance of appearing in each treatment condition. If some kinds of units appear only among the treated or only among the controls, no matching or weighting procedure can create a credible comparison for those cases [@matchit_getting_started].
+- `SUTVA` (stable unit treatment value assumption)^[In plain English, one unit's treatment should not change another unit's outcome, and "the treatment" should not hide several substantively different versions of the intervention.] is commonly used to refer to the requirement that one unit's treatment status does not alter another unit's outcome, and that there are not multiple hidden versions of treatment bundled into the same label. In evaluation settings, spillovers and displacement^[Spillovers occur when one unit's treatment affects other units who were not supposed to be treated directly. Displacement occurs when the benefits or harms of an intervention are shifted from treated units onto others, rather than creating a net new effect.] or inconsistent programme delivery can threaten this assumption [@cunningham2021mixtape].
+
+Taken together, these assumptions clarify what matching and weighting can and cannot do. They can improve comparability on observed covariates and make overlap problems visible, but they cannot rescue a design that lacks a defensible treatment definition, suffers from interference, or omits key confounders. A credible matching exercise therefore depends as much on substantive knowledge of the programme and assignment process as on statistical implementation.
+
+### Subclassification as a Motivating Strategy
+
+One useful way to understand design-stage adjustment is through subclassification. The basic idea is to divide the data into strata^[A stratum is simply a group of cases that look alike on the matching variables.] defined by pre-treatment covariates, compare treated and untreated outcomes within each stratum, and then aggregate those stratum-specific contrasts using appropriate weights [@cunningham2021subclassification]. Within a stratum, treated and untreated units are more comparable because they share the same covariate pattern, or at least a more similar one than in the full unmatched sample.
+
+This perspective is especially helpful for exact matching and CEM. Exact matching creates strata using the original covariate values and keeps only strata containing both treated and control units. CEM does the same after temporarily binning variables into broader, substantively meaningful categories. That framing is useful because it makes the design logic auditable: the evaluator is not asking software to find a hidden pattern, but to compare like with like under an explicit set of rules [@cunningham2021subclassification; @iacus2012cem].
+
+### The Curse of Dimensionality
+
+The main limitation of subclassification is that it becomes harder to implement as the number of covariates grows. Each additional covariate increases the number of possible strata, and with several continuous or finely coded variables the data quickly fragment into many sparse cells. In practice, evaluators then encounter strata with only treated units, only controls, or too few observations to support stable within-stratum comparisons [@cunningham2021subclassification].
+
+This is the curse of dimensionality in design form. It weakens common support, increases sample loss, and can shift the target population away from the one originally intended. Exact matching is therefore most defensible when the adjustment set is limited, clearly justified, and measured at a level of detail that still leaves overlap. Coarsening can relieve the problem by collapsing continuous variables into broader bins, but that creates a visible tradeoff: coarser bins improve retention while allowing less precise similarity within strata. There is no purely technical way around that tradeoff; it has to be managed transparently [@iacus2012cem; @matchit_matching_methods].
+
+### Matching Versus Weighting
+
+Matching and weighting pursue the same broad objective, but they do so in different ways. Matching changes the analytic sample by pairing or subclassifying units and often discarding observations that fall outside common support. Weighting keeps more of the original sample but alters the contribution each unit makes to the estimate so that the weighted covariate distribution in one group resembles that of another. In short, matching primarily restructures the sample, whereas weighting primarily restructures the estimating population.
+
+That distinction matters for evaluation practice. Matching often provides a clearer audit trail because it makes sample restriction visible. Weighting can retain more units, but it can also obscure how much the estimate depends on a small number of heavily weighted observations. Entropy balancing belongs in the weighting family because it does not search for matched pairs or matched strata. Instead, it computes weights that satisfy explicit balance constraints on selected covariate moments^[Moments are summary features of a distribution, usually the mean and sometimes higher-order features such as the variance.] while staying as close as possible to a set of base weights [@hainmueller2012entropy]. Its attraction is that balance is imposed directly rather than hoped for after an iterative search, but that advantage only holds if the resulting weights remain substantively and statistically credible.
+
+## Positioning Matching Among QEDs
+
+### Why Use Matching
+
+Matching is most useful when an evaluator needs to estimate a causal effect from observational data but does not have a design feature strong enough to support a more credible natural experiment^[A natural experiment uses some outside rule, event, or administrative process that creates treatment differences that are closer to random than ordinary self-selection or caseworker choice.]. In the Evaluation Academy framing, it is especially relevant when only post-intervention outcomes are available, when treatment was not randomly assigned, and when the analyst can observe a set of pre-treatment characteristics that are plausibly important to both treatment assignment and outcomes [@govuk_qed_slides]. In those settings, matching can make the comparison group more credible by reducing observed imbalance and forcing explicit decisions about overlap, sample retention, and the target population.
+
+That makes matching a practical option for many programme and policy evaluations where administrative or survey data capture rich background characteristics but do not provide a clean before-and-after structure. It can also be valuable as a diagnostic exercise: a failed matching attempt is informative if it shows that no defensible comparison group exists in the available data. Even when the final analysis still uses an outcome model^[An outcome model is the regression or other statistical model used after the design stage to estimate the treatment effect.], the matched or weighted design can reduce model dependence^[Model dependence means the estimated effect changes substantially when the analyst changes the form of the outcome model.] and make the basis for inference easier to explain [@ho2007matching; @govuk_qed_slides].
+
+### When Not to Default to Matching
+
+Matching should not be presented as the default response to observational data. The relevant question is whether it is the strongest defensible design available, not whether it is technically feasible. If the assignment process creates a credible threshold, regression discontinuity may provide a stronger basis for causal inference. If a policy or programme begins at a known point in time and comparable pre-treatment outcome trends are available for treated and untreated groups, difference-in-differences may be preferable because it can account for stable unobserved differences between groups in a way matching on observed covariates cannot [@govuk_qed_slides].
+
+The same caution applies when treatment is poorly defined, interference is likely, selection depends heavily on unobserved judgement or motivation, or overlap is so weak that adjustment requires aggressive pruning or extreme weights. In those circumstances, producing a matched sample can create a false sense of design quality without solving the underlying identification problem. A good evaluator workflow therefore treats matching as one option in a broader quasi-experimental toolkit: useful when rich pre-treatment covariates are available and stronger designs are not, but secondary when the data support a more internally valid strategy [@govuk_qed_slides].
+
+## Data and Study Design
+
+### Example Dataset
+
+Introduce the dataset used in the demonstration. Define:
+
+- the treatment indicator
+- the outcome
+- the pre-treatment covariates
+- the target estimand
+- the focal group, if targeting `ATT` or `ATC`
+
+### Evaluation Use Case
+
+Briefly describe the kind of evaluation question the example is meant to represent, such as a programme participation effect, a policy exposure effect, or an intervention uptake effect. This keeps the methods grounded in evaluator practice rather than abstract statistical comparison.
+
+### Package Setup
+
+```{r}
+library(MatchIt)
+library(WeightIt)
+library(cobalt)
+library(dplyr)
+library(ggplot2)
+```
+
+### Data Preparation
+
+```{r}
+# Replace this with the project dataset or a reproducible example.
+# dat <- read.csv("path/to/data.csv")
+
+# Example structure expected by the report:
+# dat <- dat |>
+#   mutate(
+#     treat = as.integer(treat),
+#     outcome = outcome
+#   )
+```
+
+## Pre-Match Diagnostics
+
+### Descriptive Comparison
+
+Summarize the treated and control groups before adjustment.
+
+```{r}
+# dat |>
+#   group_by(treat) |>
+#   summarise(
+#     n = n(),
+#     mean_outcome = mean(outcome, na.rm = TRUE)
+#   )
+```
+
+### Balance Diagnostics Before Adjustment
+
+Use `MatchIt` to construct a pre-match object and then inspect imbalance before any design choices are imposed [@matchit_getting_started].
+
+```{r}
+# m_out0 <- matchit(
+#   treat ~ age + sex + race + education + income,
+#   data = dat,
+#   method = NULL,
+#   distance = "glm"
+# )
+#
+# summary(m_out0)
+# bal.tab(m_out0, un = TRUE)
+```
+
+## Exact Matching
+
+### Method Overview
+
+Explain exact matching as stratum matching on the raw covariates. Note that exact matching removes imbalance on the included covariates within retained strata but can discard many units and shift the target population when support is limited [@matchit_matching_methods; @matchit_method_exact].
+
+### R Implementation with `MatchIt`
+
+```{r}
+# m_exact <- matchit(
+#   treat ~ sex + race + education + region,
+#   data = dat,
+#   method = "exact",
+#   estimand = "ATT"
+# )
+#
+# summary(m_exact)
+# matched_exact <- match.data(m_exact)
+```
+
+### Post-Match Diagnostics
+
+Assess covariate balance, the number of matched subclasses, and the number of units retained after exact matching.
+
+```{r}
+# bal.tab(m_exact, un = TRUE)
+# love.plot(m_exact, stats = "mean.diffs")
+```
+
+### Effect Estimation After Exact Matching
+
+```{r}
+# fit_exact <- lm(outcome ~ treat, data = matched_exact, weights = weights)
+# summary(fit_exact)
+```
+
+## Coarsened Exact Matching
+
+### Method Overview
+
+Explain how coarsening makes stratum matching feasible for continuous covariates and how cutpoints control the tradeoff between exact balance and sample retention [@iacus2012cem; @matchit_method_cem].
+
+### R Implementation with `MatchIt`
+
+```{r}
+# m_cem <- matchit(
+#   treat ~ age + income + bmi + sex,
+#   data = dat,
+#   method = "cem",
+#   cutpoints = list(
+#     age = c(30, 40, 50, 60),
+#     income = c(30000, 50000, 80000),
+#     bmi = c(18.5, 25, 30)
+#   )
+# )
+#
+# summary(m_cem)
+# matched_cem <- match.data(m_cem)
+```
+
+### Post-Match Diagnostics
+
+```{r}
+# bal.tab(m_cem, un = TRUE)
+# love.plot(m_cem, stats = "mean.diffs")
+```
+
+### Effect Estimation After CEM
+
+```{r}
+# fit_cem <- lm(outcome ~ treat, data = matched_cem, weights = weights)
+# summary(fit_cem)
+```
+
+## Entropy Balancing for Weighting
+
+### Method Overview
+
+Explain entropy balancing as a multivariate reweighting method that directly enforces balance constraints on selected covariate moments. Emphasize that it belongs in the report as a weighting approach rather than a matching method [@hainmueller2012entropy]. Note that the Evaluation Academy quasi-experimental design slides list entropy balancing as the recommended option among the matching-method choices presented to learners [@govuk_qed_slides].
+
+### R Implementation
+
+```{r}
+# w_ebal <- weightit(
+#   treat ~ age + income + bmi + sex + education,
+#   data = dat,
+#   method = "ebal",
+#   estimand = "ATT"
+# )
+#
+# summary(w_ebal)
+# dat$w_ebal <- w_ebal$weights
+```
+
+### Post-Weighting Diagnostics
+
+```{r}
+# bal.tab(w_ebal, un = TRUE)
+# love.plot(w_ebal, stats = "mean.diffs")
+```
+
+### Effect Estimation After Weighting
+
+```{r}
+# fit_ebal <- glm(outcome ~ treat, data = dat, weights = w_ebal$weights)
+# summary(fit_ebal)
+```
+
+## Iterating on Design Quality
+
+If covariates remain imbalanced after adjustment, treat the design as unsuccessful and revise the specification rather than moving directly to effect estimation. Potential revisions include changing the covariate set, tightening or relaxing coarsening, altering support restrictions, or reconsidering the target estimand [@matchit_getting_started].
+
+## Comparing the Methods
+
+### Covariate Balance
+
+Compare pre- and post-adjustment balance across exact matching, CEM, and entropy balancing.
+
+### Sample Retention and Effective Sample Size
+
+Discuss discarded units for matching approaches and effective sample size for the weighting approach.
+
+### Practical Tradeoffs
+
+Discuss transparency, feasibility, tuning choices, target population, and robustness in moderate-dimensional settings.
+
+## Guidance for Evaluators
+
+Translate the methods into evaluator-facing advice.
+
+### When Exact Matching Is Appropriate
+
+Discuss settings with a small number of discrete and substantively central covariates, where interpretability is a priority and sample loss is acceptable.
+
+### When CEM Is Appropriate
+
+Discuss settings where evaluators need a more feasible subclassification-based design for mixed covariate types and want explicit control over coarsening decisions.
+
+### When Entropy Balancing Is Appropriate
+
+Discuss settings where preserving units and achieving strong covariate balance is more important than producing an explicitly matched analytic sample.
+
+### Reporting Recommendations
+
+Specify that evaluator-facing reporting should include:
+
+- the estimand
+- the covariates used for design
+- balance before and after adjustment
+- discarded units or effective sample size
+- how design choices may change the population represented by the estimate
+
+### Choosing Among Matching Options
+
+Use the Evaluation Academy slide deck to motivate a practical comparison among propensity score matching, coarsened exact matching, and entropy balancing. Make clear that this report focuses on exact matching, CEM, and entropy balancing because they provide a more transparent and modern teaching pathway than relying on PSM as the main example [@govuk_qed_slides; @matchit_matching_methods].
+
+## Treatment Effect Summary
+
+Present the treatment effect estimates from each method in a comparable table and discuss the extent to which conclusions depend on design choices.
+
+```{r}
+# tibble(
+#   method = c("Exact matching", "CEM", "Entropy balancing"),
+#   estimate = c(NA_real_, NA_real_, NA_real_)
+# )
+```
+
+## Limitations
+
+Discuss:
+
+- residual confounding from omitted variables
+- lack of protection against hidden bias
+- overlap problems
+- sensitivity to cutpoints, exact constraints, and estimand choice
+- estimand drift when units are dropped due to limited support
+
+## Conclusion
+
+Summarize the main lessons from the comparison and provide practical guidance on method selection.
+
+## Appendix
+
+### Glossary
+
+`ATC`  
+Average treatment effect on the controls: the average effect the intervention would have had for units that did not receive treatment.
+
+`ATT`  
+Average treatment effect on the treated: the average effect of the intervention for units that actually received treatment.
+
+`ATE`  
+Average treatment effect: the average effect of the intervention across the full target population.
+
+`Balance`  
+The extent to which the treatment and comparison groups are similar on observed pre-treatment covariates after adjustment.
+
+`Common support`  
+The region where treated and comparison units have sufficiently similar covariate values to make adjustment credible.
+
+`Consistency`  
+The assumption that the observed outcome under the treatment actually received matches the corresponding potential outcome for that treatment condition.
+
+`Coarsened exact matching (CEM)`  
+A matching method that temporarily bins covariates into substantively meaningful categories and then matches units exactly within those coarsened strata.
+
+`Confounding`  
+Bias that arises when the estimated effect of treatment is mixed together with the effects of pre-existing differences between groups because some factors influence both treatment assignment and the outcome.
+
+`Counterfactual`  
+The outcome that would have been observed for the same unit under the treatment state that did not occur.
+
+`Covariates`  
+Observed characteristics measured before treatment that are used to describe units and adjust for differences between groups.
+
+`Entropy balancing`  
+A weighting method that chooses unit weights so the reweighted comparison group matches the treatment group on specified covariate moments.
+
+`Estimand`  
+The causal quantity the analysis is trying to estimate, such as the ATT or ATE.
+
+`Exchangeability`  
+The assumption that, after conditioning on the chosen pre-treatment covariates, treatment assignment is independent of the potential outcomes.
+
+`Exact matching`  
+A method that retains only units that can be matched exactly on the selected covariates.
+
+`Effective sample size`  
+A summary of how much information remains after weighting, accounting for the uneven distribution of weights.
+
+`Difference-in-differences`  
+A design that estimates an intervention effect by comparing how outcomes changed over time in a treated group relative to a comparison group.
+
+`Interference`  
+A situation where one unit's treatment affects another unit's outcome, violating the standard no-spillover assumption.
+
+`Interrupted time-series`  
+A design that estimates whether an intervention changed the level or trend of an outcome by comparing observations before and after a known interruption point.
+
+`Love plot`  
+A diagnostic plot that shows covariate imbalance before and after adjustment, usually using standardized mean differences.
+
+`Matching`  
+A design-stage adjustment approach that pairs or groups treated and comparison units with similar observed covariates.
+
+`Model dependence`  
+Sensitivity of the estimated treatment effect to the choice of outcome-model specification.
+
+`Moments`  
+Summary features of a distribution, usually the mean and sometimes the variance or higher-order shape characteristics.
+
+`Natural experiment`  
+A setting where an external rule, shock, or administrative process creates treatment variation that is plausibly closer to random assignment.
+
+`Outcome model`  
+The statistical model used after the design stage to estimate the treatment effect.
+
+`Overlap`  
+The degree to which treated and untreated units have comparable covariate profiles and occupy the same range of the data; weak overlap means there are too few similar cases across groups to support a credible direct comparison.
+
+`Potential outcomes`  
+The outcomes a unit would exhibit under treatment and under no treatment, only one of which is observed in practice.
+
+`Positivity`  
+The assumption that each relevant covariate profile has a non-zero chance of appearing in each treatment condition.
+
+`Pre-post design`  
+A design that compares outcomes before and after an intervention, often without using a separate comparison group.
+
+`Preprocessing`  
+A design-stage step carried out before outcome analysis to improve comparability between treatment groups.
+
+`Propensity score`  
+The probability of receiving treatment conditional on observed covariates.
+
+`Pruning`  
+Dropping units that fall outside acceptable overlap or are too dissimilar to support a credible comparison.
+
+`Quasi-experimental design (QED)`  
+A non-randomized design used for causal inference that relies on comparison structure, timing, rules, or thresholds instead of random assignment.
+
+`Regression discontinuity`  
+A design that estimates causal effects by comparing units just above and just below a policy cutoff or eligibility threshold.
+
+`Standardized mean difference`  
+A scale-free measure of covariate imbalance commonly used to assess whether adjustment improved comparability.
+
+`Synthetic control`  
+A design that builds a weighted combination of comparison units to approximate the treated unit's pre-intervention trajectory.
+
+`Stratum`  
+A subgroup of units defined by the matching variables and used for within-group comparison.
+
+`SUTVA`  
+The assumption that one unit's treatment does not affect another unit's outcome and that the treatment label does not hide multiple versions of the intervention.
+
+`Weighting`  
+An adjustment approach that assigns units analytic weights so one group better represents a target population or matches another group on observed covariates.
+
+### Full Code
+
+Add the final runnable code here or link to companion scripts.
+
+### Session Information
+
+```{r}
+# sessionInfo()
+```
+
+## References

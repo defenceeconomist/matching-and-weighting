@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Luke Heley">
+
+<title>Matching and Weighting for Causal Inference</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="matching_methods_report_files/libs/clipboard/clipboard.min.js"></script>
+<script src="matching_methods_report_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="matching_methods_report_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="matching_methods_report_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="matching_methods_report_files/libs/quarto-html/popper.min.js"></script>
+<script src="matching_methods_report_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="matching_methods_report_files/libs/quarto-html/anchor.min.js"></script>
+<link href="matching_methods_report_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="matching_methods_report_files/libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="matching_methods_report_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="matching_methods_report_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="matching_methods_report_files/libs/bootstrap/bootstrap-d6a003b94517c951b2d65075d42fb01b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a>
+  <ul class="collapse">
+  <li><a href="#relevance-for-evaluation-practice" id="toc-relevance-for-evaluation-practice" class="nav-link" data-scroll-target="#relevance-for-evaluation-practice"><span class="header-section-number">1.1</span> Relevance for Evaluation Practice</a></li>
+  </ul></li>
+  <li><a href="#design-principles" id="toc-design-principles" class="nav-link" data-scroll-target="#design-principles"><span class="header-section-number">2</span> Design Principles</a>
+  <ul class="collapse">
+  <li><a href="#define-the-estimand-before-adjustment" id="toc-define-the-estimand-before-adjustment" class="nav-link" data-scroll-target="#define-the-estimand-before-adjustment"><span class="header-section-number">2.1</span> Define the Estimand Before Adjustment</a></li>
+  <li><a href="#matching-and-weighting-as-design-stage-tools" id="toc-matching-and-weighting-as-design-stage-tools" class="nav-link" data-scroll-target="#matching-and-weighting-as-design-stage-tools"><span class="header-section-number">2.2</span> Matching and Weighting as Design-Stage Tools</a></li>
+  <li><a href="#balance-and-precision-must-be-considered-together" id="toc-balance-and-precision-must-be-considered-together" class="nav-link" data-scroll-target="#balance-and-precision-must-be-considered-together"><span class="header-section-number">2.3</span> Balance and Precision Must Be Considered Together</a></li>
+  <li><a href="#matching-within-the-quasi-experimental-toolkit" id="toc-matching-within-the-quasi-experimental-toolkit" class="nav-link" data-scroll-target="#matching-within-the-quasi-experimental-toolkit"><span class="header-section-number">2.4</span> Matching Within the Quasi-Experimental Toolkit</a></li>
+  </ul></li>
+  <li><a href="#causal-inference-background" id="toc-causal-inference-background" class="nav-link" data-scroll-target="#causal-inference-background"><span class="header-section-number">3</span> Causal Inference Background</a>
+  <ul class="collapse">
+  <li><a href="#potential-outcomes-and-estimands" id="toc-potential-outcomes-and-estimands" class="nav-link" data-scroll-target="#potential-outcomes-and-estimands"><span class="header-section-number">3.1</span> Potential Outcomes and Estimands</a></li>
+  <li><a href="#why-adjustment-is-needed" id="toc-why-adjustment-is-needed" class="nav-link" data-scroll-target="#why-adjustment-is-needed"><span class="header-section-number">3.2</span> Why Adjustment Is Needed</a></li>
+  <li><a href="#core-assumptions" id="toc-core-assumptions" class="nav-link" data-scroll-target="#core-assumptions"><span class="header-section-number">3.3</span> Core Assumptions</a></li>
+  <li><a href="#subclassification-as-a-motivating-strategy" id="toc-subclassification-as-a-motivating-strategy" class="nav-link" data-scroll-target="#subclassification-as-a-motivating-strategy"><span class="header-section-number">3.4</span> Subclassification as a Motivating Strategy</a></li>
+  <li><a href="#the-curse-of-dimensionality" id="toc-the-curse-of-dimensionality" class="nav-link" data-scroll-target="#the-curse-of-dimensionality"><span class="header-section-number">3.5</span> The Curse of Dimensionality</a></li>
+  <li><a href="#matching-versus-weighting" id="toc-matching-versus-weighting" class="nav-link" data-scroll-target="#matching-versus-weighting"><span class="header-section-number">3.6</span> Matching Versus Weighting</a></li>
+  </ul></li>
+  <li><a href="#positioning-matching-among-qeds" id="toc-positioning-matching-among-qeds" class="nav-link" data-scroll-target="#positioning-matching-among-qeds"><span class="header-section-number">4</span> Positioning Matching Among QEDs</a>
+  <ul class="collapse">
+  <li><a href="#why-use-matching" id="toc-why-use-matching" class="nav-link" data-scroll-target="#why-use-matching"><span class="header-section-number">4.1</span> Why Use Matching</a></li>
+  <li><a href="#when-not-to-default-to-matching" id="toc-when-not-to-default-to-matching" class="nav-link" data-scroll-target="#when-not-to-default-to-matching"><span class="header-section-number">4.2</span> When Not to Default to Matching</a></li>
+  </ul></li>
+  <li><a href="#data-and-study-design" id="toc-data-and-study-design" class="nav-link" data-scroll-target="#data-and-study-design"><span class="header-section-number">5</span> Data and Study Design</a>
+  <ul class="collapse">
+  <li><a href="#example-dataset" id="toc-example-dataset" class="nav-link" data-scroll-target="#example-dataset"><span class="header-section-number">5.1</span> Example Dataset</a></li>
+  <li><a href="#evaluation-use-case" id="toc-evaluation-use-case" class="nav-link" data-scroll-target="#evaluation-use-case"><span class="header-section-number">5.2</span> Evaluation Use Case</a></li>
+  <li><a href="#package-setup" id="toc-package-setup" class="nav-link" data-scroll-target="#package-setup"><span class="header-section-number">5.3</span> Package Setup</a></li>
+  <li><a href="#data-preparation" id="toc-data-preparation" class="nav-link" data-scroll-target="#data-preparation"><span class="header-section-number">5.4</span> Data Preparation</a></li>
+  </ul></li>
+  <li><a href="#pre-match-diagnostics" id="toc-pre-match-diagnostics" class="nav-link" data-scroll-target="#pre-match-diagnostics"><span class="header-section-number">6</span> Pre-Match Diagnostics</a>
+  <ul class="collapse">
+  <li><a href="#descriptive-comparison" id="toc-descriptive-comparison" class="nav-link" data-scroll-target="#descriptive-comparison"><span class="header-section-number">6.1</span> Descriptive Comparison</a></li>
+  <li><a href="#balance-diagnostics-before-adjustment" id="toc-balance-diagnostics-before-adjustment" class="nav-link" data-scroll-target="#balance-diagnostics-before-adjustment"><span class="header-section-number">6.2</span> Balance Diagnostics Before Adjustment</a></li>
+  </ul></li>
+  <li><a href="#exact-matching" id="toc-exact-matching" class="nav-link" data-scroll-target="#exact-matching"><span class="header-section-number">7</span> Exact Matching</a>
+  <ul class="collapse">
+  <li><a href="#method-overview" id="toc-method-overview" class="nav-link" data-scroll-target="#method-overview"><span class="header-section-number">7.1</span> Method Overview</a></li>
+  <li><a href="#r-implementation-with-matchit" id="toc-r-implementation-with-matchit" class="nav-link" data-scroll-target="#r-implementation-with-matchit"><span class="header-section-number">7.2</span> R Implementation with <code>MatchIt</code></a></li>
+  <li><a href="#post-match-diagnostics" id="toc-post-match-diagnostics" class="nav-link" data-scroll-target="#post-match-diagnostics"><span class="header-section-number">7.3</span> Post-Match Diagnostics</a></li>
+  <li><a href="#effect-estimation-after-exact-matching" id="toc-effect-estimation-after-exact-matching" class="nav-link" data-scroll-target="#effect-estimation-after-exact-matching"><span class="header-section-number">7.4</span> Effect Estimation After Exact Matching</a></li>
+  </ul></li>
+  <li><a href="#coarsened-exact-matching" id="toc-coarsened-exact-matching" class="nav-link" data-scroll-target="#coarsened-exact-matching"><span class="header-section-number">8</span> Coarsened Exact Matching</a>
+  <ul class="collapse">
+  <li><a href="#method-overview-1" id="toc-method-overview-1" class="nav-link" data-scroll-target="#method-overview-1"><span class="header-section-number">8.1</span> Method Overview</a></li>
+  <li><a href="#r-implementation-with-matchit-1" id="toc-r-implementation-with-matchit-1" class="nav-link" data-scroll-target="#r-implementation-with-matchit-1"><span class="header-section-number">8.2</span> R Implementation with <code>MatchIt</code></a></li>
+  <li><a href="#post-match-diagnostics-1" id="toc-post-match-diagnostics-1" class="nav-link" data-scroll-target="#post-match-diagnostics-1"><span class="header-section-number">8.3</span> Post-Match Diagnostics</a></li>
+  <li><a href="#effect-estimation-after-cem" id="toc-effect-estimation-after-cem" class="nav-link" data-scroll-target="#effect-estimation-after-cem"><span class="header-section-number">8.4</span> Effect Estimation After CEM</a></li>
+  </ul></li>
+  <li><a href="#entropy-balancing-for-weighting" id="toc-entropy-balancing-for-weighting" class="nav-link" data-scroll-target="#entropy-balancing-for-weighting"><span class="header-section-number">9</span> Entropy Balancing for Weighting</a>
+  <ul class="collapse">
+  <li><a href="#method-overview-2" id="toc-method-overview-2" class="nav-link" data-scroll-target="#method-overview-2"><span class="header-section-number">9.1</span> Method Overview</a></li>
+  <li><a href="#r-implementation" id="toc-r-implementation" class="nav-link" data-scroll-target="#r-implementation"><span class="header-section-number">9.2</span> R Implementation</a></li>
+  <li><a href="#post-weighting-diagnostics" id="toc-post-weighting-diagnostics" class="nav-link" data-scroll-target="#post-weighting-diagnostics"><span class="header-section-number">9.3</span> Post-Weighting Diagnostics</a></li>
+  <li><a href="#effect-estimation-after-weighting" id="toc-effect-estimation-after-weighting" class="nav-link" data-scroll-target="#effect-estimation-after-weighting"><span class="header-section-number">9.4</span> Effect Estimation After Weighting</a></li>
+  </ul></li>
+  <li><a href="#iterating-on-design-quality" id="toc-iterating-on-design-quality" class="nav-link" data-scroll-target="#iterating-on-design-quality"><span class="header-section-number">10</span> Iterating on Design Quality</a></li>
+  <li><a href="#comparing-the-methods" id="toc-comparing-the-methods" class="nav-link" data-scroll-target="#comparing-the-methods"><span class="header-section-number">11</span> Comparing the Methods</a>
+  <ul class="collapse">
+  <li><a href="#covariate-balance" id="toc-covariate-balance" class="nav-link" data-scroll-target="#covariate-balance"><span class="header-section-number">11.1</span> Covariate Balance</a></li>
+  <li><a href="#sample-retention-and-effective-sample-size" id="toc-sample-retention-and-effective-sample-size" class="nav-link" data-scroll-target="#sample-retention-and-effective-sample-size"><span class="header-section-number">11.2</span> Sample Retention and Effective Sample Size</a></li>
+  <li><a href="#practical-tradeoffs" id="toc-practical-tradeoffs" class="nav-link" data-scroll-target="#practical-tradeoffs"><span class="header-section-number">11.3</span> Practical Tradeoffs</a></li>
+  </ul></li>
+  <li><a href="#guidance-for-evaluators" id="toc-guidance-for-evaluators" class="nav-link" data-scroll-target="#guidance-for-evaluators"><span class="header-section-number">12</span> Guidance for Evaluators</a>
+  <ul class="collapse">
+  <li><a href="#when-exact-matching-is-appropriate" id="toc-when-exact-matching-is-appropriate" class="nav-link" data-scroll-target="#when-exact-matching-is-appropriate"><span class="header-section-number">12.1</span> When Exact Matching Is Appropriate</a></li>
+  <li><a href="#when-cem-is-appropriate" id="toc-when-cem-is-appropriate" class="nav-link" data-scroll-target="#when-cem-is-appropriate"><span class="header-section-number">12.2</span> When CEM Is Appropriate</a></li>
+  <li><a href="#when-entropy-balancing-is-appropriate" id="toc-when-entropy-balancing-is-appropriate" class="nav-link" data-scroll-target="#when-entropy-balancing-is-appropriate"><span class="header-section-number">12.3</span> When Entropy Balancing Is Appropriate</a></li>
+  <li><a href="#reporting-recommendations" id="toc-reporting-recommendations" class="nav-link" data-scroll-target="#reporting-recommendations"><span class="header-section-number">12.4</span> Reporting Recommendations</a></li>
+  <li><a href="#choosing-among-matching-options" id="toc-choosing-among-matching-options" class="nav-link" data-scroll-target="#choosing-among-matching-options"><span class="header-section-number">12.5</span> Choosing Among Matching Options</a></li>
+  </ul></li>
+  <li><a href="#treatment-effect-summary" id="toc-treatment-effect-summary" class="nav-link" data-scroll-target="#treatment-effect-summary"><span class="header-section-number">13</span> Treatment Effect Summary</a></li>
+  <li><a href="#limitations" id="toc-limitations" class="nav-link" data-scroll-target="#limitations"><span class="header-section-number">14</span> Limitations</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">15</span> Conclusion</a></li>
+  <li><a href="#appendix" id="toc-appendix" class="nav-link" data-scroll-target="#appendix"><span class="header-section-number">16</span> Appendix</a>
+  <ul class="collapse">
+  <li><a href="#glossary" id="toc-glossary" class="nav-link" data-scroll-target="#glossary"><span class="header-section-number">16.1</span> Glossary</a></li>
+  <li><a href="#full-code" id="toc-full-code" class="nav-link" data-scroll-target="#full-code"><span class="header-section-number">16.2</span> Full Code</a></li>
+  <li><a href="#session-information" id="toc-session-information" class="nav-link" data-scroll-target="#session-information"><span class="header-section-number">16.3</span> Session Information</a></li>
+  </ul></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">17</span> References</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Matching and Weighting for Causal Inference</h1>
+<p class="subtitle lead">Exact Matching, Coarsened Exact Matching, and Entropy Balancing</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Luke Heley </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
+<p>This report examines three design-stage adjustment methods for causal inference using observational data: exact matching, which keeps only treated and untreated units that are identical on selected background variables; coarsened exact matching (CEM), which first groups variables into broader categories before matching; and entropy balancing, which reweights units so the groups align on selected covariate summaries. They are grouped together not because they are interchangeable, but because each forces the evaluator to answer the same design questions early: what causal effect is being targeted, which pre-treatment covariates<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> belong in the design, whether treated and untreated units overlap enough to be compared, and how much information is lost when comparability is improved.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> <span class="citation" data-cites="ho2011matchit matchit_getting_started">(<a href="#ref-ho2011matchit" role="doc-biblioref">Ho et al. 2011</a>; <a href="#ref-matchit_getting_started" role="doc-biblioref">MatchIt Authors n.d.</a>)</span>. That makes them useful both as teaching devices and as practical stress tests of whether an observational comparison is defensible.</p>
+<p>The methods should also be assessed critically rather than taught as a menu of equivalent options. Exact matching is highly transparent, but it often becomes unusable once the covariate set contains several variables or any meaningful granularity. CEM is usually more workable because it relaxes exact matching through binning, but the analyst’s coarsening choices can materially change who is retained and what “similarity” means. Entropy balancing can exactly balance the included covariate moments, but when overlap is limited the resulting weights may become highly variable and reduce effective sample size, so balance tables should be interpreted alongside overlap and weight-dispersion diagnostics.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> <span class="citation" data-cites="hainmueller2012entropy matchit_matching_methods">(<a href="#ref-hainmueller2012entropy" role="doc-biblioref">Hainmueller 2012</a>; <a href="#ref-matchit_matching_methods" role="doc-biblioref">MatchIt Authors n.d.</a>)</span>. The point of comparing these methods is therefore to make those tradeoffs explicit, not to identify a universal best practice.</p>
+<p>The report does not use propensity score matching as the main teaching example. That omission is deliberate. Propensity scores remain widely used, but in an introductory evaluation setting they can compress the design problem into a single modeled quantity<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> and can distract attention from whether specific covariates are actually balanced. For evaluator training, the selected methods better expose the relationship between covariate balance, sample retention, and the target population <span class="citation" data-cites="matchit_matching_methods govuk_qed_slides">(<a href="#ref-matchit_matching_methods" role="doc-biblioref">MatchIt Authors n.d.</a>; <a href="#ref-govuk_qed_slides" role="doc-biblioref">Evaluation Task Force 2025b</a>)</span>.</p>
+<p>The report is written for an evaluation training context, with particular relevance for programme and policy evaluation in government. That framing matters. The Evaluation Task Force presents matching as one option within a wider quasi-experimental toolkit<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> that also includes difference-in-differences, regression discontinuity, synthetic control, and interrupted time-series analysis<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a> <span class="citation" data-cites="govuk_evaluation_academy_resources govuk_qed_slides">(<a href="#ref-govuk_evaluation_academy_resources" role="doc-biblioref">Evaluation Task Force 2025a</a>, <a href="#ref-govuk_qed_slides" role="doc-biblioref">2025b</a>)</span>. A good methods report should therefore do more than explain how matching works; it should also explain when matching is the strongest available design, when it is a second-best compromise, and when it should be rejected in favour of a more credible alternative.</p>
+<section id="relevance-for-evaluation-practice" class="level3" data-number="1.1">
+<h3 data-number="1.1" class="anchored" data-anchor-id="relevance-for-evaluation-practice"><span class="header-section-number">1.1</span> Relevance for Evaluation Practice</h3>
+<p>In many applied evaluations, treatment assignment is shaped by need, geography, eligibility decisions, or self-selection rather than randomization. In those settings, matching and weighting methods can improve design transparency because they force the analyst to state what makes units comparable and to inspect whether that comparability is actually present on observed covariates that were determined before treatment, even when the evaluation itself is conducted retrospectively using post-intervention outcome data.<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a> <span class="citation" data-cites="govuk_evaluation_academy_resources govuk_qed_slides">(<a href="#ref-govuk_evaluation_academy_resources" role="doc-biblioref">Evaluation Task Force 2025a</a>, <a href="#ref-govuk_qed_slides" role="doc-biblioref">2025b</a>)</span>. This is a genuine practical advantage over moving straight to an outcome model<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a>, because a regression can adjust for observed differences without first showing whether treated and untreated units were meaningfully comparable to begin with. Design-stage adjustment makes the comparison problem visible: it reveals whether balance can be achieved, how much sample is lost or reweighted to achieve it, and whether the remaining analytic sample still corresponds to the population the evaluation is supposed to inform. That does not remove the need for outcome modelling, but it does reduce the risk that a well-specified regression is treated as a substitute for checking whether a defensible comparison group exists at all.</p>
+<p>But the practical value of these methods depends on using them skeptically. They help when the adjustment set captures the main observable drivers of selection and when the retained sample still corresponds to a policy-relevant population. They help far less when key confounders<a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a> are missing, when overlap is poor, or when a stronger quasi-experimental design is available. The aim of this report is therefore not to promote matching as a default solution, but to show evaluators how to use it as a disciplined design exercise and how to recognise when the data cannot support the causal question being asked.</p>
+</section>
+</section>
+<section id="design-principles" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="design-principles"><span class="header-section-number">2</span> Design Principles</h2>
+<section id="define-the-estimand-before-adjustment" class="level3" data-number="2.1">
+<h3 data-number="2.1" class="anchored" data-anchor-id="define-the-estimand-before-adjustment"><span class="header-section-number">2.1</span> Define the Estimand Before Adjustment</h3>
+<p>Any adjustment strategy should begin with a clear statement of the target estimand<a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a> rather than with a preferred algorithm. In practice, that usually means deciding whether the analysis targets the average treatment effect (<code>ATE</code>), the average treatment effect on the treated (<code>ATT</code>), or the average treatment effect on the controls (<code>ATC</code>). This choice is not a technical afterthought. It affects which group is treated as focal, how weights are constructed, what kind of mismatch counts as a problem, and which population the final estimate describes <span class="citation" data-cites="matchit_getting_started matchit_matching_methods">(<a href="#ref-matchit_getting_started" role="doc-biblioref">MatchIt Authors n.d.</a>, <a href="#ref-matchit_matching_methods" role="doc-biblioref">n.d.</a>)</span>.</p>
+<p>This is also where many weak applications begin to drift <span class="citation" data-cites="matchit_getting_started">(<a href="#ref-matchit_getting_started" role="doc-biblioref">MatchIt Authors n.d.</a>)</span>. Analysts sometimes choose a method first and only later describe the target population. That reverses the logic of causal design. If the policy question concerns current participants, an <code>ATT</code>-oriented design may be appropriate; if it concerns a universal rollout, an <code>ATE</code> may matter more. Without that decision, apparently good balance can still be answering the wrong question.</p>
+</section>
+<section id="matching-and-weighting-as-design-stage-tools" class="level3" data-number="2.2">
+<h3 data-number="2.2" class="anchored" data-anchor-id="matching-and-weighting-as-design-stage-tools"><span class="header-section-number">2.2</span> Matching and Weighting as Design-Stage Tools</h3>
+<p>Matching and weighting are best understood as design-stage tools for improving comparability before outcome analysis begins. Exact matching and CEM do this by restricting comparisons to units with the same or similar covariate profiles, while entropy balancing does so by reweighting units until selected features of the covariate distributions align <span class="citation" data-cites="huntingtonklein_matching hainmueller2012entropy">(<a href="#ref-huntingtonklein_matching" role="doc-biblioref">Huntington-Klein n.d.</a>; <a href="#ref-hainmueller2012entropy" role="doc-biblioref">Hainmueller 2012</a>)</span>. Keeping design and outcome analysis conceptually separate is useful because it reduces the temptation to keep tuning the design until the treatment effect looks convenient.</p>
+<p>That said, design-stage adjustment should not be oversold. These methods can only balance observed covariates that have been measured well and included for defensible reasons. Matching and weighting often improve transparency more reliably than validity because they make the design assumptions and comparison group visible, but they cannot by themselves address unmeasured confounding<a href="#fn11" class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a>, poor treatment definition, or weak overlap. A balanced design on the wrong covariates is still a weak design, and no software output can compensate for a poor causal story about how treatment was assigned.</p>
+</section>
+<section id="balance-and-precision-must-be-considered-together" class="level3" data-number="2.3">
+<h3 data-number="2.3" class="anchored" data-anchor-id="balance-and-precision-must-be-considered-together"><span class="header-section-number">2.3</span> Balance and Precision Must Be Considered Together</h3>
+<p>A successful design is not defined by covariate balance alone. Very small standardized mean differences<a href="#fn12" class="footnote-ref" id="fnref12" role="doc-noteref"><sup>12</sup></a> can coexist with heavy pruning<a href="#fn13" class="footnote-ref" id="fnref13" role="doc-noteref"><sup>13</sup></a>, a very small effective sample size<a href="#fn14" class="footnote-ref" id="fnref14" role="doc-noteref"><sup>14</sup></a>, or extreme weights that make estimates unstable. Better balance can therefore be purchased at the price of noisier estimates and a narrower target population <span class="citation" data-cites="matchit_getting_started hainmueller2012entropy">(<a href="#ref-matchit_getting_started" role="doc-biblioref">MatchIt Authors n.d.</a>; <a href="#ref-hainmueller2012entropy" role="doc-biblioref">Hainmueller 2012</a>)</span>.</p>
+<p>For that reason, diagnostics should report at least four things together: covariate balance, overlap/common support<a href="#fn15" class="footnote-ref" id="fnref15" role="doc-noteref"><sup>15</sup></a>, retained sample or effective sample size, and the implied target population. Treating any one of those metrics as sufficient is a methodological mistake.</p>
+</section>
+<section id="matching-within-the-quasi-experimental-toolkit" class="level3" data-number="2.4">
+<h3 data-number="2.4" class="anchored" data-anchor-id="matching-within-the-quasi-experimental-toolkit"><span class="header-section-number">2.4</span> Matching Within the Quasi-Experimental Toolkit</h3>
+<p>Matching should be positioned as one option within a broader quasi-experimental toolkit rather than as the default solution for observational data. The Evaluation Academy materials place it alongside difference-in-differences, regression discontinuity, synthetic control, and pre-post approaches<a href="#fn16" class="footnote-ref" id="fnref16" role="doc-noteref"><sup>16</sup></a>, each of which relies on different assumptions and data structures <span class="citation" data-cites="govuk_qed_slides">(<a href="#ref-govuk_qed_slides" role="doc-biblioref">Evaluation Task Force 2025b</a>)</span>. In practice, the relevant question is not simply whether matching can be done, but whether it is the strongest defensible design available for the evaluation problem at hand.</p>
+<p>That ranking matters because matching only addresses bias from observed differences between groups. If the data contain a credible threshold, a phased rollout, or repeated pre-treatment outcomes, other designs may offer stronger leverage against unobserved confounding. Matching is often most valuable when the assignment mechanism is messy but rich covariates determined before treatment are available; it is least valuable when the main threats to validity are precisely the things the data do not observe.</p>
+</section>
+</section>
+<section id="causal-inference-background" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="causal-inference-background"><span class="header-section-number">3</span> Causal Inference Background</h2>
+<section id="potential-outcomes-and-estimands" class="level3" data-number="3.1">
+<h3 data-number="3.1" class="anchored" data-anchor-id="potential-outcomes-and-estimands"><span class="header-section-number">3.1</span> Potential Outcomes and Estimands</h3>
+<p>The starting point for causal inference is the potential outcomes framework. For each unit, we imagine one outcome under treatment and another under no treatment<a href="#fn17" class="footnote-ref" id="fnref17" role="doc-noteref"><sup>17</sup></a>. The causal effect for that unit is the difference between those two potential outcomes. The central problem is that only one of them is ever observed, so the other is counterfactual<a href="#fn18" class="footnote-ref" id="fnref18" role="doc-noteref"><sup>18</sup></a> <span class="citation" data-cites="cunningham2021mixtape">(<a href="#ref-cunningham2021mixtape" role="doc-biblioref">Cunningham 2021a</a>)</span>. All matching and weighting methods are attempts to build a more credible stand-in for that missing outcome.</p>
+<p>This framework also makes the estimand explicit. <code>ATE</code>, <code>ATT</code>, and <code>ATC</code> are not interchangeable labels but answers to different policy questions. They refer to different target populations, imply different weighting or matching priorities, and can produce different substantive conclusions. A design-stage adjustment method is therefore only meaningful once the report has stated which estimand it is trying to recover <span class="citation" data-cites="cunningham2021mixtape matchit_getting_started">(<a href="#ref-cunningham2021mixtape" role="doc-biblioref">Cunningham 2021a</a>; <a href="#ref-matchit_getting_started" role="doc-biblioref">MatchIt Authors n.d.</a>)</span>.</p>
+</section>
+<section id="why-adjustment-is-needed" class="level3" data-number="3.2">
+<h3 data-number="3.2" class="anchored" data-anchor-id="why-adjustment-is-needed"><span class="header-section-number">3.2</span> Why Adjustment Is Needed</h3>
+<p>In observational studies, treatment assignment is usually related to characteristics that also affect outcomes. Participants may seek out a programme because they are more motivated, administrators may target services toward higher-need cases, or policy exposure may vary systematically by place, timing, or institutional rules. If treated and untreated units differ in these pre-treatment characteristics, a raw outcome difference combines the effect of treatment with the effect of those pre-existing differences. That is the core confounding problem<a href="#fn19" class="footnote-ref" id="fnref19" role="doc-noteref"><sup>19</sup></a>.</p>
+<p>Adjustment is needed because the untreated group is rarely a credible stand-in for the treated group without further design work. Matching and weighting can make the comparison more defensible by aligning treated and untreated units on observed pre-treatment covariates, but that qualifier matters. They do nothing for important factors that were never measured, measured badly, or left out of the design. A well-balanced analysis on the wrong variables is still biased <span class="citation" data-cites="ho2007matching ho2011matchit">(<a href="#ref-ho2007matching" role="doc-biblioref">Ho et al. 2007</a>, <a href="#ref-ho2011matchit" role="doc-biblioref">2011</a>)</span>.</p>
+</section>
+<section id="core-assumptions" class="level3" data-number="3.3">
+<h3 data-number="3.3" class="anchored" data-anchor-id="core-assumptions"><span class="header-section-number">3.3</span> Core Assumptions</h3>
+<p>For adjusted comparisons to support causal interpretation, several assumptions must be taken seriously:</p>
+<ul>
+<li><code>Consistency</code> means that the observed outcome under the treatment actually received corresponds to the relevant potential outcome. This requires treatment to be defined clearly enough that “receiving treatment” has a coherent substantive meaning <span class="citation" data-cites="cunningham2021mixtape">(<a href="#ref-cunningham2021mixtape" role="doc-biblioref">Cunningham 2021a</a>)</span>. If one site delivers a light-touch service and another delivers an intensive intervention under the same label, the causal contrast is already blurred.</li>
+<li><code>Exchangeability</code>, often framed as no unmeasured confounding<a href="#fn20" class="footnote-ref" id="fnref20" role="doc-noteref"><sup>20</sup></a>, means that after conditioning on the selected pre-treatment covariates, treatment assignment is as good as independent of the potential outcomes. This is usually the hardest assumption and cannot be verified from balance tables alone <span class="citation" data-cites="cunningham2021mixtape">(<a href="#ref-cunningham2021mixtape" role="doc-biblioref">Cunningham 2021a</a>)</span>.</li>
+<li><code>Positivity</code>, or overlap<a href="#fn21" class="footnote-ref" id="fnref21" role="doc-noteref"><sup>21</sup></a>, means that units with a given covariate profile must have a non-zero chance of appearing in each treatment condition. If some kinds of units appear only among the treated or only among the controls, no matching or weighting procedure can create a credible comparison for those cases <span class="citation" data-cites="matchit_getting_started">(<a href="#ref-matchit_getting_started" role="doc-biblioref">MatchIt Authors n.d.</a>)</span>.</li>
+<li><code>SUTVA</code> (stable unit treatment value assumption)<a href="#fn22" class="footnote-ref" id="fnref22" role="doc-noteref"><sup>22</sup></a> is commonly used to refer to the requirement that one unit’s treatment status does not alter another unit’s outcome, and that there are not multiple hidden versions of treatment bundled into the same label. In evaluation settings, spillovers and displacement<a href="#fn23" class="footnote-ref" id="fnref23" role="doc-noteref"><sup>23</sup></a> or inconsistent programme delivery can threaten this assumption <span class="citation" data-cites="cunningham2021mixtape">(<a href="#ref-cunningham2021mixtape" role="doc-biblioref">Cunningham 2021a</a>)</span>.</li>
+</ul>
+<p>Taken together, these assumptions clarify what matching and weighting can and cannot do. They can improve comparability on observed covariates and make overlap problems visible, but they cannot rescue a design that lacks a defensible treatment definition, suffers from interference, or omits key confounders. A credible matching exercise therefore depends as much on substantive knowledge of the programme and assignment process as on statistical implementation.</p>
+</section>
+<section id="subclassification-as-a-motivating-strategy" class="level3" data-number="3.4">
+<h3 data-number="3.4" class="anchored" data-anchor-id="subclassification-as-a-motivating-strategy"><span class="header-section-number">3.4</span> Subclassification as a Motivating Strategy</h3>
+<p>One useful way to understand design-stage adjustment is through subclassification. The basic idea is to divide the data into strata<a href="#fn24" class="footnote-ref" id="fnref24" role="doc-noteref"><sup>24</sup></a> defined by pre-treatment covariates, compare treated and untreated outcomes within each stratum, and then aggregate those stratum-specific contrasts using appropriate weights <span class="citation" data-cites="cunningham2021subclassification">(<a href="#ref-cunningham2021subclassification" role="doc-biblioref">Cunningham 2021b</a>)</span>. Within a stratum, treated and untreated units are more comparable because they share the same covariate pattern, or at least a more similar one than in the full unmatched sample.</p>
+<p>This perspective is especially helpful for exact matching and CEM. Exact matching creates strata using the original covariate values and keeps only strata containing both treated and control units. CEM does the same after temporarily binning variables into broader, substantively meaningful categories. That framing is useful because it makes the design logic auditable: the evaluator is not asking software to find a hidden pattern, but to compare like with like under an explicit set of rules <span class="citation" data-cites="cunningham2021subclassification iacus2012cem">(<a href="#ref-cunningham2021subclassification" role="doc-biblioref">Cunningham 2021b</a>; <a href="#ref-iacus2012cem" role="doc-biblioref">Iacus, King, and Porro 2012</a>)</span>.</p>
+</section>
+<section id="the-curse-of-dimensionality" class="level3" data-number="3.5">
+<h3 data-number="3.5" class="anchored" data-anchor-id="the-curse-of-dimensionality"><span class="header-section-number">3.5</span> The Curse of Dimensionality</h3>
+<p>The main limitation of subclassification is that it becomes harder to implement as the number of covariates grows. Each additional covariate increases the number of possible strata, and with several continuous or finely coded variables the data quickly fragment into many sparse cells. In practice, evaluators then encounter strata with only treated units, only controls, or too few observations to support stable within-stratum comparisons <span class="citation" data-cites="cunningham2021subclassification">(<a href="#ref-cunningham2021subclassification" role="doc-biblioref">Cunningham 2021b</a>)</span>.</p>
+<p>This is the curse of dimensionality in design form. It weakens common support, increases sample loss, and can shift the target population away from the one originally intended. Exact matching is therefore most defensible when the adjustment set is limited, clearly justified, and measured at a level of detail that still leaves overlap. Coarsening can relieve the problem by collapsing continuous variables into broader bins, but that creates a visible tradeoff: coarser bins improve retention while allowing less precise similarity within strata. There is no purely technical way around that tradeoff; it has to be managed transparently <span class="citation" data-cites="iacus2012cem matchit_matching_methods">(<a href="#ref-iacus2012cem" role="doc-biblioref">Iacus, King, and Porro 2012</a>; <a href="#ref-matchit_matching_methods" role="doc-biblioref">MatchIt Authors n.d.</a>)</span>.</p>
+</section>
+<section id="matching-versus-weighting" class="level3" data-number="3.6">
+<h3 data-number="3.6" class="anchored" data-anchor-id="matching-versus-weighting"><span class="header-section-number">3.6</span> Matching Versus Weighting</h3>
+<p>Matching and weighting pursue the same broad objective, but they do so in different ways. Matching changes the analytic sample by pairing or subclassifying units and often discarding observations that fall outside common support. Weighting keeps more of the original sample but alters the contribution each unit makes to the estimate so that the weighted covariate distribution in one group resembles that of another. In short, matching primarily restructures the sample, whereas weighting primarily restructures the estimating population.</p>
+<p>That distinction matters for evaluation practice. Matching often provides a clearer audit trail because it makes sample restriction visible. Weighting can retain more units, but it can also obscure how much the estimate depends on a small number of heavily weighted observations. Entropy balancing belongs in the weighting family because it does not search for matched pairs or matched strata. Instead, it computes weights that satisfy explicit balance constraints on selected covariate moments<a href="#fn25" class="footnote-ref" id="fnref25" role="doc-noteref"><sup>25</sup></a> while staying as close as possible to a set of base weights <span class="citation" data-cites="hainmueller2012entropy">(<a href="#ref-hainmueller2012entropy" role="doc-biblioref">Hainmueller 2012</a>)</span>. Its attraction is that balance is imposed directly rather than hoped for after an iterative search, but that advantage only holds if the resulting weights remain substantively and statistically credible.</p>
+</section>
+</section>
+<section id="positioning-matching-among-qeds" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="positioning-matching-among-qeds"><span class="header-section-number">4</span> Positioning Matching Among QEDs</h2>
+<section id="why-use-matching" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="why-use-matching"><span class="header-section-number">4.1</span> Why Use Matching</h3>
+<p>Matching is most useful when an evaluator needs to estimate a causal effect from observational data but does not have a design feature strong enough to support a more credible natural experiment<a href="#fn26" class="footnote-ref" id="fnref26" role="doc-noteref"><sup>26</sup></a>. In the Evaluation Academy framing, it is especially relevant when only post-intervention outcomes are available, when treatment was not randomly assigned, and when the analyst can observe a set of pre-treatment characteristics that are plausibly important to both treatment assignment and outcomes <span class="citation" data-cites="govuk_qed_slides">(<a href="#ref-govuk_qed_slides" role="doc-biblioref">Evaluation Task Force 2025b</a>)</span>. In those settings, matching can make the comparison group more credible by reducing observed imbalance and forcing explicit decisions about overlap, sample retention, and the target population.</p>
+<p>That makes matching a practical option for many programme and policy evaluations where administrative or survey data capture rich background characteristics but do not provide a clean before-and-after structure. It can also be valuable as a diagnostic exercise: a failed matching attempt is informative if it shows that no defensible comparison group exists in the available data. Even when the final analysis still uses an outcome model<a href="#fn27" class="footnote-ref" id="fnref27" role="doc-noteref"><sup>27</sup></a>, the matched or weighted design can reduce model dependence<a href="#fn28" class="footnote-ref" id="fnref28" role="doc-noteref"><sup>28</sup></a> and make the basis for inference easier to explain <span class="citation" data-cites="ho2007matching govuk_qed_slides">(<a href="#ref-ho2007matching" role="doc-biblioref">Ho et al. 2007</a>; <a href="#ref-govuk_qed_slides" role="doc-biblioref">Evaluation Task Force 2025b</a>)</span>.</p>
+</section>
+<section id="when-not-to-default-to-matching" class="level3" data-number="4.2">
+<h3 data-number="4.2" class="anchored" data-anchor-id="when-not-to-default-to-matching"><span class="header-section-number">4.2</span> When Not to Default to Matching</h3>
+<p>Matching should not be presented as the default response to observational data. The relevant question is whether it is the strongest defensible design available, not whether it is technically feasible. If the assignment process creates a credible threshold, regression discontinuity may provide a stronger basis for causal inference. If a policy or programme begins at a known point in time and comparable pre-treatment outcome trends are available for treated and untreated groups, difference-in-differences may be preferable because it can account for stable unobserved differences between groups in a way matching on observed covariates cannot <span class="citation" data-cites="govuk_qed_slides">(<a href="#ref-govuk_qed_slides" role="doc-biblioref">Evaluation Task Force 2025b</a>)</span>.</p>
+<p>The same caution applies when treatment is poorly defined, interference is likely, selection depends heavily on unobserved judgement or motivation, or overlap is so weak that adjustment requires aggressive pruning or extreme weights. In those circumstances, producing a matched sample can create a false sense of design quality without solving the underlying identification problem. A good evaluator workflow therefore treats matching as one option in a broader quasi-experimental toolkit: useful when rich pre-treatment covariates are available and stronger designs are not, but secondary when the data support a more internally valid strategy <span class="citation" data-cites="govuk_qed_slides">(<a href="#ref-govuk_qed_slides" role="doc-biblioref">Evaluation Task Force 2025b</a>)</span>.</p>
+</section>
+</section>
+<section id="data-and-study-design" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="data-and-study-design"><span class="header-section-number">5</span> Data and Study Design</h2>
+<section id="example-dataset" class="level3" data-number="5.1">
+<h3 data-number="5.1" class="anchored" data-anchor-id="example-dataset"><span class="header-section-number">5.1</span> Example Dataset</h3>
+<p>Introduce the dataset used in the demonstration. Define:</p>
+<ul>
+<li>the treatment indicator</li>
+<li>the outcome</li>
+<li>the pre-treatment covariates</li>
+<li>the target estimand</li>
+<li>the focal group, if targeting <code>ATT</code> or <code>ATC</code></li>
+</ul>
+</section>
+<section id="evaluation-use-case" class="level3" data-number="5.2">
+<h3 data-number="5.2" class="anchored" data-anchor-id="evaluation-use-case"><span class="header-section-number">5.2</span> Evaluation Use Case</h3>
+<p>Briefly describe the kind of evaluation question the example is meant to represent, such as a programme participation effect, a policy exposure effect, or an intervention uptake effect. This keeps the methods grounded in evaluator practice rather than abstract statistical comparison.</p>
+</section>
+<section id="package-setup" class="level3" data-number="5.3">
+<h3 data-number="5.3" class="anchored" data-anchor-id="package-setup"><span class="header-section-number">5.3</span> Package Setup</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MatchIt)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(WeightIt)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cobalt)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="data-preparation" class="level3" data-number="5.4">
+<h3 data-number="5.4" class="anchored" data-anchor-id="data-preparation"><span class="header-section-number">5.4</span> Data Preparation</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Replace this with the project dataset or a reproducible example.</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># dat &lt;- read.csv("path/to/data.csv")</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Example structure expected by the report:</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># dat &lt;- dat |&gt;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">#   mutate(</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#     treat = as.integer(treat),</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">#     outcome = outcome</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">#   )</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="pre-match-diagnostics" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="pre-match-diagnostics"><span class="header-section-number">6</span> Pre-Match Diagnostics</h2>
+<section id="descriptive-comparison" class="level3" data-number="6.1">
+<h3 data-number="6.1" class="anchored" data-anchor-id="descriptive-comparison"><span class="header-section-number">6.1</span> Descriptive Comparison</h3>
+<p>Summarize the treated and control groups before adjustment.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># dat |&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   group_by(treat) |&gt;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   summarise(</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#     n = n(),</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#     mean_outcome = mean(outcome, na.rm = TRUE)</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#   )</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="balance-diagnostics-before-adjustment" class="level3" data-number="6.2">
+<h3 data-number="6.2" class="anchored" data-anchor-id="balance-diagnostics-before-adjustment"><span class="header-section-number">6.2</span> Balance Diagnostics Before Adjustment</h3>
+<p>Use <code>MatchIt</code> to construct a pre-match object and then inspect imbalance before any design choices are imposed <span class="citation" data-cites="matchit_getting_started">(<a href="#ref-matchit_getting_started" role="doc-biblioref">MatchIt Authors n.d.</a>)</span>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># m_out0 &lt;- matchit(</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   treat ~ age + sex + race + education + income,</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   data = dat,</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#   method = NULL,</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#   distance = "glm"</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># )</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(m_out0)</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># bal.tab(m_out0, un = TRUE)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="exact-matching" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="exact-matching"><span class="header-section-number">7</span> Exact Matching</h2>
+<section id="method-overview" class="level3" data-number="7.1">
+<h3 data-number="7.1" class="anchored" data-anchor-id="method-overview"><span class="header-section-number">7.1</span> Method Overview</h3>
+<p>Explain exact matching as stratum matching on the raw covariates. Note that exact matching removes imbalance on the included covariates within retained strata but can discard many units and shift the target population when support is limited <span class="citation" data-cites="matchit_matching_methods matchit_method_exact">(<a href="#ref-matchit_matching_methods" role="doc-biblioref">MatchIt Authors n.d.</a>, <a href="#ref-matchit_method_exact" role="doc-biblioref">n.d.</a>)</span>.</p>
+</section>
+<section id="r-implementation-with-matchit" class="level3" data-number="7.2">
+<h3 data-number="7.2" class="anchored" data-anchor-id="r-implementation-with-matchit"><span class="header-section-number">7.2</span> R Implementation with <code>MatchIt</code></h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># m_exact &lt;- matchit(</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   treat ~ sex + race + education + region,</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   data = dat,</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#   method = "exact",</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#   estimand = "ATT"</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># )</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(m_exact)</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co"># matched_exact &lt;- match.data(m_exact)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="post-match-diagnostics" class="level3" data-number="7.3">
+<h3 data-number="7.3" class="anchored" data-anchor-id="post-match-diagnostics"><span class="header-section-number">7.3</span> Post-Match Diagnostics</h3>
+<p>Assess covariate balance, the number of matched subclasses, and the number of units retained after exact matching.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># bal.tab(m_exact, un = TRUE)</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># love.plot(m_exact, stats = "mean.diffs")</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="effect-estimation-after-exact-matching" class="level3" data-number="7.4">
+<h3 data-number="7.4" class="anchored" data-anchor-id="effect-estimation-after-exact-matching"><span class="header-section-number">7.4</span> Effect Estimation After Exact Matching</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fit_exact &lt;- lm(outcome ~ treat, data = matched_exact, weights = weights)</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(fit_exact)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="coarsened-exact-matching" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="coarsened-exact-matching"><span class="header-section-number">8</span> Coarsened Exact Matching</h2>
+<section id="method-overview-1" class="level3" data-number="8.1">
+<h3 data-number="8.1" class="anchored" data-anchor-id="method-overview-1"><span class="header-section-number">8.1</span> Method Overview</h3>
+<p>Explain how coarsening makes stratum matching feasible for continuous covariates and how cutpoints control the tradeoff between exact balance and sample retention <span class="citation" data-cites="iacus2012cem matchit_method_cem">(<a href="#ref-iacus2012cem" role="doc-biblioref">Iacus, King, and Porro 2012</a>; <a href="#ref-matchit_method_cem" role="doc-biblioref">MatchIt Authors n.d.</a>)</span>.</p>
+</section>
+<section id="r-implementation-with-matchit-1" class="level3" data-number="8.2">
+<h3 data-number="8.2" class="anchored" data-anchor-id="r-implementation-with-matchit-1"><span class="header-section-number">8.2</span> R Implementation with <code>MatchIt</code></h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># m_cem &lt;- matchit(</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   treat ~ age + income + bmi + sex,</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   data = dat,</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#   method = "cem",</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#   cutpoints = list(</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#     age = c(30, 40, 50, 60),</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#     income = c(30000, 50000, 80000),</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">#     bmi = c(18.5, 25, 30)</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co">#   )</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co"># )</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(m_cem)</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co"># matched_cem &lt;- match.data(m_cem)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="post-match-diagnostics-1" class="level3" data-number="8.3">
+<h3 data-number="8.3" class="anchored" data-anchor-id="post-match-diagnostics-1"><span class="header-section-number">8.3</span> Post-Match Diagnostics</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># bal.tab(m_cem, un = TRUE)</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># love.plot(m_cem, stats = "mean.diffs")</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="effect-estimation-after-cem" class="level3" data-number="8.4">
+<h3 data-number="8.4" class="anchored" data-anchor-id="effect-estimation-after-cem"><span class="header-section-number">8.4</span> Effect Estimation After CEM</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fit_cem &lt;- lm(outcome ~ treat, data = matched_cem, weights = weights)</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(fit_cem)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="entropy-balancing-for-weighting" class="level2" data-number="9">
+<h2 data-number="9" class="anchored" data-anchor-id="entropy-balancing-for-weighting"><span class="header-section-number">9</span> Entropy Balancing for Weighting</h2>
+<section id="method-overview-2" class="level3" data-number="9.1">
+<h3 data-number="9.1" class="anchored" data-anchor-id="method-overview-2"><span class="header-section-number">9.1</span> Method Overview</h3>
+<p>Explain entropy balancing as a multivariate reweighting method that directly enforces balance constraints on selected covariate moments. Emphasize that it belongs in the report as a weighting approach rather than a matching method <span class="citation" data-cites="hainmueller2012entropy">(<a href="#ref-hainmueller2012entropy" role="doc-biblioref">Hainmueller 2012</a>)</span>. Note that the Evaluation Academy quasi-experimental design slides list entropy balancing as the recommended option among the matching-method choices presented to learners <span class="citation" data-cites="govuk_qed_slides">(<a href="#ref-govuk_qed_slides" role="doc-biblioref">Evaluation Task Force 2025b</a>)</span>.</p>
+</section>
+<section id="r-implementation" class="level3" data-number="9.2">
+<h3 data-number="9.2" class="anchored" data-anchor-id="r-implementation"><span class="header-section-number">9.2</span> R Implementation</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># w_ebal &lt;- weightit(</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   treat ~ age + income + bmi + sex + education,</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   data = dat,</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">#   method = "ebal",</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co">#   estimand = "ATT"</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co"># )</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(w_ebal)</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co"># dat$w_ebal &lt;- w_ebal$weights</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="post-weighting-diagnostics" class="level3" data-number="9.3">
+<h3 data-number="9.3" class="anchored" data-anchor-id="post-weighting-diagnostics"><span class="header-section-number">9.3</span> Post-Weighting Diagnostics</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># bal.tab(w_ebal, un = TRUE)</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># love.plot(w_ebal, stats = "mean.diffs")</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="effect-estimation-after-weighting" class="level3" data-number="9.4">
+<h3 data-number="9.4" class="anchored" data-anchor-id="effect-estimation-after-weighting"><span class="header-section-number">9.4</span> Effect Estimation After Weighting</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fit_ebal &lt;- glm(outcome ~ treat, data = dat, weights = w_ebal$weights)</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(fit_ebal)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="iterating-on-design-quality" class="level2" data-number="10">
+<h2 data-number="10" class="anchored" data-anchor-id="iterating-on-design-quality"><span class="header-section-number">10</span> Iterating on Design Quality</h2>
+<p>If covariates remain imbalanced after adjustment, treat the design as unsuccessful and revise the specification rather than moving directly to effect estimation. Potential revisions include changing the covariate set, tightening or relaxing coarsening, altering support restrictions, or reconsidering the target estimand <span class="citation" data-cites="matchit_getting_started">(<a href="#ref-matchit_getting_started" role="doc-biblioref">MatchIt Authors n.d.</a>)</span>.</p>
+</section>
+<section id="comparing-the-methods" class="level2" data-number="11">
+<h2 data-number="11" class="anchored" data-anchor-id="comparing-the-methods"><span class="header-section-number">11</span> Comparing the Methods</h2>
+<section id="covariate-balance" class="level3" data-number="11.1">
+<h3 data-number="11.1" class="anchored" data-anchor-id="covariate-balance"><span class="header-section-number">11.1</span> Covariate Balance</h3>
+<p>Compare pre- and post-adjustment balance across exact matching, CEM, and entropy balancing.</p>
+</section>
+<section id="sample-retention-and-effective-sample-size" class="level3" data-number="11.2">
+<h3 data-number="11.2" class="anchored" data-anchor-id="sample-retention-and-effective-sample-size"><span class="header-section-number">11.2</span> Sample Retention and Effective Sample Size</h3>
+<p>Discuss discarded units for matching approaches and effective sample size for the weighting approach.</p>
+</section>
+<section id="practical-tradeoffs" class="level3" data-number="11.3">
+<h3 data-number="11.3" class="anchored" data-anchor-id="practical-tradeoffs"><span class="header-section-number">11.3</span> Practical Tradeoffs</h3>
+<p>Discuss transparency, feasibility, tuning choices, target population, and robustness in moderate-dimensional settings.</p>
+</section>
+</section>
+<section id="guidance-for-evaluators" class="level2" data-number="12">
+<h2 data-number="12" class="anchored" data-anchor-id="guidance-for-evaluators"><span class="header-section-number">12</span> Guidance for Evaluators</h2>
+<p>Translate the methods into evaluator-facing advice.</p>
+<section id="when-exact-matching-is-appropriate" class="level3" data-number="12.1">
+<h3 data-number="12.1" class="anchored" data-anchor-id="when-exact-matching-is-appropriate"><span class="header-section-number">12.1</span> When Exact Matching Is Appropriate</h3>
+<p>Discuss settings with a small number of discrete and substantively central covariates, where interpretability is a priority and sample loss is acceptable.</p>
+</section>
+<section id="when-cem-is-appropriate" class="level3" data-number="12.2">
+<h3 data-number="12.2" class="anchored" data-anchor-id="when-cem-is-appropriate"><span class="header-section-number">12.2</span> When CEM Is Appropriate</h3>
+<p>Discuss settings where evaluators need a more feasible subclassification-based design for mixed covariate types and want explicit control over coarsening decisions.</p>
+</section>
+<section id="when-entropy-balancing-is-appropriate" class="level3" data-number="12.3">
+<h3 data-number="12.3" class="anchored" data-anchor-id="when-entropy-balancing-is-appropriate"><span class="header-section-number">12.3</span> When Entropy Balancing Is Appropriate</h3>
+<p>Discuss settings where preserving units and achieving strong covariate balance is more important than producing an explicitly matched analytic sample.</p>
+</section>
+<section id="reporting-recommendations" class="level3" data-number="12.4">
+<h3 data-number="12.4" class="anchored" data-anchor-id="reporting-recommendations"><span class="header-section-number">12.4</span> Reporting Recommendations</h3>
+<p>Specify that evaluator-facing reporting should include:</p>
+<ul>
+<li>the estimand</li>
+<li>the covariates used for design</li>
+<li>balance before and after adjustment</li>
+<li>discarded units or effective sample size</li>
+<li>how design choices may change the population represented by the estimate</li>
+</ul>
+</section>
+<section id="choosing-among-matching-options" class="level3" data-number="12.5">
+<h3 data-number="12.5" class="anchored" data-anchor-id="choosing-among-matching-options"><span class="header-section-number">12.5</span> Choosing Among Matching Options</h3>
+<p>Use the Evaluation Academy slide deck to motivate a practical comparison among propensity score matching, coarsened exact matching, and entropy balancing. Make clear that this report focuses on exact matching, CEM, and entropy balancing because they provide a more transparent and modern teaching pathway than relying on PSM as the main example <span class="citation" data-cites="govuk_qed_slides matchit_matching_methods">(<a href="#ref-govuk_qed_slides" role="doc-biblioref">Evaluation Task Force 2025b</a>; <a href="#ref-matchit_matching_methods" role="doc-biblioref">MatchIt Authors n.d.</a>)</span>.</p>
+</section>
+</section>
+<section id="treatment-effect-summary" class="level2" data-number="13">
+<h2 data-number="13" class="anchored" data-anchor-id="treatment-effect-summary"><span class="header-section-number">13</span> Treatment Effect Summary</h2>
+<p>Present the treatment effect estimates from each method in a comparable table and discuss the extent to which conclusions depend on design choices.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># tibble(</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   method = c("Exact matching", "CEM", "Entropy balancing"),</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   estimate = c(NA_real_, NA_real_, NA_real_)</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># )</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="limitations" class="level2" data-number="14">
+<h2 data-number="14" class="anchored" data-anchor-id="limitations"><span class="header-section-number">14</span> Limitations</h2>
+<p>Discuss:</p>
+<ul>
+<li>residual confounding from omitted variables</li>
+<li>lack of protection against hidden bias</li>
+<li>overlap problems</li>
+<li>sensitivity to cutpoints, exact constraints, and estimand choice</li>
+<li>estimand drift when units are dropped due to limited support</li>
+</ul>
+</section>
+<section id="conclusion" class="level2" data-number="15">
+<h2 data-number="15" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">15</span> Conclusion</h2>
+<p>Summarize the main lessons from the comparison and provide practical guidance on method selection.</p>
+</section>
+<section id="appendix" class="level2" data-number="16">
+<h2 data-number="16" class="anchored" data-anchor-id="appendix"><span class="header-section-number">16</span> Appendix</h2>
+<section id="glossary" class="level3" data-number="16.1">
+<h3 data-number="16.1" class="anchored" data-anchor-id="glossary"><span class="header-section-number">16.1</span> Glossary</h3>
+<p><code>ATC</code><br>
+Average treatment effect on the controls: the average effect the intervention would have had for units that did not receive treatment.</p>
+<p><code>ATT</code><br>
+Average treatment effect on the treated: the average effect of the intervention for units that actually received treatment.</p>
+<p><code>ATE</code><br>
+Average treatment effect: the average effect of the intervention across the full target population.</p>
+<p><code>Balance</code><br>
+The extent to which the treatment and comparison groups are similar on observed pre-treatment covariates after adjustment.</p>
+<p><code>Common support</code><br>
+The region where treated and comparison units have sufficiently similar covariate values to make adjustment credible.</p>
+<p><code>Consistency</code><br>
+The assumption that the observed outcome under the treatment actually received matches the corresponding potential outcome for that treatment condition.</p>
+<p><code>Coarsened exact matching (CEM)</code><br>
+A matching method that temporarily bins covariates into substantively meaningful categories and then matches units exactly within those coarsened strata.</p>
+<p><code>Confounding</code><br>
+Bias that arises when the estimated effect of treatment is mixed together with the effects of pre-existing differences between groups because some factors influence both treatment assignment and the outcome.</p>
+<p><code>Counterfactual</code><br>
+The outcome that would have been observed for the same unit under the treatment state that did not occur.</p>
+<p><code>Covariates</code><br>
+Observed characteristics measured before treatment that are used to describe units and adjust for differences between groups.</p>
+<p><code>Entropy balancing</code><br>
+A weighting method that chooses unit weights so the reweighted comparison group matches the treatment group on specified covariate moments.</p>
+<p><code>Estimand</code><br>
+The causal quantity the analysis is trying to estimate, such as the ATT or ATE.</p>
+<p><code>Exchangeability</code><br>
+The assumption that, after conditioning on the chosen pre-treatment covariates, treatment assignment is independent of the potential outcomes.</p>
+<p><code>Exact matching</code><br>
+A method that retains only units that can be matched exactly on the selected covariates.</p>
+<p><code>Effective sample size</code><br>
+A summary of how much information remains after weighting, accounting for the uneven distribution of weights.</p>
+<p><code>Difference-in-differences</code><br>
+A design that estimates an intervention effect by comparing how outcomes changed over time in a treated group relative to a comparison group.</p>
+<p><code>Interference</code><br>
+A situation where one unit’s treatment affects another unit’s outcome, violating the standard no-spillover assumption.</p>
+<p><code>Interrupted time-series</code><br>
+A design that estimates whether an intervention changed the level or trend of an outcome by comparing observations before and after a known interruption point.</p>
+<p><code>Love plot</code><br>
+A diagnostic plot that shows covariate imbalance before and after adjustment, usually using standardized mean differences.</p>
+<p><code>Matching</code><br>
+A design-stage adjustment approach that pairs or groups treated and comparison units with similar observed covariates.</p>
+<p><code>Model dependence</code><br>
+Sensitivity of the estimated treatment effect to the choice of outcome-model specification.</p>
+<p><code>Moments</code><br>
+Summary features of a distribution, usually the mean and sometimes the variance or higher-order shape characteristics.</p>
+<p><code>Natural experiment</code><br>
+A setting where an external rule, shock, or administrative process creates treatment variation that is plausibly closer to random assignment.</p>
+<p><code>Outcome model</code><br>
+The statistical model used after the design stage to estimate the treatment effect.</p>
+<p><code>Overlap</code><br>
+The degree to which treated and untreated units have comparable covariate profiles and occupy the same range of the data; weak overlap means there are too few similar cases across groups to support a credible direct comparison.</p>
+<p><code>Potential outcomes</code><br>
+The outcomes a unit would exhibit under treatment and under no treatment, only one of which is observed in practice.</p>
+<p><code>Positivity</code><br>
+The assumption that each relevant covariate profile has a non-zero chance of appearing in each treatment condition.</p>
+<p><code>Pre-post design</code><br>
+A design that compares outcomes before and after an intervention, often without using a separate comparison group.</p>
+<p><code>Preprocessing</code><br>
+A design-stage step carried out before outcome analysis to improve comparability between treatment groups.</p>
+<p><code>Propensity score</code><br>
+The probability of receiving treatment conditional on observed covariates.</p>
+<p><code>Pruning</code><br>
+Dropping units that fall outside acceptable overlap or are too dissimilar to support a credible comparison.</p>
+<p><code>Quasi-experimental design (QED)</code><br>
+A non-randomized design used for causal inference that relies on comparison structure, timing, rules, or thresholds instead of random assignment.</p>
+<p><code>Regression discontinuity</code><br>
+A design that estimates causal effects by comparing units just above and just below a policy cutoff or eligibility threshold.</p>
+<p><code>Standardized mean difference</code><br>
+A scale-free measure of covariate imbalance commonly used to assess whether adjustment improved comparability.</p>
+<p><code>Synthetic control</code><br>
+A design that builds a weighted combination of comparison units to approximate the treated unit’s pre-intervention trajectory.</p>
+<p><code>Stratum</code><br>
+A subgroup of units defined by the matching variables and used for within-group comparison.</p>
+<p><code>SUTVA</code><br>
+The assumption that one unit’s treatment does not affect another unit’s outcome and that the treatment label does not hide multiple versions of the intervention.</p>
+<p><code>Weighting</code><br>
+An adjustment approach that assigns units analytic weights so one group better represents a target population or matches another group on observed covariates.</p>
+</section>
+<section id="full-code" class="level3" data-number="16.2">
+<h3 data-number="16.2" class="anchored" data-anchor-id="full-code"><span class="header-section-number">16.2</span> Full Code</h3>
+<p>Add the final runnable code here or link to companion scripts.</p>
+</section>
+<section id="session-information" class="level3" data-number="16.3">
+<h3 data-number="16.3" class="anchored" data-anchor-id="session-information"><span class="header-section-number">16.3</span> Session Information</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sessionInfo()</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="references" class="level2 unnumbered" data-number="17">
+
+
+</section>
+
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">17 References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-cunningham2021mixtape" class="csl-entry" role="listitem">
+Cunningham, Scott. 2021a. <em>Causal Inference: The Mixtape</em>. New Haven, CT: Yale University Press.
+</div>
+<div id="ref-cunningham2021subclassification" class="csl-entry" role="listitem">
+———. 2021b. <span>“Matching and Subclassification.”</span> 2021. <a href="https://mixtape.scunning.com/05-matching_and_subclassification">https://mixtape.scunning.com/05-matching_and_subclassification</a>.
+</div>
+<div id="ref-govuk_evaluation_academy_resources" class="csl-entry" role="listitem">
+Evaluation Task Force. 2025a. <span>“ETF Evaluation Academy 2.0 Resources.”</span> 2025. <a href="https://www.gov.uk/government/publications/etf-evaluation-academy-20-resources">https://www.gov.uk/government/publications/etf-evaluation-academy-20-resources</a>.
+</div>
+<div id="ref-govuk_qed_slides" class="csl-entry" role="listitem">
+———. 2025b. <span>“Quasi-Experimental Designs.”</span> 2025. <a href="https://assets.publishing.service.gov.uk/media/67adca8a2535b0468badce35/6-etf-evaluation-academy-20-quasi-experimental-designs-slides.pdf">https://assets.publishing.service.gov.uk/media/67adca8a2535b0468badce35/6-etf-evaluation-academy-20-quasi-experimental-designs-slides.pdf</a>.
+</div>
+<div id="ref-hainmueller2012entropy" class="csl-entry" role="listitem">
+Hainmueller, Jens. 2012. <span>“Entropy Balancing for Causal Effects: A Multivariate Reweighting Method to Produce Balanced Samples in Observational Studies.”</span> <em>Political Analysis</em> 20 (1): 25–46. <a href="https://doi.org/10.1093/pan/mpr025">https://doi.org/10.1093/pan/mpr025</a>.
+</div>
+<div id="ref-ho2007matching" class="csl-entry" role="listitem">
+Ho, Daniel E., Kosuke Imai, Gary King, and Elizabeth A. Stuart. 2007. <span>“Matching as Nonparametric Preprocessing for Reducing Model Dependence in Parametric Causal Inference.”</span> <em>Political Analysis</em> 15 (3): 199–236. <a href="https://doi.org/10.1093/pan/mpl013">https://doi.org/10.1093/pan/mpl013</a>.
+</div>
+<div id="ref-ho2011matchit" class="csl-entry" role="listitem">
+———. 2011. <span>“MatchIt: Nonparametric Preprocessing for Parametric Causal Inference.”</span> <em>Journal of Statistical Software</em> 42 (8): 1–28. <a href="https://doi.org/10.18637/jss.v042.i08">https://doi.org/10.18637/jss.v042.i08</a>.
+</div>
+<div id="ref-huntingtonklein_matching" class="csl-entry" role="listitem">
+Huntington-Klein, Nick. n.d. <span>“Chapter 14 - Matching.”</span> n.d. <a href="https://theeffectbook.net/ch-Matching.html">https://theeffectbook.net/ch-Matching.html</a>.
+</div>
+<div id="ref-iacus2012cem" class="csl-entry" role="listitem">
+Iacus, Stefano M., Gary King, and Giuseppe Porro. 2012. <span>“Causal Inference Without Balance Checking: Coarsened Exact Matching.”</span> <em>Political Analysis</em> 20 (1): 1–24. <a href="https://doi.org/10.1093/pan/mpr013">https://doi.org/10.1093/pan/mpr013</a>.
+</div>
+<div id="ref-matchit_method_cem" class="csl-entry" role="listitem">
+MatchIt Authors. n.d. <span>“Coarsened Exact Matching — Method_cem.”</span> n.d. <a href="https://kosukeimai.github.io/MatchIt/reference/method_cem.html">https://kosukeimai.github.io/MatchIt/reference/method_cem.html</a>.
+</div>
+<div id="ref-matchit_method_exact" class="csl-entry" role="listitem">
+———. n.d. <span>“Exact Matching — Method_exact.”</span> n.d. <a href="https://kosukeimai.github.io/MatchIt/reference/method_exact.html">https://kosukeimai.github.io/MatchIt/reference/method_exact.html</a>.
+</div>
+<div id="ref-matchit_matching_methods" class="csl-entry" role="listitem">
+———. n.d. <span>“Matching Methods.”</span> n.d. <a href="https://kosukeimai.github.io/MatchIt/articles/matching-methods.html">https://kosukeimai.github.io/MatchIt/articles/matching-methods.html</a>.
+</div>
+<div id="ref-matchit_getting_started" class="csl-entry" role="listitem">
+———. n.d. <span>“MatchIt: Getting Started.”</span> n.d. <a href="https://kosukeimai.github.io/MatchIt/articles/MatchIt.html">https://kosukeimai.github.io/MatchIt/articles/MatchIt.html</a>.
+</div>
+</div></section><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>Covariates are background characteristics measured before treatment that are used to describe units and improve comparability.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Here, balance means how similar the groups are on observed pre-treatment characteristics, while overlap means whether the data contain genuinely comparable treated and untreated cases in the first place.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>In plain English, the method can make the treated and untreated groups look very similar on paper, but only by giving a lot of influence to a small number of cases. If the groups were not really comparable to begin with, those large weights can make the results fragile and easy to distort, even when the balance statistics look good.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>A propensity score is the estimated probability of receiving treatment given the observed background variables. In plain English, it turns many characteristics into one score, which can make the design easier to run but harder to inspect.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>A quasi-experimental design estimates causal effects without random assignment, usually by exploiting timing, thresholds, policy rules, or carefully constructed comparison groups.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>In plain English: difference-in-differences compares changes over time, regression discontinuity uses an eligibility cutoff, synthetic control builds a weighted comparison case, and interrupted time-series tracks outcomes before and after a change.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>For matching, what matters is not when the analyst receives the data, but whether the covariates were determined before the programme or policy could affect them. If a variable may already have been changed by treatment, it should not usually be used to construct the match or weights.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn8"><p>An outcome model is the statistical model used after the design stage to estimate the relationship between treatment and the outcome.<a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn9"><p>Confounders are factors that influence both who receives treatment and what outcome they would have had anyway.<a href="#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn10"><p>The estimand is the exact causal quantity the analysis is trying to learn.<a href="#fnref10" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn11"><p>Confounding means the estimated effect of treatment is mixed together with the effects of pre-existing differences between groups. Unmeasured confounding refers to this problem when the relevant differences are not observed in the data.<a href="#fnref11" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn12"><p>A standardized mean difference is a way of expressing how far apart the treated and untreated groups are on a covariate after putting them on a common scale. Smaller values usually mean better balance, but they do not tell you everything that matters.<a href="#fnref12" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn13"><p>Pruning means dropping units that are too dissimilar to compare credibly after matching or weighting.<a href="#fnref13" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn14"><p>Effective sample size is the amount of usable information left after matching or weighting. If a few cases receive very large weights, the analysis may behave as if it were based on far fewer observations than the raw sample size suggests.<a href="#fnref14" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn15"><p>Overlap or common support means the treated and untreated groups share enough of the same covariate range to support a direct comparison. If treated cases are concentrated in parts of the data where no similar controls exist, the analysis is extrapolating rather than comparing like with like.<a href="#fnref15" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn16"><p>A pre-post design compares outcomes before and after an intervention, often without a separate comparison group.<a href="#fnref16" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn17"><p>A potential outcome is the result we would see for the same unit under one specific treatment state. The difficulty is that we never observe both states for the same person, place, or organisation.<a href="#fnref17" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn18"><p>Counterfactual just means “what would have happened instead.” Causal inference is difficult because that missing outcome can never be observed directly.<a href="#fnref18" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn19"><p>Confounding means the estimated effect of treatment is mixed together with the effects of pre-existing differences between groups. A confounder is a variable that affects both who gets treated and what outcome they would have had anyway.<a href="#fnref19" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn20"><p>In plain English, this means that once you account for the chosen background variables, the treated and untreated groups are comparable enough that treatment status is not just a marker for pre-existing advantage or disadvantage.<a href="#fnref20" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn21"><p>In plain English, each important type of case needs at least some treated and some untreated examples. If all severe cases are treated and all mild cases are untreated, the design has no direct basis for comparison.<a href="#fnref21" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn22"><p>In plain English, one unit’s treatment should not change another unit’s outcome, and “the treatment” should not hide several substantively different versions of the intervention.<a href="#fnref22" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn23"><p>Spillovers occur when one unit’s treatment affects other units who were not supposed to be treated directly. Displacement occurs when the benefits or harms of an intervention are shifted from treated units onto others, rather than creating a net new effect.<a href="#fnref23" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn24"><p>A stratum is simply a group of cases that look alike on the matching variables.<a href="#fnref24" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn25"><p>Moments are summary features of a distribution, usually the mean and sometimes higher-order features such as the variance.<a href="#fnref25" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn26"><p>A natural experiment uses some outside rule, event, or administrative process that creates treatment differences that are closer to random than ordinary self-selection or caseworker choice.<a href="#fnref26" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn27"><p>An outcome model is the regression or other statistical model used after the design stage to estimate the treatment effect.<a href="#fnref27" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn28"><p>Model dependence means the estimated effect changes substantially when the analyst changes the form of the outcome model.<a href="#fnref28" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
