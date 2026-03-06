@@ -30,7 +30,6 @@ website:
         - labs/black_politicians_lab.qmd
         - labs/nsw_cps_benchmark_lab.qmd
         - labs/titanic_teaching_lab.qmd
-        - labs/data_acquisition_lab.qmd
     - id: slides
       title: "Slides"
       style: "docked"

@@ -152,12 +152,6 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text">Lab: Titanic Teaching Example</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../labs/data_acquisition_lab.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Lab: Data Acquisition Layer</span></a>
-  </div>
-</li>
     </ul>
     </div>
 </nav>
@@ -168,12 +162,16 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#objective" id="toc-objective" class="nav-link active" data-scroll-target="#objective"><span class="header-section-number">1</span> Objective</a></li>
-  <li><a href="#design-setup" id="toc-design-setup" class="nav-link" data-scroll-target="#design-setup"><span class="header-section-number">2</span> Design Setup</a></li>
-  <li><a href="#planned-analysis-blocks" id="toc-planned-analysis-blocks" class="nav-link" data-scroll-target="#planned-analysis-blocks"><span class="header-section-number">3</span> Planned Analysis Blocks</a></li>
-  <li><a href="#implementation-checklist" id="toc-implementation-checklist" class="nav-link" data-scroll-target="#implementation-checklist"><span class="header-section-number">4</span> Implementation Checklist</a></li>
+  <li><a href="#how-to-use-this-page" id="toc-how-to-use-this-page" class="nav-link active" data-scroll-target="#how-to-use-this-page"><span class="header-section-number">1</span> How To Use This Page</a></li>
+  <li><a href="#design-choice" id="toc-design-choice" class="nav-link" data-scroll-target="#design-choice"><span class="header-section-number">2</span> Design Choice</a></li>
+  <li><a href="#dataset-at-a-glance" id="toc-dataset-at-a-glance" class="nav-link" data-scroll-target="#dataset-at-a-glance"><span class="header-section-number">3</span> Dataset At A Glance</a></li>
+  <li><a href="#support-cells-before-matching" id="toc-support-cells-before-matching" class="nav-link" data-scroll-target="#support-cells-before-matching"><span class="header-section-number">4</span> Support Cells Before Matching</a></li>
+  <li><a href="#exact-matching" id="toc-exact-matching" class="nav-link" data-scroll-target="#exact-matching"><span class="header-section-number">5</span> Exact Matching</a></li>
+  <li><a href="#propensity-score-subclassification" id="toc-propensity-score-subclassification" class="nav-link" data-scroll-target="#propensity-score-subclassification"><span class="header-section-number">6</span> Propensity-Score Subclassification</a></li>
+  <li><a href="#comparison-of-estimates" id="toc-comparison-of-estimates" class="nav-link" data-scroll-target="#comparison-of-estimates"><span class="header-section-number">7</span> Comparison Of Estimates</a></li>
+  <li><a href="#slide-friendly-summary" id="toc-slide-friendly-summary" class="nav-link" data-scroll-target="#slide-friendly-summary"><span class="header-section-number">8</span> Slide-Friendly Summary</a></li>
   </ul>
-</nav>
+<div class="quarto-code-links"><h2>Code Links</h2><ul><li><a href="titanic_teaching_lab_full_code.html"><i class="bi bi-link-45deg"></i>Full Code</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -197,34 +195,382 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="objective" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="objective"><span class="header-section-number">1</span> Objective</h2>
-<p>Create a compact, slide-friendly example for subclassification and simple exact matching.</p>
+<section id="how-to-use-this-page" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="how-to-use-this-page"><span class="header-section-number">1</span> How To Use This Page</h2>
+<p>This lab turns the Titanic scaffold into a compact executed example for exact matching and propensity-score subclassification.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This is a teaching example, not a literal policy-evaluation design. The value of <code>causaldata::titanic</code> is that the treatment groups, covariates, and support cells are easy to see on one page.</p>
+</div>
+</div>
 </section>
-<section id="design-setup" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="design-setup"><span class="header-section-number">2</span> Design Setup</h2>
+<section id="design-choice" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="design-choice"><span class="header-section-number">2</span> Design Choice</h2>
+<p>For a slide-friendly matching example, keep the setup deliberately simple:</p>
 <ul>
-<li>Use <code>causaldata::titanic</code> as a pedagogic dataset.</li>
-<li>Keep this as a teaching appendix, not a main policy-evaluation example.</li>
-<li>Prioritize visual clarity over methodological depth.</li>
+<li>Treatment: <code>sex</code>, coded here as female versus male</li>
+<li>Outcome: <code>survived</code></li>
+<li>Pre-treatment covariates: ticket <code>class</code> and <code>age</code></li>
+<li>Teaching estimand: <code>ATT</code> for the female group</li>
 </ul>
+<p>This choice keeps the design transparent. There are only two adjustment variables, both are discrete, and the implied exact-match cells are easy to inspect directly before using any propensity-score machinery.</p>
 </section>
-<section id="planned-analysis-blocks" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="planned-analysis-blocks"><span class="header-section-number">3</span> Planned Analysis Blocks</h2>
+<section id="dataset-at-a-glance" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="dataset-at-a-glance"><span class="header-section-number">3</span> Dataset At A Glance</h2>
+<p>In this local installation, <code>causaldata::titanic</code> contains 2,201 passenger records with four variables: <code>class</code>, <code>age</code>, <code>sex</code>, and <code>survived</code>.</p>
+<p>The table below shows the raw comparison before any design adjustment.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Raw comparison: women and men differ on both survival and covariate composition.</caption>
+<colgroup>
+<col style="width: 10%">
+<col style="width: 7%">
+<col style="width: 20%">
+<col style="width: 26%">
+<col style="width: 16%">
+<col style="width: 17%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Group</th>
+<th style="text-align: right;">N</th>
+<th style="text-align: right;">Survival rate</th>
+<th style="text-align: right;">First-class share</th>
+<th style="text-align: right;">Crew share</th>
+<th style="text-align: right;">Child share</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Female</td>
+<td style="text-align: right;">470</td>
+<td style="text-align: right;">73.2%</td>
+<td style="text-align: right;">30.9%</td>
+<td style="text-align: right;">4.9%</td>
+<td style="text-align: right;">9.6%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Male</td>
+<td style="text-align: right;">1731</td>
+<td style="text-align: right;">21.2%</td>
+<td style="text-align: right;">10.4%</td>
+<td style="text-align: right;">49.8%</td>
+<td style="text-align: right;">3.7%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Women survive at a much higher rate than men in the raw data, but women are also less concentrated in the crew and somewhat more concentrated in the higher-status passenger classes. That makes this a useful classroom example for separating the raw contrast from the adjusted one.</p>
+</section>
+<section id="support-cells-before-matching" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="support-cells-before-matching"><span class="header-section-number">4</span> Support Cells Before Matching</h2>
+<p>There are 8 possible age-by-class cells. 7 are observed in the data, and all 7 observed cells contain both women and men. The only empty cell is Crew x Child.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="titanic_teaching_lab_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Exact-match cells: counts and within-cell survival rates.</caption>
+<colgroup>
+<col style="width: 13%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 4%">
+<col style="width: 17%">
+<col style="width: 15%">
+<col style="width: 18%">
+<col style="width: 21%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Ticket class</th>
+<th style="text-align: left;">Age</th>
+<th style="text-align: right;">Women</th>
+<th style="text-align: right;">Men</th>
+<th style="text-align: right;">Women’s survival</th>
+<th style="text-align: right;">Men’s survival</th>
+<th style="text-align: right;">Gap (women - men)</th>
+<th style="text-align: left;">Overlap</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">First</td>
+<td style="text-align: left;">Child</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">100.0%</td>
+<td style="text-align: right;">100.0%</td>
+<td style="text-align: right;">0.0%</td>
+<td style="text-align: left;">Both groups observed</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Second</td>
+<td style="text-align: left;">Child</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">100.0%</td>
+<td style="text-align: right;">100.0%</td>
+<td style="text-align: right;">0.0%</td>
+<td style="text-align: left;">Both groups observed</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Third</td>
+<td style="text-align: left;">Child</td>
+<td style="text-align: right;">31</td>
+<td style="text-align: right;">48</td>
+<td style="text-align: right;">45.2%</td>
+<td style="text-align: right;">27.1%</td>
+<td style="text-align: right;">18.1%</td>
+<td style="text-align: left;">Both groups observed</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Crew</td>
+<td style="text-align: left;">Child</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: left;">Empty cell</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">First</td>
+<td style="text-align: left;">Adult</td>
+<td style="text-align: right;">144</td>
+<td style="text-align: right;">175</td>
+<td style="text-align: right;">97.2%</td>
+<td style="text-align: right;">32.6%</td>
+<td style="text-align: right;">64.7%</td>
+<td style="text-align: left;">Both groups observed</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Second</td>
+<td style="text-align: left;">Adult</td>
+<td style="text-align: right;">93</td>
+<td style="text-align: right;">168</td>
+<td style="text-align: right;">86.0%</td>
+<td style="text-align: right;">8.3%</td>
+<td style="text-align: right;">77.7%</td>
+<td style="text-align: left;">Both groups observed</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Third</td>
+<td style="text-align: left;">Adult</td>
+<td style="text-align: right;">165</td>
+<td style="text-align: right;">462</td>
+<td style="text-align: right;">46.1%</td>
+<td style="text-align: right;">16.2%</td>
+<td style="text-align: right;">29.8%</td>
+<td style="text-align: left;">Both groups observed</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Crew</td>
+<td style="text-align: left;">Adult</td>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">862</td>
+<td style="text-align: right;">87.0%</td>
+<td style="text-align: right;">22.3%</td>
+<td style="text-align: right;">64.7%</td>
+<td style="text-align: left;">Both groups observed</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>This is why Titanic works well in teaching. You can inspect the exact cells first and see that exact matching is feasible before fitting a propensity model.</p>
+</section>
+<section id="exact-matching" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="exact-matching"><span class="header-section-number">5</span> Exact Matching</h2>
+<p>Exact matching on <code>class</code> and <code>age</code> is almost the ideal first demonstration here:</p>
+<ul>
+<li>every observed female passenger has at least one male comparison unit in the same cell</li>
+<li>the matched sample achieves exact balance on the design covariates</li>
+<li>the estimand remains easy to explain because the cells are visible</li>
+</ul>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Absolute standardized mean differences before adjustment and after each design.</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 25%">
+<col style="width: 27%">
+<col style="width: 31%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Covariate</th>
+<th style="text-align: right;">Raw |SMD|</th>
+<th style="text-align: right;">Exact |SMD|</th>
+<th style="text-align: right;">Subclass |SMD|</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">First class</td>
+<td style="text-align: right;">0.443</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.018</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Second class</td>
+<td style="text-align: right;">0.292</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.002</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Third class</td>
+<td style="text-align: right;">0.248</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.015</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Crew</td>
+<td style="text-align: right;">2.081</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Child</td>
+<td style="text-align: right;">0.200</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.030</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Adult</td>
+<td style="text-align: right;">0.200</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.030</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The exact-matching column is all zeros because the design conditions directly on the full set of observed covariates.</p>
+</section>
+<section id="propensity-score-subclassification" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="propensity-score-subclassification"><span class="header-section-number">6</span> Propensity-Score Subclassification</h2>
+<p>Subclassification is useful here as a bridge to higher-dimensional problems. With only two discrete covariates it does not buy much over exact matching, but it shows how a propensity-score design can recover almost the same adjusted comparison while relaxing the requirement that each design cell be used literally.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Subclass composition after propensity-score subclassification.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Subclass</th>
+<th style="text-align: right;">Women</th>
+<th style="text-align: right;">Men</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1</td>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">862</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2</td>
+<td style="text-align: right;">165</td>
+<td style="text-align: right;">462</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">3</td>
+<td style="text-align: right;">124</td>
+<td style="text-align: right;">216</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">4</td>
+<td style="text-align: right;">158</td>
+<td style="text-align: right;">191</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>All four subclasses retain both women and men, and the adjusted balance remains well below the <code>0.1</code> standardized-difference benchmark on every covariate.</p>
+</section>
+<section id="comparison-of-estimates" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="comparison-of-estimates"><span class="header-section-number">7</span> Comparison Of Estimates</h2>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Raw and adjusted survival differences for the female group.</caption>
+<colgroup>
+<col style="width: 23%">
+<col style="width: 18%">
+<col style="width: 19%">
+<col style="width: 22%">
+<col style="width: 15%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Design</th>
+<th style="text-align: right;">Estimated gap</th>
+<th style="text-align: right;">95% CI</th>
+<th style="text-align: right;">Treated retained</th>
+<th style="text-align: right;">Control ESS</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Raw comparison</td>
+<td style="text-align: right;">52.0%</td>
+<td style="text-align: right;">47.7% to 56.2%</td>
+<td style="text-align: right;">100.0%</td>
+<td style="text-align: right;">1731.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Exact matching</td>
+<td style="text-align: right;">50.0%</td>
+<td style="text-align: right;">45.7% to 54.4%</td>
+<td style="text-align: right;">100.0%</td>
+<td style="text-align: right;">833.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Subclassification</td>
+<td style="text-align: right;">50.3%</td>
+<td style="text-align: right;">45.9% to 54.6%</td>
+<td style="text-align: right;">100.0%</td>
+<td style="text-align: right;">845.0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The key teaching result is that adjustment changes the estimate only modestly:</p>
+<ul>
+<li>raw difference: 52.0 percentage points</li>
+<li>exact matching: 50.0 percentage points</li>
+<li>subclassification: 50.3 percentage points</li>
+</ul>
+<p>That is a useful contrast with higher-dimensional matching examples. Here, the adjustment task is so transparent that the class-by-age structure already explains most of what the design is doing.</p>
+</section>
+<section id="slide-friendly-summary" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="slide-friendly-summary"><span class="header-section-number">8</span> Slide-Friendly Summary</h2>
 <ol type="1">
-<li>Define treatment and outcome for a transparent classroom contrast.</li>
-<li>Show baseline imbalance and curse-of-dimensionality intuition.</li>
-<li>Demonstrate simple exact matching and basic CEM.</li>
-<li>Present concise interpretation and caveats.</li>
+<li>Start with the cell structure. Titanic is useful because you can inspect the exact comparison cells directly.</li>
+<li>Exact matching is feasible here because the covariates are low-dimensional and discrete.</li>
+<li>Subclassification reaches nearly the same adjusted estimate, which makes it a clean bridge to settings where exact matching becomes too restrictive.</li>
+<li>This is still a pedagogic example rather than a literal causal treatment effect, because <code>sex</code> is not a manipulable intervention and important determinants of survival are not observed.</li>
 </ol>
-</section>
-<section id="implementation-checklist" class="level2" data-number="4">
-<h2 data-number="4" class="anchored" data-anchor-id="implementation-checklist"><span class="header-section-number">4</span> Implementation Checklist</h2>
-<ul class="task-list">
-<li><label><input type="checkbox">Lock treatment/outcome definitions for teaching use.</label></li>
-<li><label><input type="checkbox">Add a minimal visual diagnostic set.</label></li>
-<li><label><input type="checkbox">Add one-page teaching summary suitable for slides.</label></li>
-</ul>
 
 
 </section>

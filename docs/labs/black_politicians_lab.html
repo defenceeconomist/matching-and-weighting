@@ -187,12 +187,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">Lab: Titanic Teaching Example</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../labs/data_acquisition_lab.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Lab: Data Acquisition Layer</span></a>
-  </div>
-</li>
     </ul>
     </div>
 </nav>
@@ -283,17 +277,34 @@ Note
 <ul>
 <li>Observations: <code>5,593</code></li>
 <li>Variables: <code>14</code></li>
-<li>Unit of analysis: one legislator-email observation from the study design</li>
+<li>Unit of analysis: one email-to-legislator observation</li>
 <li>Built-in randomized factor: <code>treat_out</code> (whether the email was out-of-district)</li>
 </ul>
-<p>For this lab, we use:</p>
+<p>The important design feature is that this dataset contains both:</p>
+<ul>
+<li>an experimental component: <code>treat_out</code>, which was randomized in the original study</li>
+<li>an observational comparison: legislator characteristics such as <code>leg_black</code>, <code>leg_democrat</code>, and district composition</li>
+</ul>
+<p>That makes it useful for training because you can separate two different questions:</p>
+<ol type="1">
+<li>what the original experiment randomized</li>
+<li>what you are doing when you instead compare observed groups of legislators</li>
+</ol>
+<p>In this lab, we deliberately focus on the second question. We are <strong>not</strong> estimating the effect of the randomized out-of-district email treatment. Instead, we treat <code>leg_black</code> as the focal training comparison and ask whether Black and non-Black legislators can be made more comparable on a compact set of pre-outcome covariates.</p>
+<p>For this training version, we use:</p>
 <ul>
 <li>focal training comparison: <code>leg_black</code></li>
 <li>binary outcome: <code>responded</code></li>
 <li>core design covariates: <code>medianhhincom</code>, <code>blackpercent</code>, <code>leg_democrat</code></li>
 <li>extension covariates for later rounds: <code>leg_senator</code>, <code>south</code>, <code>urbanpercent</code>, <code>totalpop</code></li>
 </ul>
-<p>This structure is useful for training because it supports a clear design-first sequence: inspect raw imbalance, test exact matching feasibility, then compare CEM and entropy balancing under a shared <code>ATT</code> target.</p>
+<p>These variables work well for a matching lab because they mix:</p>
+<ul>
+<li>legislator attributes such as party and chamber</li>
+<li>district composition measures such as racial composition, income, population, and urbanicity</li>
+<li>an observable behavioral outcome, <code>responded</code></li>
+</ul>
+<p>That structure supports a clear design-first sequence: inspect raw imbalance, test whether literal exact matching is feasible, then compare CEM and entropy balancing under a shared <code>ATT</code> target.</p>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -304,7 +315,7 @@ Warning
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>This is best treated as a training example for matching logic, not as a literal policy treatment that could be assigned. <code>leg_black</code> is an observed attribute, so the main teaching value here is design transparency: how you define comparability, what overlap exists, and what is lost when you improve balance.</p>
+<p>This is best treated as a training example for matching logic, not as a literal policy treatment that could be assigned. <code>leg_black</code> is an observed attribute, so the main teaching value here is design transparency: what comparability would have to mean, where overlap is thin, and how the matched estimand changes as you tighten the design.</p>
 </div>
 </div>
 </section>

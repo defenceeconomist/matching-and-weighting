@@ -1,26 +1,128 @@
 ---
 title: "Lab: Titanic Teaching Example"
+format:
+  html:
+    code-links:
+      - text: Full Code
+        href: titanic_teaching_lab_full_code.html
+execute:
+  echo: false
+  eval: true
+  warning: false
+  message: false
 ---
 
-## Objective
+```{r}
+#| include: false
+source("titanic_teaching_lab_full_code.R", local = knitr::knit_global())
+```
 
-Create a compact, slide-friendly example for subclassification and simple exact matching.
+## How To Use This Page
 
-## Design Setup
+This lab turns the Titanic scaffold into a compact executed example for exact matching and propensity-score subclassification.
 
-- Use `causaldata::titanic` as a pedagogic dataset.
-- Keep this as a teaching appendix, not a main policy-evaluation example.
-- Prioritize visual clarity over methodological depth.
+::: {.callout-note}
+This is a teaching example, not a literal policy-evaluation design. The value of `causaldata::titanic` is that the treatment groups, covariates, and support cells are easy to see on one page.
+:::
 
-## Planned Analysis Blocks
+## Design Choice
 
-1. Define treatment and outcome for a transparent classroom contrast.
-2. Show baseline imbalance and curse-of-dimensionality intuition.
-3. Demonstrate simple exact matching and basic CEM.
-4. Present concise interpretation and caveats.
+For a slide-friendly matching example, keep the setup deliberately simple:
 
-## Implementation Checklist
+- Treatment: `sex`, coded here as female versus male
+- Outcome: `survived`
+- Pre-treatment covariates: ticket `class` and `age`
+- Teaching estimand: `ATT` for the female group
 
-- [ ] Lock treatment/outcome definitions for teaching use.
-- [ ] Add a minimal visual diagnostic set.
-- [ ] Add one-page teaching summary suitable for slides.
+This choice keeps the design transparent. There are only two adjustment variables, both are discrete, and the implied exact-match cells are easy to inspect directly before using any propensity-score machinery.
+
+## Dataset At A Glance
+
+In this local installation, `causaldata::titanic` contains `r format(nrow(dat), big.mark = ",")` passenger records with four variables: `class`, `age`, `sex`, and `survived`.
+
+The table below shows the raw comparison before any design adjustment.
+
+```{r}
+knitr::kable(
+  raw_summary_display,
+  align = c("l", "r", "r", "r", "r", "r"),
+  caption = "Raw comparison: women and men differ on both survival and covariate composition."
+)
+```
+
+Women survive at a much higher rate than men in the raw data, but women are also less concentrated in the crew and somewhat more concentrated in the higher-status passenger classes. That makes this a useful classroom example for separating the raw contrast from the adjusted one.
+
+## Support Cells Before Matching
+
+There are `r total_cells_n` possible age-by-class cells. `r observed_cells_n` are observed in the data, and all `r supported_cells_n` observed cells contain both women and men. The only empty cell is `r empty_cells_text`.
+
+```{r}
+support_plot
+```
+
+```{r}
+knitr::kable(
+  cell_support_display,
+  align = c("l", "l", "r", "r", "r", "r", "r", "l"),
+  caption = "Exact-match cells: counts and within-cell survival rates."
+)
+```
+
+This is why Titanic works well in teaching. You can inspect the exact cells first and see that exact matching is feasible before fitting a propensity model.
+
+## Exact Matching
+
+Exact matching on `class` and `age` is almost the ideal first demonstration here:
+
+- every observed female passenger has at least one male comparison unit in the same cell
+- the matched sample achieves exact balance on the design covariates
+- the estimand remains easy to explain because the cells are visible
+
+```{r}
+knitr::kable(
+  balance_compare_display,
+  align = c("l", "r", "r", "r"),
+  caption = "Absolute standardized mean differences before adjustment and after each design."
+)
+```
+
+The exact-matching column is all zeros because the design conditions directly on the full set of observed covariates.
+
+## Propensity-Score Subclassification
+
+Subclassification is useful here as a bridge to higher-dimensional problems. With only two discrete covariates it does not buy much over exact matching, but it shows how a propensity-score design can recover almost the same adjusted comparison while relaxing the requirement that each design cell be used literally.
+
+```{r}
+knitr::kable(
+  subclass_counts_display,
+  align = c("l", "r", "r"),
+  caption = "Subclass composition after propensity-score subclassification."
+)
+```
+
+All four subclasses retain both women and men, and the adjusted balance remains well below the `0.1` standardized-difference benchmark on every covariate.
+
+## Comparison Of Estimates
+
+```{r}
+knitr::kable(
+  estimate_table_display,
+  align = c("l", "r", "r", "r", "r"),
+  caption = "Raw and adjusted survival differences for the female group."
+)
+```
+
+The key teaching result is that adjustment changes the estimate only modestly:
+
+- raw difference: `r sprintf('%.1f', raw_gap_pp)` percentage points
+- exact matching: `r sprintf('%.1f', exact_gap_pp)` percentage points
+- subclassification: `r sprintf('%.1f', subclass_gap_pp)` percentage points
+
+That is a useful contrast with higher-dimensional matching examples. Here, the adjustment task is so transparent that the class-by-age structure already explains most of what the design is doing.
+
+## Slide-Friendly Summary
+
+1. Start with the cell structure. Titanic is useful because you can inspect the exact comparison cells directly.
+2. Exact matching is feasible here because the covariates are low-dimensional and discrete.
+3. Subclassification reaches nearly the same adjusted estimate, which makes it a clean bridge to settings where exact matching becomes too restrictive.
+4. This is still a pedagogic example rather than a literal causal treatment effect, because `sex` is not a manipulable intervention and important determinants of survival are not observed.

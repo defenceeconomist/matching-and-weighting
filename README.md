@@ -110,6 +110,8 @@ This renders:
 - `docs/labs/black_politicians_lab_full_code.html`
 - `docs/labs/black_politicians_lab_evaluated_code.html`
 - `docs/labs/black_politicians_lab_qa_log.html`
+- `docs/labs/titanic_teaching_lab.html`
+- `docs/labs/titanic_teaching_lab_full_code.html`
 - `docs/slides/index.html` and slide scaffold pages
 - `docs/matching_methods_report_full_code.html`
 - `docs/matching_methods_report_qa_log.html`
@@ -190,7 +192,7 @@ Status labels used below:
 | --- | --- | --- |
 | 16. Add `causaldata::black_politicians` as the first non-`lalonde` worked example. | `Done` | Implemented as a training aid with linked full-code, evaluated-code, and QA-log outputs. The current implementation keeps the design-first comparison focus (exact/CEM/entropy balancing) and includes a chapter-alignment QA trace against *The Effect*. |
 | 17. Add a benchmarking appendix using `causaldata::nsw_mixtape` plus `causaldata::cps_mixtape`. | `Done` | Implemented as a full lab bundle with linked lab, full-code, evaluated-code, and QA-log outputs. The workflow benchmarks observational estimates against the NSW experimental reference and reports benchmark gaps across raw, exact, CEM, and entropy-balancing designs. |
-| 18. Add a short teaching appendix using `causaldata::titanic` for subclassification and simple exact matching. | `Later` | This is not the best policy-style example, so it should not displace the main report narrative. It is still a strong classroom dataset because the treatment, covariates, and curse-of-dimensionality problem are visually transparent and easy to explain in slides or training notes. |
+| 18. Add a short teaching appendix using `causaldata::titanic` for subclassification and simple exact matching. | `Done` | Implemented as a compact teaching lab with an executed narrative page and a linked full-code companion. The workflow focuses on visible support cells, exact matching on discrete covariates, and a simple subclassification comparison. |
 | 19. Document a small acquisition layer for book-native datasets. | `Next` | `MatchIt`, `WeightIt`, and `cobalt` are already installed locally, but `causaldata` is not. The cleanest path is either to add `causaldata` as a documented dependency or to vendor the specific source files needed for the roadmap datasets into a reproducible `data/raw` workflow. |
 
 ### Planned sequence

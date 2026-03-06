@@ -22,11 +22,10 @@ The dataset expansion workstream is available as additional labs and training ai
 - [Black Politicians Lab](labs/black_politicians_lab.qmd)
 - [NSW + CPS Benchmark Lab](labs/nsw_cps_benchmark_lab.qmd)
 - [Titanic Teaching Lab](labs/titanic_teaching_lab.qmd)
-- [Data Acquisition Lab](labs/data_acquisition_lab.qmd)
 
 ## Slides Space
 
 A dedicated slides section is included for training delivery:
 
 - [Slides Hub](slides/index.qmd)
-- [Starter Slide Deck](slides/matching_methods_slides.qmd)
+- [Matching and Weighting Training Deck](slides/matching_methods_slides.qmd)

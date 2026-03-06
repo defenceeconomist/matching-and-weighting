@@ -43,20 +43,38 @@ Practice the design-first workflow from the main report on a second dataset:
 
 - Observations: `5,593`
 - Variables: `14`
-- Unit of analysis: one legislator-email observation from the study design
+- Unit of analysis: one email-to-legislator observation
 - Built-in randomized factor: `treat_out` (whether the email was out-of-district)
 
-For this lab, we use:
+The important design feature is that this dataset contains both:
+
+- an experimental component: `treat_out`, which was randomized in the original study
+- an observational comparison: legislator characteristics such as `leg_black`, `leg_democrat`, and district composition
+
+That makes it useful for training because you can separate two different questions:
+
+1. what the original experiment randomized
+2. what you are doing when you instead compare observed groups of legislators
+
+In this lab, we deliberately focus on the second question. We are **not** estimating the effect of the randomized out-of-district email treatment. Instead, we treat `leg_black` as the focal training comparison and ask whether Black and non-Black legislators can be made more comparable on a compact set of pre-outcome covariates.
+
+For this training version, we use:
 
 - focal training comparison: `leg_black`
 - binary outcome: `responded`
 - core design covariates: `medianhhincom`, `blackpercent`, `leg_democrat`
 - extension covariates for later rounds: `leg_senator`, `south`, `urbanpercent`, `totalpop`
 
-This structure is useful for training because it supports a clear design-first sequence: inspect raw imbalance, test exact matching feasibility, then compare CEM and entropy balancing under a shared `ATT` target.
+These variables work well for a matching lab because they mix:
+
+- legislator attributes such as party and chamber
+- district composition measures such as racial composition, income, population, and urbanicity
+- an observable behavioral outcome, `responded`
+
+That structure supports a clear design-first sequence: inspect raw imbalance, test whether literal exact matching is feasible, then compare CEM and entropy balancing under a shared `ATT` target.
 
 ::: {.callout-warning}
-This is best treated as a training example for matching logic, not as a literal policy treatment that could be assigned. `leg_black` is an observed attribute, so the main teaching value here is design transparency: how you define comparability, what overlap exists, and what is lost when you improve balance.
+This is best treated as a training example for matching logic, not as a literal policy treatment that could be assigned. `leg_black` is an observed attribute, so the main teaching value here is design transparency: what comparability would have to mean, where overlap is thin, and how the matched estimand changes as you tighten the design.
 :::
 
 ## Core Design Choice For This Training Aid

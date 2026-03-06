@@ -2,7 +2,13 @@
 title: "Dataset Expansion Labs"
 ---
 
-This section collects additional worked examples beyond `lalonde`.
+This section collects the secondary worked examples that sit alongside the main `lalonde` report.
+
+Use these pages as extensions of the same design-first workflow:
+
+- start with the benchmarked policy-style examples if you want the closest match to the main report
+- use the Titanic page when you want a compact teaching example for support, exact matching, and subclassification
+- treat each lab as a self-contained notebook with its own assumptions, diagnostics, and tradeoffs
 
 ## Roadmap-Aligned Labs
 
@@ -10,11 +16,14 @@ This section collects additional worked examples beyond `lalonde`.
 |---|---|---|---|
 | Black Politicians Lab | `causaldata::black_politicians` | Training aid | [Open](black_politicians_lab.qmd) · [Full code](black_politicians_lab_full_code.qmd) · [Evaluated code](black_politicians_lab_evaluated_code.qmd) · [QA log](black_politicians_lab_qa_log.qmd) |
 | NSW + CPS Benchmark Lab | `causaldata::nsw_mixtape`, `causaldata::cps_mixtape` | Benchmark lab | [Open](nsw_cps_benchmark_lab.qmd) · [Full code](nsw_cps_benchmark_lab_full_code.qmd) · [Evaluated code](nsw_cps_benchmark_lab_evaluated_code.qmd) · [QA log](nsw_cps_benchmark_lab_qa_log.qmd) |
-| Titanic Teaching Lab | `causaldata::titanic` | Scaffolded | [Open](titanic_teaching_lab.qmd) |
-| Data Acquisition Lab | `causaldata` dependency and ingest workflow | Scaffolded | [Open](data_acquisition_lab.qmd) |
+| Titanic Teaching Lab | `causaldata::titanic` | Teaching lab | [Open](titanic_teaching_lab.qmd) · [Full code](titanic_teaching_lab_full_code.qmd) |
 
-## How To Use These Pages
+## Recommended Sequence
 
-1. Keep each lab as a self-contained design notebook.
-2. Reuse a common diagnostics structure from the main report.
-3. Promote completed labs into the main article when ready.
+1. Start with the Black Politicians lab for a second design-first matching workflow with richer covariates.
+2. Use the NSW + CPS benchmark lab when you want to compare observational designs against an experimental reference.
+3. Use the Titanic lab for slide-friendly teaching on exact support cells and low-dimensional adjustment.
+
+## Working Rule
+
+Keep the same standard across all labs: define the estimand first, inspect imbalance before adjustment, and compare balance against retention after design changes.

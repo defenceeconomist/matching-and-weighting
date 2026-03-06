@@ -152,12 +152,6 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text">Lab: Titanic Teaching Example</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../labs/data_acquisition_lab.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Lab: Data Acquisition Layer</span></a>
-  </div>
-</li>
     </ul>
     </div>
 </nav>
@@ -169,7 +163,8 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#roadmap-aligned-labs" id="toc-roadmap-aligned-labs" class="nav-link active" data-scroll-target="#roadmap-aligned-labs"><span class="header-section-number">1</span> Roadmap-Aligned Labs</a></li>
-  <li><a href="#how-to-use-these-pages" id="toc-how-to-use-these-pages" class="nav-link" data-scroll-target="#how-to-use-these-pages"><span class="header-section-number">2</span> How To Use These Pages</a></li>
+  <li><a href="#recommended-sequence" id="toc-recommended-sequence" class="nav-link" data-scroll-target="#recommended-sequence"><span class="header-section-number">2</span> Recommended Sequence</a></li>
+  <li><a href="#working-rule" id="toc-working-rule" class="nav-link" data-scroll-target="#working-rule"><span class="header-section-number">3</span> Working Rule</a></li>
   </ul>
 </nav>
     </div>
@@ -195,7 +190,13 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>This section collects additional worked examples beyond <code>lalonde</code>.</p>
+<p>This section collects the secondary worked examples that sit alongside the main <code>lalonde</code> report.</p>
+<p>Use these pages as extensions of the same design-first workflow:</p>
+<ul>
+<li>start with the benchmarked policy-style examples if you want the closest match to the main report</li>
+<li>use the Titanic page when you want a compact teaching example for support, exact matching, and subclassification</li>
+<li>treat each lab as a self-contained notebook with its own assumptions, diagnostics, and tradeoffs</li>
+</ul>
 <section id="roadmap-aligned-labs" class="level2" data-number="1">
 <h2 data-number="1" class="anchored" data-anchor-id="roadmap-aligned-labs"><span class="header-section-number">1</span> Roadmap-Aligned Labs</h2>
 <table class="caption-top table">
@@ -223,25 +224,23 @@ ul.task-list li input[type="checkbox"] {
 <tr class="odd">
 <td>Titanic Teaching Lab</td>
 <td><code>causaldata::titanic</code></td>
-<td>Scaffolded</td>
-<td><a href="../labs/titanic_teaching_lab.html">Open</a></td>
-</tr>
-<tr class="even">
-<td>Data Acquisition Lab</td>
-<td><code>causaldata</code> dependency and ingest workflow</td>
-<td>Scaffolded</td>
-<td><a href="../labs/data_acquisition_lab.html">Open</a></td>
+<td>Teaching lab</td>
+<td><a href="../labs/titanic_teaching_lab.html">Open</a> · <a href="../labs/titanic_teaching_lab_full_code.html">Full code</a></td>
 </tr>
 </tbody>
 </table>
 </section>
-<section id="how-to-use-these-pages" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="how-to-use-these-pages"><span class="header-section-number">2</span> How To Use These Pages</h2>
+<section id="recommended-sequence" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="recommended-sequence"><span class="header-section-number">2</span> Recommended Sequence</h2>
 <ol type="1">
-<li>Keep each lab as a self-contained design notebook.</li>
-<li>Reuse a common diagnostics structure from the main report.</li>
-<li>Promote completed labs into the main article when ready.</li>
+<li>Start with the Black Politicians lab for a second design-first matching workflow with richer covariates.</li>
+<li>Use the NSW + CPS benchmark lab when you want to compare observational designs against an experimental reference.</li>
+<li>Use the Titanic lab for slide-friendly teaching on exact support cells and low-dimensional adjustment.</li>
 </ol>
+</section>
+<section id="working-rule" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="working-rule"><span class="header-section-number">3</span> Working Rule</h2>
+<p>Keep the same standard across all labs: define the estimand first, inspect imbalance before adjustment, and compare balance against retention after design changes.</p>
 
 
 </section>
