@@ -1,0 +1,67 @@
+---
+title: "Quality Assurance Log: Black Politicians Evaluated Code"
+subtitle: "Comparison Against The Effect (Chapter 14: Matching)"
+date: "2026-03-06"
+format:
+  html:
+    toc: true
+execute:
+  echo: false
+  eval: false
+---
+
+## Scope
+
+- Evaluated script reviewed: `docs/labs/black_politicians_lab_evaluated_code.R`
+- Rendered companion page reviewed: `docs/labs/black_politicians_lab_evaluated_code.qmd`
+- Baseline reference: *The Effect*, Chapter 14 ("Matching"), `black_politicians` code examples for CEM, entropy balancing, and weighted outcome models.
+- QA date: `2026-03-06`
+- Local package context:
+  - `causaldata 0.1.4`
+  - `MatchIt 4.7.2`
+  - `WeightIt 1.5.1`
+  - `cobalt 4.6.2`
+  - `cem` and `ebal` are not installed in this environment.
+
+## Source Baseline
+
+- Chapter URL: [The Effect, Chapter 14 - Matching](https://theeffectbook.net/ch-Matching.html)
+- CEM example block: lines around `381-427` in current chapter rendering.
+- Entropy balancing block: lines around `499-529` in current chapter rendering.
+- Weighted interaction regression block using CEM weights: lines around `903-944` in current chapter rendering.
+
+## Outcome Summary
+
+| Outcome | Count |
+|---|---:|
+| Pass | 7 |
+| Partial alignment (intentional extension) | 2 |
+| Material mismatch vs book workflow | 0 |
+| Out-of-scope relative to book example | 1 |
+
+The evaluated lab code is **methodologically aligned** with the chapter examples, but it is **not a literal reproduction** of the book workflow.
+
+## Detailed QA Log
+
+| ID | Evaluated code claim and location | The Effect comparison | Result | Action |
+|---|---|---|---|---|
+| B1 | Uses `causaldata::black_politicians`, with `treat = leg_black` and `outcome = responded` (`black_politicians_lab_evaluated_code.R:31-36`) | Chapter code uses `br <- causaldata::black_politicians`, `D <- leg_black`, `Y <- responded` in entropy balancing, and the same treatment/outcome in CEM examples. | Pass | None |
+| B2 | CEM uses quantile breaks for `medianhhincom` and even breaks for `blackpercent` (`...R:81-99`) | Chapter CEM code uses quantile breaks for `medianhhincom` and evenly spaced breaks for `blackpercent`. | Pass | None |
+| B3 | CEM includes additional matching covariates `leg_senator` and `south` (`...R:94`) | Chapter CEM example matches on `medianhhincom`, `blackpercent`, `leg_democrat` only. | Partial alignment | Keep as training extension, but label clearly as "extended CEM spec (not book-default)." |
+| B4 | CEM results show treated units pruned (`364 -> 300`) via `cem_counts` (`...R:101-104`; evaluated output) | Chapter text warns that CEM can drop many treated observations and that short matching-variable lists are used to limit attrition. | Pass | None |
+| B5 | Entropy balancing includes means for core covariates and squared terms for continuous covariates (`...R:109-113`) | Chapter entropy-balance code constructs `X` with `medianhhincom`, `blackpercent`, `leg_democrat`, plus squared terms for the continuous covariates. | Pass | None |
+| B6 | Entropy balancing also includes extra binary terms `leg_senator` and `south` (`...R:112`) | Chapter entropy example uses only `medianhhincom`, `blackpercent`, `leg_democrat` (+ squared continuous terms). | Partial alignment | Keep as extension, but mark as "expanded constraints vs book baseline." |
+| B7 | ATT weighting behavior is consistent: treated mean weight is 1, control weights concentrated (`...R:127-137`; evaluated output `ess`, `max_weight`) | Chapter entropy section notes control-side balancing weights and treated units handled as focal group in ATT-style setup. | Pass | None |
+| B8 | Primary model comparison includes `lm(outcome ~ treat)` across raw/exact/CEM/ebal (`...R:139-163`) | Chapter provides `lm(responded ~ leg_black, weights = ...)` after CEM/entropy workflows. | Pass | None |
+| B9 | Evaluated script includes the weighted interaction model `outcome ~ treat*treat_out + ...` with CEM weights and reports key terms (`black_politicians_lab_evaluated_code.R:165-192`) | Chapter includes weighted interaction model with CEM weights for substantive interpretation. | Pass | None |
+| B10 | Script includes an exact-matching branch (`...R:68-79`) | The book’s `black_politicians` workflow in this chapter emphasizes CEM and entropy balancing; exact matching is not the shown main path for this dataset. | Out-of-scope extension | Keep for training breadth; annotate as extra method not used in the chapter’s worked code. |
+
+## QA Decision
+
+The evaluated code is **training-aligned** with *The Effect* methods and now includes the chapter-style weighted interaction model block.
+
+Remaining differences are intentional training extensions (expanded CEM/entropy covariate constraints and an additional exact-matching branch), not material mismatches.
+
+If strict chapter replication is needed, the remaining optional change is:
+
+1. Add a "book-default spec" mode that uses only `medianhhincom`, `blackpercent`, and `leg_democrat` for CEM/entropy balancing.

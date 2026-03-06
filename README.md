@@ -105,7 +105,11 @@ This renders:
 
 - `docs/index.html`
 - `docs/matching_methods_report.html` (main article)
-- `docs/labs/index.html` and lab scaffold pages
+- `docs/labs/index.html` and lab pages
+- `docs/labs/black_politicians_lab.html`
+- `docs/labs/black_politicians_lab_full_code.html`
+- `docs/labs/black_politicians_lab_evaluated_code.html`
+- `docs/labs/black_politicians_lab_qa_log.html`
 - `docs/slides/index.html` and slide scaffold pages
 - `docs/matching_methods_report_full_code.html`
 - `docs/matching_methods_report_qa_log.html`
@@ -144,6 +148,29 @@ Rscript scripts/extract_qmd_chunks.R \
 
 Optional third argument customizes the chunk separator format (default: `# ---- chunk %d ----`).
 
+## Black Politicians Lab Outputs
+
+The `black_politicians` training aid now includes four linked outputs:
+
+- Training aid page: `docs/labs/black_politicians_lab.qmd` -> `docs/labs/black_politicians_lab.html`
+- Full executable script and page:
+  - `docs/labs/black_politicians_lab_full_code.R`
+  - `docs/labs/black_politicians_lab_full_code.qmd` -> `docs/labs/black_politicians_lab_full_code.html`
+- Evaluated script and page (shows processed data objects/results):
+  - `docs/labs/black_politicians_lab_evaluated_code.R`
+  - `docs/labs/black_politicians_lab_evaluated_code.qmd` -> `docs/labs/black_politicians_lab_evaluated_code.html`
+- QA log against *The Effect* chapter workflow:
+  - `docs/labs/black_politicians_lab_qa_log.qmd` -> `docs/labs/black_politicians_lab_qa_log.html`
+
+Render these pages individually with:
+
+```bash
+quarto render docs/labs/black_politicians_lab.qmd --to html
+quarto render docs/labs/black_politicians_lab_full_code.qmd --to html
+quarto render docs/labs/black_politicians_lab_evaluated_code.qmd --to html
+quarto render docs/labs/black_politicians_lab_qa_log.qmd --to html
+```
+
 ## Next Steps
 
 - Add hidden-bias sensitivity analysis beyond design diagnostics (e.g., Rosenbaum-style bounds or omitted-variable benchmarking).
@@ -155,19 +182,20 @@ The next dataset work should prioritize examples from *Causal Inference: The Mix
 
 Status labels used below:
 
+- `Done`: implemented and rendered in the current repo.
 - `Next`: highest-priority implementation target for the report.
 - `Later`: useful extension once the first expansion dataset is complete.
 
 | Roadmap item | Status | Why this dataset fits |
 | --- | --- | --- |
-| 16. Add `causaldata::black_politicians` as the first non-`lalonde` worked example. | `Next` | This is the strongest immediate candidate from *The Effect* because the matching chapter already uses it for coarsened exact matching and entropy balancing. It shifts the report into a second substantive domain, keeps a binary treatment and outcome, and is well-suited to comparing pruning, balance, and weight concentration. |
+| 16. Add `causaldata::black_politicians` as the first non-`lalonde` worked example. | `Done` | Implemented as a training aid with linked full-code, evaluated-code, and QA-log outputs. The current implementation keeps the design-first comparison focus (exact/CEM/entropy balancing) and includes a chapter-alignment QA trace against *The Effect*. |
 | 17. Add a benchmarking appendix using `causaldata::nsw_mixtape` plus `causaldata::cps_mixtape`. | `Next` | This comes directly from the Mixtape matching chapter and is useful even though it is close to `lalonde`. The value is not novelty of topic but benchmarking: it lets the report compare observational matching and weighting estimates against the known NSW experimental result and show more explicitly how poor overlap with observational controls can distort conclusions. |
 | 18. Add a short teaching appendix using `causaldata::titanic` for subclassification and simple exact matching. | `Later` | This is not the best policy-style example, so it should not displace the main report narrative. It is still a strong classroom dataset because the treatment, covariates, and curse-of-dimensionality problem are visually transparent and easy to explain in slides or training notes. |
 | 19. Document a small acquisition layer for book-native datasets. | `Next` | `MatchIt`, `WeightIt`, and `cobalt` are already installed locally, but `causaldata` is not. The cleanest path is either to add `causaldata` as a documented dependency or to vendor the specific source files needed for the roadmap datasets into a reproducible `data/raw` workflow. |
 
 ### Planned sequence
 
-1. Implement `black_politicians` first as the main transportability example for exact matching on a reduced discrete covariate set, CEM on richer bins, and entropy balancing with explicit ESS and weight-dispersion checks.
-2. Implement `nsw_mixtape` plus `cps_mixtape` second as a validation appendix that compares adjusted observational estimates with the known experimental benchmark.
+1. Maintain `black_politicians` as the primary non-`lalonde` training example and keep chapter-alignment QA checks current as lab code evolves.
+2. Implement `nsw_mixtape` plus `cps_mixtape` as a validation appendix that compares adjusted observational estimates with the known experimental benchmark.
 3. Add `titanic` only as a compact pedagogic appendix or slide-friendly note, not as the main substantive extension.
 4. If dataset expansion becomes a recurring pattern, move the common data-ingest and diagnostics code into reusable helper chunks so each new example only changes the treatment, outcome, and covariate specification.

@@ -2,13 +2,13 @@
 title: "Dataset Expansion Labs"
 ---
 
-This section scaffolds additional worked examples beyond `lalonde`.
+This section collects additional worked examples beyond `lalonde`.
 
 ## Roadmap-Aligned Labs
 
 | Lab | Dataset(s) | Current status | Link |
 |---|---|---|---|
-| Black Politicians Lab | `causaldata::black_politicians` | Scaffolded | [Open](black_politicians_lab.qmd) |
+| Black Politicians Lab | `causaldata::black_politicians` | Training aid | [Open](black_politicians_lab.qmd) · [Full code](black_politicians_lab_full_code.qmd) · [Evaluated code](black_politicians_lab_evaluated_code.qmd) · [QA log](black_politicians_lab_qa_log.qmd) |
 | NSW + CPS Benchmark Lab | `causaldata::nsw_mixtape`, `causaldata::cps_mixtape` | Scaffolded | [Open](nsw_cps_benchmark_lab.qmd) |
 | Titanic Teaching Lab | `causaldata::titanic` | Scaffolded | [Open](titanic_teaching_lab.qmd) |
 | Data Acquisition Lab | `causaldata` dependency and ingest workflow | Scaffolded | [Open](data_acquisition_lab.qmd) |

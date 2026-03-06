@@ -1,0 +1,73 @@
+---
+title: "Black Politicians Training Aid: Evaluated Code"
+format:
+  html:
+    toc: true
+    code-links:
+      - text: Training Aid
+        href: black_politicians_lab.html
+      - text: Full Code
+        href: black_politicians_lab_full_code.html
+      - text: QA Log
+        href: black_politicians_lab_qa_log.html
+      - text: Evaluated Script
+        href: black_politicians_lab_evaluated_code.R
+execute:
+  echo: false
+  eval: true
+  warning: false
+  message: false
+---
+
+This page runs the evaluated workflow script and shows processed data objects created during execution.
+
+```{r}
+#| include: false
+source("black_politicians_lab_evaluated_code.R", local = knitr::knit_global())
+```
+
+## Evaluated Script
+
+```{r}
+#| results: asis
+cat("```r\n")
+cat(readLines("black_politicians_lab_evaluated_code.R"), sep = "\n")
+cat("\n```")
+```
+
+## Processed Data Preview
+
+```{r}
+dat_preview
+```
+
+## Raw Comparison Summary
+
+```{r}
+raw_summary
+```
+
+## Matched Sample Counts
+
+```{r}
+exact_counts
+cem_counts
+```
+
+## Entropy Balancing Weights Summary
+
+```{r}
+ebal_weight_summary
+```
+
+## Effect Estimates By Design
+
+```{r}
+estimate_comparison
+```
+
+## Book-Replication Interaction Model (CEM Weights)
+
+```{r}
+final_fit_key_terms
+```

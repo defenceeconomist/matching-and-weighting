@@ -103,7 +103,7 @@
     "href": "labs/index.html",
     "title": "Dataset Expansion Labs",
     "section": "",
-    "text": "This section scaffolds additional worked examples beyond lalonde.",
+    "text": "This section collects additional worked examples beyond lalonde.",
     "crumbs": [
       "Additional Labs",
       "Dataset Expansion Labs"
@@ -114,7 +114,7 @@
     "href": "labs/index.html#roadmap-aligned-labs",
     "title": "Dataset Expansion Labs",
     "section": "1 Roadmap-Aligned Labs",
-    "text": "1 Roadmap-Aligned Labs\n\n\n\nLab\nDataset(s)\nCurrent status\nLink\n\n\n\n\nBlack Politicians Lab\ncausaldata::black_politicians\nScaffolded\nOpen\n\n\nNSW + CPS Benchmark Lab\ncausaldata::nsw_mixtape, causaldata::cps_mixtape\nScaffolded\nOpen\n\n\nTitanic Teaching Lab\ncausaldata::titanic\nScaffolded\nOpen\n\n\nData Acquisition Lab\ncausaldata dependency and ingest workflow\nScaffolded\nOpen",
+    "text": "1 Roadmap-Aligned Labs\n\n\n\nLab\nDataset(s)\nCurrent status\nLink\n\n\n\n\nBlack Politicians Lab\ncausaldata::black_politicians\nTraining aid\nOpen · Full code · Evaluated code · QA log\n\n\nNSW + CPS Benchmark Lab\ncausaldata::nsw_mixtape, causaldata::cps_mixtape\nScaffolded\nOpen\n\n\nTitanic Teaching Lab\ncausaldata::titanic\nScaffolded\nOpen\n\n\nData Acquisition Lab\ncausaldata dependency and ingest workflow\nScaffolded\nOpen",
     "crumbs": [
       "Additional Labs",
       "Dataset Expansion Labs"
@@ -134,12 +134,12 @@
   {
     "objectID": "labs/black_politicians_lab.html",
     "href": "labs/black_politicians_lab.html",
-    "title": "Lab: Black Politicians",
+    "title": "Lab: Black Politicians Training Aid",
     "section": "",
-    "text": "Build the first non-lalonde worked example using causaldata::black_politicians.",
+    "text": "Use this page as a guided worksheet rather than as a finished report.\n\nRead the short framing note for each step.\nRun the starter code in your own R session.\nWrite down what you learn before moving to the next section.\nFill in the comparison table near the end so you can compare designs side by side.\n\n\n\n\n\n\n\nNote\n\n\n\nThe code is shown but not executed when the website is rendered. That keeps the page readable even if causaldata is not installed yet.",
     "crumbs": [
       "Additional Labs",
-      "Lab: Black Politicians"
+      "Lab: Black Politicians Training Aid"
     ]
   },
   {
@@ -212,7 +212,7 @@
     "href": "index.html#dataset-expansion-labs",
     "title": "Matching TRG",
     "section": "2 Dataset Expansion Labs",
-    "text": "2 Dataset Expansion Labs\nThe dataset expansion workstream is scaffolded as additional labs:\n\nDataset Expansion Lab Hub\nBlack Politicians Lab\nNSW + CPS Benchmark Lab\nTitanic Teaching Lab\nData Acquisition Lab"
+    "text": "2 Dataset Expansion Labs\nThe dataset expansion workstream is available as additional labs and training aids:\n\nDataset Expansion Lab Hub\nBlack Politicians Lab\nNSW + CPS Benchmark Lab\nTitanic Teaching Lab\nData Acquisition Lab"
   },
   {
     "objectID": "index.html#slides-space",
@@ -535,5 +535,286 @@
     "crumbs": [
       "Slides"
     ]
+  },
+  {
+    "objectID": "labs/black_politicians_lab.html#how-to-use-this-page",
+    "href": "labs/black_politicians_lab.html#how-to-use-this-page",
+    "title": "Lab: Black Politicians Training Aid",
+    "section": "",
+    "text": "Use this page as a guided worksheet rather than as a finished report.\n\nRead the short framing note for each step.\nRun the starter code in your own R session.\nWrite down what you learn before moving to the next section.\nFill in the comparison table near the end so you can compare designs side by side.\n\n\n\n\n\n\n\nNote\n\n\n\nThe code is shown but not executed when the website is rendered. That keeps the page readable even if causaldata is not installed yet.",
+    "crumbs": [
+      "Additional Labs",
+      "Lab: Black Politicians Training Aid"
+    ]
+  },
+  {
+    "objectID": "labs/black_politicians_lab.html#training-goal",
+    "href": "labs/black_politicians_lab.html#training-goal",
+    "title": "Lab: Black Politicians Training Aid",
+    "section": "2 Training Goal",
+    "text": "2 Training Goal\nPractice the design-first workflow from the main report on a second dataset:\n\ndefine the estimand before choosing a method\nmap treatment, outcome, and covariates clearly\ndiagnose raw imbalance\ncompare exact matching, CEM, and entropy balancing\ninterpret the tradeoff between balance, retention, and weight concentration",
+    "crumbs": [
+      "Additional Labs",
+      "Lab: Black Politicians Training Aid"
+    ]
+  },
+  {
+    "objectID": "labs/black_politicians_lab.html#why-this-dataset-works-for-training",
+    "href": "labs/black_politicians_lab.html#why-this-dataset-works-for-training",
+    "title": "Lab: Black Politicians Training Aid",
+    "section": "3 Why This Dataset Works For Training",
+    "text": "3 Why This Dataset Works For Training\ncausaldata::black_politicians is useful because it gives you:\n\na binary focal variable: leg_black\na binary outcome: responded\nseveral plausible background covariates measured at the district or legislator level\na built-in reason to discuss design choices, because the original study also includes the randomized email manipulation treat_out\n\n\n\n\n\n\n\nWarning\n\n\n\nThis is best treated as a training example for matching logic, not as a literal policy treatment that could be assigned. leg_black is an observed attribute, so the main teaching value here is design transparency: how you define comparability, what overlap exists, and what is lost when you improve balance.",
+    "crumbs": [
+      "Additional Labs",
+      "Lab: Black Politicians Training Aid"
+    ]
+  },
+  {
+    "objectID": "labs/black_politicians_lab.html#core-design-choice-for-this-training-aid",
+    "href": "labs/black_politicians_lab.html#core-design-choice-for-this-training-aid",
+    "title": "Lab: Black Politicians Training Aid",
+    "section": "4 Core Design Choice For This Training Aid",
+    "text": "4 Core Design Choice For This Training Aid\nFor a first pass, keep the exercise simple and explicit.\n\n\n\n\n\n\n\n\nRole\nVariable\nWhy it is used here\n\n\n\n\nTreatment\nleg_black\nFocal comparison for the matching exercise\n\n\nOutcome\nresponded\nWhether the legislator replied\n\n\nEstimand\nATT\nAverage difference for the Black-legislator group\n\n\nCore covariates\nmedianhhincom, blackpercent, leg_democrat\nCompact set that captures district resources, district racial composition, and party\n\n\nExtension covariates\nleg_senator, south, urbanpercent, totalpop\nUseful once the basic workflow is clear\n\n\nPost-design modeling variable\ntreat_out\nPart of the original study design; add it after you understand the basic matched comparison\n\n\n\nWhy not start with every variable at once? Because this page is meant to train judgement, not to hide the design behind a long formula.",
+    "crumbs": [
+      "Additional Labs",
+      "Lab: Black Politicians Training Aid"
+    ]
+  },
+  {
+    "objectID": "labs/black_politicians_lab.html#suggested-session-flow",
+    "href": "labs/black_politicians_lab.html#suggested-session-flow",
+    "title": "Lab: Black Politicians Training Aid",
+    "section": "5 Suggested Session Flow",
+    "text": "5 Suggested Session Flow\nIf you are teaching this live, a simple 35-45 minute structure works well:\n\n5 minutes: frame the question and walk through the variable map\n10 minutes: run raw descriptives and balance diagnostics\n5 minutes: try exact matching and discuss why it struggles\n10 minutes: run CEM and inspect the retention-versus-balance tradeoff\n10 minutes: run entropy balancing and inspect effective sample size\n5 minutes: compare designs and decide which one you would defend",
+    "crumbs": [
+      "Additional Labs",
+      "Lab: Black Politicians Training Aid"
+    ]
+  },
+  {
+    "objectID": "labs/black_politicians_lab.html#step-1-load-the-data",
+    "href": "labs/black_politicians_lab.html#step-1-load-the-data",
+    "title": "Lab: Black Politicians Training Aid",
+    "section": "6 Step 1: Load The Data",
+    "text": "6 Step 1: Load The Data\nStart by loading the packages, bringing in the data, and creating a compact analysis object.\n\nrequired_packages &lt;- c(\n  \"causaldata\",\n  \"MatchIt\",\n  \"WeightIt\",\n  \"cobalt\",\n  \"dplyr\",\n  \"ggplot2\"\n)\n\nmissing_packages &lt;- required_packages[!vapply(\n  required_packages,\n  requireNamespace,\n  logical(1),\n  quietly = TRUE\n)]\n\nif (length(missing_packages) &gt; 0) {\n  install.packages(missing_packages, repos = \"https://cloud.r-project.org\")\n}\n\ninvisible(lapply(required_packages, library, character.only = TRUE))\n\ndat &lt;- causaldata::black_politicians |&gt;\n  mutate(\n    treat = as.integer(leg_black),\n    outcome = as.integer(responded)\n  )\n\ndesign_covariates &lt;- c(\"medianhhincom\", \"blackpercent\", \"leg_democrat\")\n\ndat |&gt;\n  select(treat, outcome, treat_out, all_of(design_covariates)) |&gt;\n  glimpse()\n\nCheckpoint:\n\nIs the treatment binary?\nIs the outcome binary?\nAre the matching covariates measured before the outcome?",
+    "crumbs": [
+      "Additional Labs",
+      "Lab: Black Politicians Training Aid"
+    ]
+  },
+  {
+    "objectID": "labs/black_politicians_lab.html#step-2-describe-the-raw-comparison",
+    "href": "labs/black_politicians_lab.html#step-2-describe-the-raw-comparison",
+    "title": "Lab: Black Politicians Training Aid",
+    "section": "7 Step 2: Describe The Raw Comparison",
+    "text": "7 Step 2: Describe The Raw Comparison\nDo not start with a matching algorithm. First check whether the untreated group looks remotely comparable to the treated group on the covariates you care about.\n\nraw_summary &lt;- dat |&gt;\n  group_by(treat) |&gt;\n  summarise(\n    n = n(),\n    response_rate = mean(outcome, na.rm = TRUE),\n    mean_income = mean(medianhhincom, na.rm = TRUE),\n    mean_blackpercent = mean(blackpercent, na.rm = TRUE),\n    prop_democrat = mean(leg_democrat == 1, na.rm = TRUE),\n    .groups = \"drop\"\n  ) |&gt;\n  mutate(group = if_else(treat == 1L, \"Black legislators\", \"Non-Black legislators\")) |&gt;\n  select(group, n, response_rate, mean_income, mean_blackpercent, prop_democrat)\n\nraw_summary\n\nWhat to look for:\n\nlarge differences in medianhhincom\nlarge differences in blackpercent\nmajor party imbalance on leg_democrat\n\nIf the raw groups are far apart, that does not mean matching will fail, but it does mean the burden on the design is real.",
+    "crumbs": [
+      "Additional Labs",
+      "Lab: Black Politicians Training Aid"
+    ]
+  },
+  {
+    "objectID": "labs/black_politicians_lab.html#step-3-baseline-balance-diagnostics",
+    "href": "labs/black_politicians_lab.html#step-3-baseline-balance-diagnostics",
+    "title": "Lab: Black Politicians Training Aid",
+    "section": "8 Step 3: Baseline Balance Diagnostics",
+    "text": "8 Step 3: Baseline Balance Diagnostics\nUse MatchIt with method = NULL to get a formal pre-adjustment balance benchmark.\n\nm_raw &lt;- matchit(\n  treat ~ medianhhincom + blackpercent + leg_democrat,\n  data = dat,\n  method = NULL,\n  estimand = \"ATT\"\n)\n\nsummary(m_raw, un = TRUE)\n\ncobalt::bal.tab(m_raw, un = TRUE, m.threshold = 0.1)\n\ncobalt::love.plot(\n  m_raw,\n  abs = TRUE,\n  thresholds = c(m = 0.1),\n  stars = \"raw\"\n)\n\nCheckpoint:\n\nWhich covariate is least balanced?\nAre any absolute standardized mean differences already below 0.1?\nIf balance is poor, is the problem modest or structural?",
+    "crumbs": [
+      "Additional Labs",
+      "Lab: Black Politicians Training Aid"
+    ]
+  },
+  {
+    "objectID": "labs/black_politicians_lab.html#step-4-exact-matching-feasibility-check",
+    "href": "labs/black_politicians_lab.html#step-4-exact-matching-feasibility-check",
+    "title": "Lab: Black Politicians Training Aid",
+    "section": "9 Step 4: Exact Matching Feasibility Check",
+    "text": "9 Step 4: Exact Matching Feasibility Check\nExact matching is easiest to explain, but it becomes restrictive quickly. Use a reduced discrete specification to show both its appeal and its limits.\n\nm_exact &lt;- matchit(\n  treat ~ leg_democrat + leg_senator + south,\n  data = dat,\n  method = \"exact\",\n  estimand = \"ATT\"\n)\n\nsummary(m_exact, un = TRUE)\n\nexact_dat &lt;- match.data(m_exact)\n\nexact_dat |&gt;\n  count(treat) |&gt;\n  mutate(group = if_else(treat == 1L, \"Treated\", \"Control\"))\n\nWhat to discuss:\n\nExact matching is transparent because every retained comparison is literal on the chosen variables.\nIt will usually ignore important continuous differences unless you bin them first.\nIf many treated units are dropped, the estimand begins to drift toward “the treated units for whom exact matches exist.”",
+    "crumbs": [
+      "Additional Labs",
+      "Lab: Black Politicians Training Aid"
+    ]
+  },
+  {
+    "objectID": "labs/black_politicians_lab.html#step-5-build-a-cem-version",
+    "href": "labs/black_politicians_lab.html#step-5-build-a-cem-version",
+    "title": "Lab: Black Politicians Training Aid",
+    "section": "10 Step 5: Build A CEM Version",
+    "text": "10 Step 5: Build A CEM Version\nCEM relaxes exact matching by coarsening continuous covariates into bins. That usually improves feasibility while keeping the matching logic visible.\n\ncreate_even_breaks &lt;- function(x, n) {\n  min_x &lt;- min(x, na.rm = TRUE)\n  max_x &lt;- max(x, na.rm = TRUE)\n  min_x + ((0:n) / n) * (max_x - min_x)\n}\n\ncem_cutpoints &lt;- list(\n  medianhhincom = quantile(dat$medianhhincom, probs = (0:6) / 6, na.rm = TRUE),\n  blackpercent = create_even_breaks(dat$blackpercent, 6)\n)\n\nm_cem &lt;- matchit(\n  treat ~ medianhhincom + blackpercent + leg_democrat + leg_senator + south,\n  data = dat,\n  method = \"cem\",\n  estimand = \"ATT\",\n  cutpoints = cem_cutpoints\n)\n\nsummary(m_cem, un = TRUE)\n\ncobalt::bal.tab(m_cem, un = TRUE, m.threshold = 0.1)\n\ncobalt::love.plot(\n  m_cem,\n  abs = TRUE,\n  thresholds = c(m = 0.1),\n  stars = \"raw\"\n)\n\nQuestions to answer after running it:\n\nHow much better is balance than in the raw sample?\nHow many treated units are retained?\nWhich binning choices matter most for the result?",
+    "crumbs": [
+      "Additional Labs",
+      "Lab: Black Politicians Training Aid"
+    ]
+  },
+  {
+    "objectID": "labs/black_politicians_lab.html#step-6-try-entropy-balancing",
+    "href": "labs/black_politicians_lab.html#step-6-try-entropy-balancing",
+    "title": "Lab: Black Politicians Training Aid",
+    "section": "11 Step 6: Try Entropy Balancing",
+    "text": "11 Step 6: Try Entropy Balancing\nEntropy balancing keeps the treated group intact and reweights the controls. That often gives excellent balance, but the price can be concentrated weights and a smaller effective control sample.\n\nw_ebal &lt;- weightit(\n  treat ~ medianhhincom + I(medianhhincom^2) +\n    blackpercent + I(blackpercent^2) +\n    leg_democrat + leg_senator + south,\n  data = dat,\n  method = \"ebal\",\n  estimand = \"ATT\"\n)\n\nsummary(w_ebal)\n\ncobalt::bal.tab(w_ebal, un = TRUE, m.threshold = 0.1)\n\ncobalt::love.plot(\n  w_ebal,\n  abs = TRUE,\n  thresholds = c(m = 0.1),\n  stars = \"raw\"\n)\n\ness &lt;- function(w) {\n  (sum(w)^2) / sum(w^2)\n}\n\ndat_ebal &lt;- dat |&gt;\n  mutate(w = w_ebal$weights)\n\ndat_ebal |&gt;\n  group_by(treat) |&gt;\n  summarise(\n    raw_n = n(),\n    ess = ess(w),\n    max_weight = max(w),\n    mean_weight = mean(w),\n    .groups = \"drop\"\n  )\n\nInterpretation prompt:\n\nIf balance looks excellent but control-side ESS collapses, would you still prefer this design?",
+    "crumbs": [
+      "Additional Labs",
+      "Lab: Black Politicians Training Aid"
+    ]
+  },
+  {
+    "objectID": "labs/black_politicians_lab.html#step-7-estimate-and-compare",
+    "href": "labs/black_politicians_lab.html#step-7-estimate-and-compare",
+    "title": "Lab: Black Politicians Training Aid",
+    "section": "12 Step 7: Estimate And Compare",
+    "text": "12 Step 7: Estimate And Compare\nKeep the outcome model simple for the training version. The point is to compare designs, not to hide differences behind a complicated specification.\n\nraw_fit &lt;- lm(outcome ~ treat, data = dat)\n\nexact_fit &lt;- lm(outcome ~ treat, data = exact_dat, weights = weights)\n\ncem_dat &lt;- match.data(m_cem)\ncem_fit &lt;- lm(outcome ~ treat, data = cem_dat, weights = weights)\n\nebal_fit &lt;- lm(outcome ~ treat, data = dat_ebal, weights = w)\n\ncoef(summary(raw_fit))\ncoef(summary(exact_fit))\ncoef(summary(cem_fit))\ncoef(summary(ebal_fit))\n\nYou can stop here for an introductory session. If you want to connect the lab back to the original study design, add treat_out and relevant controls after the design stage rather than mixing everything together at the start.",
+    "crumbs": [
+      "Additional Labs",
+      "Lab: Black Politicians Training Aid"
+    ]
+  },
+  {
+    "objectID": "labs/black_politicians_lab.html#comparison-table-to-fill-in",
+    "href": "labs/black_politicians_lab.html#comparison-table-to-fill-in",
+    "title": "Lab: Black Politicians Training Aid",
+    "section": "13 Comparison Table To Fill In",
+    "text": "13 Comparison Table To Fill In\nUse this table as the main training record.\n\n\n\n\n\n\n\n\n\n\n\nDesign\nWorst abs. SMD\nTreated retained\nControl ESS\nEstimated effect\nYour judgement\n\n\n\n\nRaw sample\n\n\n\n\n\n\n\nExact matching\n\n\n\n\n\n\n\nCEM\n\n\n\n\n\n\n\nEntropy balancing",
+    "crumbs": [
+      "Additional Labs",
+      "Lab: Black Politicians Training Aid"
+    ]
+  },
+  {
+    "objectID": "labs/black_politicians_lab.html#debrief-questions",
+    "href": "labs/black_politicians_lab.html#debrief-questions",
+    "title": "Lab: Black Politicians Training Aid",
+    "section": "14 Debrief Questions",
+    "text": "14 Debrief Questions\n\nWhich design gave the best balance on the covariates you actually care about?\nWhich design preserved the clearest connection to the original ATT?\nDid better balance come from pruning observations, reweighting heavily, or both?\nIf you had to explain your preferred design to a non-technical policy audience, which one would be easiest to defend?",
+    "crumbs": [
+      "Additional Labs",
+      "Lab: Black Politicians Training Aid"
+    ]
+  },
+  {
+    "objectID": "labs/black_politicians_lab.html#optional-extension",
+    "href": "labs/black_politicians_lab.html#optional-extension",
+    "title": "Lab: Black Politicians Training Aid",
+    "section": "15 Optional Extension",
+    "text": "15 Optional Extension\nOnce the core exercise is complete, extend the outcome model to reflect the original study more closely. This same interaction model is now included in the evaluated-code artifact so you can compare your local run with the QA checks directly.\n\nfinal_fit &lt;- lm(\n  outcome ~ treat * treat_out +\n    nonblacknonwhite +\n    black_medianhh +\n    white_medianhh +\n    statessquireindex +\n    totalpop +\n    urbanpercent,\n  data = cem_dat,\n  weights = weights\n)\n\nsummary(final_fit)\n\nThis extension is useful because it separates two tasks:\n\ndesign the comparison first\nfit the richer substantive model second",
+    "crumbs": [
+      "Additional Labs",
+      "Lab: Black Politicians Training Aid"
+    ]
+  },
+  {
+    "objectID": "labs/black_politicians_lab_full_code.html",
+    "href": "labs/black_politicians_lab_full_code.html",
+    "title": "Black Politicians Training Aid: Full Code",
+    "section": "",
+    "text": "This document contains the complete executable R script for black_politicians_lab.qmd.\n# Black Politicians training aid: executable full analysis script.\n# Run with:\n#   Rscript docs/labs/black_politicians_lab_full_code.R\n\noptions(width = 120)\n\n# ---- Step 1: Install and load required packages ----\n# Install only packages that are missing so repeated runs stay fast and reproducible.\nrequired_packages &lt;- c(\n  \"causaldata\",\n  \"MatchIt\",\n  \"WeightIt\",\n  \"cobalt\",\n  \"dplyr\",\n  \"ggplot2\"\n)\n\nmissing_packages &lt;- required_packages[!vapply(\n  required_packages,\n  requireNamespace,\n  logical(1),\n  quietly = TRUE\n)]\n\nif (length(missing_packages) &gt; 0) {\n  message(\"Installing missing packages: \", paste(missing_packages, collapse = \", \"))\n  install.packages(missing_packages, repos = \"https://cloud.r-project.org\")\n}\n\ninvisible(lapply(required_packages, library, character.only = TRUE))\n\n# ---- Step 2: Load data and map variables to design roles ----\n# We define a binary treatment and binary outcome used consistently in every method.\ndat &lt;- causaldata::black_politicians |&gt;\n  dplyr::mutate(\n    treat = as.integer(leg_black),\n    outcome = as.integer(responded)\n  )\n\ndesign_covariates &lt;- c(\"medianhhincom\", \"blackpercent\", \"leg_democrat\")\n\nmessage(\"\\n[Step 2] Data schema check\")\ndat |&gt;\n  dplyr::select(treat, outcome, treat_out, dplyr::all_of(design_covariates)) |&gt;\n  dplyr::glimpse()\n\n# ---- Step 3: Describe the raw comparison before any adjustment ----\nmessage(\"\\n[Step 3] Raw treated vs control comparison\")\nraw_summary &lt;- dat |&gt;\n  dplyr::group_by(treat) |&gt;\n  dplyr::summarise(\n    n = dplyr::n(),\n    response_rate = mean(outcome, na.rm = TRUE),\n    mean_income = mean(medianhhincom, na.rm = TRUE),\n    mean_blackpercent = mean(blackpercent, na.rm = TRUE),\n    prop_democrat = mean(leg_democrat == 1, na.rm = TRUE),\n    .groups = \"drop\"\n  ) |&gt;\n  dplyr::mutate(group = dplyr::if_else(treat == 1L, \"Black legislators\", \"Non-Black legislators\")) |&gt;\n  dplyr::select(group, n, response_rate, mean_income, mean_blackpercent, prop_democrat)\n\nprint(raw_summary)\n\n# ---- Step 4: Baseline balance diagnostics (no adjustment) ----\n# method = NULL builds a diagnostic object for the unadjusted sample.\nmessage(\"\\n[Step 4] Baseline balance diagnostics\")\nm_raw &lt;- MatchIt::matchit(\n  treat ~ medianhhincom + blackpercent + leg_democrat,\n  data = dat,\n  method = NULL,\n  estimand = \"ATT\"\n)\n\nprint(summary(m_raw, un = TRUE))\nprint(cobalt::bal.tab(m_raw, un = TRUE, m.threshold = 0.1))\nprint(cobalt::love.plot(\n  m_raw,\n  abs = TRUE,\n  thresholds = c(m = 0.1),\n  stars = \"raw\"\n))\n\n# ---- Step 5: Exact matching feasibility check ----\n# Exact matching is transparent, but often drops many units.\nmessage(\"\\n[Step 5] Exact matching\")\nm_exact &lt;- MatchIt::matchit(\n  treat ~ leg_democrat + leg_senator + south,\n  data = dat,\n  method = \"exact\",\n  estimand = \"ATT\"\n)\n\nprint(summary(m_exact, un = TRUE))\n\nexact_dat &lt;- MatchIt::match.data(m_exact)\nexact_counts &lt;- exact_dat |&gt;\n  dplyr::count(treat) |&gt;\n  dplyr::mutate(group = dplyr::if_else(treat == 1L, \"Treated\", \"Control\"))\nprint(exact_counts)\n\n# ---- Step 6: Coarsened exact matching (CEM) ----\n# We coarsen continuous covariates into bins to relax strict exact matching.\nmessage(\"\\n[Step 6] Coarsened exact matching (CEM)\")\ncreate_even_breaks &lt;- function(x, n) {\n  min_x &lt;- min(x, na.rm = TRUE)\n  max_x &lt;- max(x, na.rm = TRUE)\n  min_x + ((0:n) / n) * (max_x - min_x)\n}\n\ncem_cutpoints &lt;- list(\n  medianhhincom = quantile(dat$medianhhincom, probs = (0:6) / 6, na.rm = TRUE),\n  blackpercent = create_even_breaks(dat$blackpercent, 6)\n)\n\nm_cem &lt;- MatchIt::matchit(\n  treat ~ medianhhincom + blackpercent + leg_democrat + leg_senator + south,\n  data = dat,\n  method = \"cem\",\n  estimand = \"ATT\",\n  cutpoints = cem_cutpoints\n)\n\nprint(summary(m_cem, un = TRUE))\nprint(cobalt::bal.tab(m_cem, un = TRUE, m.threshold = 0.1))\nprint(cobalt::love.plot(\n  m_cem,\n  abs = TRUE,\n  thresholds = c(m = 0.1),\n  stars = \"raw\"\n))\n\n# ---- Step 7: Entropy balancing and weight diagnostics ----\n# Entropy balancing keeps treated units and reweights controls to satisfy balance constraints.\nmessage(\"\\n[Step 7] Entropy balancing\")\nw_ebal &lt;- WeightIt::weightit(\n  treat ~ medianhhincom + I(medianhhincom^2) +\n    blackpercent + I(blackpercent^2) +\n    leg_democrat + leg_senator + south,\n  data = dat,\n  method = \"ebal\",\n  estimand = \"ATT\"\n)\n\nprint(summary(w_ebal))\nprint(cobalt::bal.tab(w_ebal, un = TRUE, m.threshold = 0.1))\nprint(cobalt::love.plot(\n  w_ebal,\n  abs = TRUE,\n  thresholds = c(m = 0.1),\n  stars = \"raw\"\n))\n\n# Effective sample size helps quantify how concentrated the weights become.\ness &lt;- function(w) {\n  (sum(w)^2) / sum(w^2)\n}\n\ndat_ebal &lt;- dat |&gt;\n  dplyr::mutate(w = w_ebal$weights)\n\nebal_weight_summary &lt;- dat_ebal |&gt;\n  dplyr::group_by(treat) |&gt;\n  dplyr::summarise(\n    raw_n = dplyr::n(),\n    ess = ess(w),\n    max_weight = max(w),\n    mean_weight = mean(w),\n    .groups = \"drop\"\n  )\nprint(ebal_weight_summary)\n\n# ---- Step 8: Compare treatment effect estimates across designs ----\n# Keep the outcome model simple so the design tradeoffs stay easy to interpret.\nmessage(\"\\n[Step 8] Outcome model comparison\")\nraw_fit &lt;- stats::lm(outcome ~ treat, data = dat)\nexact_fit &lt;- stats::lm(outcome ~ treat, data = exact_dat, weights = weights)\n\ncem_dat &lt;- MatchIt::match.data(m_cem)\ncem_fit &lt;- stats::lm(outcome ~ treat, data = cem_dat, weights = weights)\n\nebal_fit &lt;- stats::lm(outcome ~ treat, data = dat_ebal, weights = w)\n\nprint(coef(summary(raw_fit)))\nprint(coef(summary(exact_fit)))\nprint(coef(summary(cem_fit)))\nprint(coef(summary(ebal_fit)))\n\n# Optional extension: richer model closer to the original study setup.\nmessage(\"\\n[Step 8 extension] Interaction model with treat_out\")\nfinal_fit &lt;- stats::lm(\n  outcome ~ treat * treat_out +\n    nonblacknonwhite +\n    black_medianhh +\n    white_medianhh +\n    statessquireindex +\n    totalpop +\n    urbanpercent,\n  data = cem_dat,\n  weights = weights\n)\n\nprint(summary(final_fit))\n\nmessage(\"\\nDone: full Black Politicians training-aid workflow executed.\")"
+  },
+  {
+    "objectID": "labs/black_politicians_lab.html#dataset-at-a-glance",
+    "href": "labs/black_politicians_lab.html#dataset-at-a-glance",
+    "title": "Lab: Black Politicians Training Aid",
+    "section": "3 Dataset At A Glance",
+    "text": "3 Dataset At A Glance\ncausaldata::black_politicians comes from Broockman (2013), a U.S. field experiment on legislator responsiveness that is also used in the Matching chapter of The Effect.\n\nObservations: 5,593\nVariables: 14\nUnit of analysis: one legislator-email observation from the study design\nBuilt-in randomized factor: treat_out (whether the email was out-of-district)\n\nFor this lab, we use:\n\nfocal training comparison: leg_black\nbinary outcome: responded\ncore design covariates: medianhhincom, blackpercent, leg_democrat\nextension covariates for later rounds: leg_senator, south, urbanpercent, totalpop\n\nThis structure is useful for training because it supports a clear design-first sequence: inspect raw imbalance, test exact matching feasibility, then compare CEM and entropy balancing under a shared ATT target.\n\n\n\n\n\n\nWarning\n\n\n\nThis is best treated as a training example for matching logic, not as a literal policy treatment that could be assigned. leg_black is an observed attribute, so the main teaching value here is design transparency: how you define comparability, what overlap exists, and what is lost when you improve balance.",
+    "crumbs": [
+      "Additional Labs",
+      "Lab: Black Politicians Training Aid"
+    ]
+  },
+  {
+    "objectID": "labs/black_politicians_lab_evaluated_code.html",
+    "href": "labs/black_politicians_lab_evaluated_code.html",
+    "title": "Black Politicians Training Aid: Evaluated Code",
+    "section": "",
+    "text": "This page runs the evaluated workflow script and shows processed data objects created during execution."
+  },
+  {
+    "objectID": "labs/black_politicians_lab_evaluated_code.html#evaluated-script",
+    "href": "labs/black_politicians_lab_evaluated_code.html#evaluated-script",
+    "title": "Black Politicians Training Aid: Evaluated Code",
+    "section": "1 Evaluated Script",
+    "text": "1 Evaluated Script\n# Black Politicians training aid: evaluated code with processed outputs.\n# Run with:\n#   Rscript docs/labs/black_politicians_lab_evaluated_code.R\n\noptions(width = 120)\n\n# ---- Step 1: Install and load required packages ----\nrequired_packages &lt;- c(\n  \"causaldata\",\n  \"MatchIt\",\n  \"WeightIt\",\n  \"cobalt\",\n  \"dplyr\",\n  \"ggplot2\"\n)\n\nmissing_packages &lt;- required_packages[!vapply(\n  required_packages,\n  requireNamespace,\n  logical(1),\n  quietly = TRUE\n)]\n\nif (length(missing_packages) &gt; 0) {\n  message(\"Installing missing packages: \", paste(missing_packages, collapse = \", \"))\n  install.packages(missing_packages, repos = \"https://cloud.r-project.org\")\n}\n\ninvisible(lapply(required_packages, library, character.only = TRUE))\n\n# ---- Step 2: Build analysis dataset used by all methods ----\ndat &lt;- causaldata::black_politicians |&gt;\n  dplyr::mutate(\n    treat = as.integer(leg_black),\n    outcome = as.integer(responded)\n  )\n\ndesign_covariates &lt;- c(\"medianhhincom\", \"blackpercent\", \"leg_democrat\")\n\ndat_preview &lt;- dat |&gt;\n  dplyr::select(treat, outcome, treat_out, dplyr::all_of(design_covariates)) |&gt;\n  head(10)\n\n# ---- Step 3: Raw comparison summary ----\nraw_summary &lt;- dat |&gt;\n  dplyr::group_by(treat) |&gt;\n  dplyr::summarise(\n    n = dplyr::n(),\n    response_rate = mean(outcome, na.rm = TRUE),\n    mean_income = mean(medianhhincom, na.rm = TRUE),\n    mean_blackpercent = mean(blackpercent, na.rm = TRUE),\n    prop_democrat = mean(leg_democrat == 1, na.rm = TRUE),\n    .groups = \"drop\"\n  ) |&gt;\n  dplyr::mutate(group = dplyr::if_else(treat == 1L, \"Black legislators\", \"Non-Black legislators\")) |&gt;\n  dplyr::select(group, n, response_rate, mean_income, mean_blackpercent, prop_democrat)\n\n# ---- Step 4: Baseline balance benchmark ----\nm_raw &lt;- MatchIt::matchit(\n  treat ~ medianhhincom + blackpercent + leg_democrat,\n  data = dat,\n  method = NULL,\n  estimand = \"ATT\"\n)\n\nraw_balance &lt;- cobalt::bal.tab(m_raw, un = TRUE, m.threshold = 0.1)\n\n# ---- Step 5: Exact matching ----\nm_exact &lt;- MatchIt::matchit(\n  treat ~ leg_democrat + leg_senator + south,\n  data = dat,\n  method = \"exact\",\n  estimand = \"ATT\"\n)\n\nexact_dat &lt;- MatchIt::match.data(m_exact)\nexact_counts &lt;- exact_dat |&gt;\n  dplyr::count(treat) |&gt;\n  dplyr::mutate(group = dplyr::if_else(treat == 1L, \"Treated\", \"Control\"))\n\n# ---- Step 6: CEM ----\ncreate_even_breaks &lt;- function(x, n) {\n  min_x &lt;- min(x, na.rm = TRUE)\n  max_x &lt;- max(x, na.rm = TRUE)\n  min_x + ((0:n) / n) * (max_x - min_x)\n}\n\ncem_cutpoints &lt;- list(\n  medianhhincom = quantile(dat$medianhhincom, probs = (0:6) / 6, na.rm = TRUE),\n  blackpercent = create_even_breaks(dat$blackpercent, 6)\n)\n\nm_cem &lt;- MatchIt::matchit(\n  treat ~ medianhhincom + blackpercent + leg_democrat + leg_senator + south,\n  data = dat,\n  method = \"cem\",\n  estimand = \"ATT\",\n  cutpoints = cem_cutpoints\n)\n\ncem_dat &lt;- MatchIt::match.data(m_cem)\ncem_counts &lt;- cem_dat |&gt;\n  dplyr::count(treat) |&gt;\n  dplyr::mutate(group = dplyr::if_else(treat == 1L, \"Treated\", \"Control\"))\n\ncem_balance &lt;- cobalt::bal.tab(m_cem, un = TRUE, m.threshold = 0.1)\n\n# ---- Step 7: Entropy balancing and ESS diagnostics ----\nw_ebal &lt;- WeightIt::weightit(\n  treat ~ medianhhincom + I(medianhhincom^2) +\n    blackpercent + I(blackpercent^2) +\n    leg_democrat + leg_senator + south,\n  data = dat,\n  method = \"ebal\",\n  estimand = \"ATT\"\n)\n\nebal_balance &lt;- cobalt::bal.tab(w_ebal, un = TRUE, m.threshold = 0.1)\n\ness &lt;- function(w) {\n  (sum(w)^2) / sum(w^2)\n}\n\ndat_ebal &lt;- dat |&gt;\n  dplyr::mutate(w = w_ebal$weights)\n\nebal_weight_summary &lt;- dat_ebal |&gt;\n  dplyr::group_by(treat) |&gt;\n  dplyr::summarise(\n    raw_n = dplyr::n(),\n    ess = ess(w),\n    max_weight = max(w),\n    mean_weight = mean(w),\n    .groups = \"drop\"\n  ) |&gt;\n  dplyr::mutate(group = dplyr::if_else(treat == 1L, \"Treated\", \"Control\")) |&gt;\n  dplyr::select(group, raw_n, ess, max_weight, mean_weight)\n\n# ---- Step 8: Outcome models across designs ----\nraw_fit &lt;- stats::lm(outcome ~ treat, data = dat)\nexact_fit &lt;- stats::lm(outcome ~ treat, data = exact_dat, weights = weights)\ncem_fit &lt;- stats::lm(outcome ~ treat, data = cem_dat, weights = weights)\nebal_fit &lt;- stats::lm(outcome ~ treat, data = dat_ebal, weights = w)\n\nget_treat_row &lt;- function(fit, design_name) {\n  out &lt;- coef(summary(fit))\n  data.frame(\n    design = design_name,\n    estimate = unname(out[\"treat\", \"Estimate\"]),\n    std_error = unname(out[\"treat\", \"Std. Error\"]),\n    t_value = unname(out[\"treat\", \"t value\"]),\n    p_value = unname(out[\"treat\", \"Pr(&gt;|t|)\"]),\n    row.names = NULL,\n    check.names = FALSE\n  )\n}\n\nestimate_comparison &lt;- dplyr::bind_rows(\n  get_treat_row(raw_fit, \"Raw sample\"),\n  get_treat_row(exact_fit, \"Exact matching\"),\n  get_treat_row(cem_fit, \"CEM\"),\n  get_treat_row(ebal_fit, \"Entropy balancing\")\n)\n\n# ---- Step 8b: Book-style weighted interaction model using CEM weights ----\n# This mirrors the chapter's richer specification after the design stage.\nfinal_fit &lt;- stats::lm(\n  outcome ~ treat * treat_out +\n    nonblacknonwhite +\n    black_medianhh +\n    white_medianhh +\n    statessquireindex +\n    totalpop +\n    urbanpercent,\n  data = cem_dat,\n  weights = weights\n)\n\nfinal_fit_coef &lt;- coef(summary(final_fit))\nfinal_fit_key_terms &lt;- data.frame(\n  term = rownames(final_fit_coef),\n  estimate = unname(final_fit_coef[, \"Estimate\"]),\n  std_error = unname(final_fit_coef[, \"Std. Error\"]),\n  t_value = unname(final_fit_coef[, \"t value\"]),\n  p_value = unname(final_fit_coef[, \"Pr(&gt;|t|)\"]),\n  row.names = NULL,\n  check.names = FALSE\n)\n\nfinal_fit_key_terms &lt;- final_fit_key_terms[\n  final_fit_key_terms$term %in% c(\"treat\", \"treat_out\", \"treat:treat_out\"),\n]\n\n# ---- Step 9: Print processed data objects for non-interactive runs ----\nmessage(\"\\n[Processed data preview]\")\nprint(dat_preview)\n\nmessage(\"\\n[Raw summary]\")\nprint(raw_summary)\n\nmessage(\"\\n[Exact matched counts]\")\nprint(exact_counts)\n\nmessage(\"\\n[CEM matched counts]\")\nprint(cem_counts)\n\nmessage(\"\\n[Entropy balancing weight summary]\")\nprint(ebal_weight_summary)\n\nmessage(\"\\n[Effect estimate comparison]\")\nprint(estimate_comparison)\n\nmessage(\"\\n[Book-replication interaction model key terms]\")\nprint(final_fit_key_terms)\n\nmessage(\"\\nDone: evaluated workflow objects created.\")"
+  },
+  {
+    "objectID": "labs/black_politicians_lab_evaluated_code.html#processed-data-preview",
+    "href": "labs/black_politicians_lab_evaluated_code.html#processed-data-preview",
+    "title": "Black Politicians Training Aid: Evaluated Code",
+    "section": "2 Processed Data Preview",
+    "text": "2 Processed Data Preview\n\n\n# A tibble: 10 × 6\n   treat outcome treat_out medianhhincom blackpercent leg_democrat\n   &lt;int&gt;   &lt;int&gt;     &lt;dbl&gt;         &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;\n 1     0       0         0          5.06      0.00712            0\n 2     0       1         0          4.97      0.00580            0\n 3     0       1         0          6.96      0.0120             0\n 4     0       1         0          4.18      0.00428            0\n 5     0       1         1          3.12      0.00826            1\n 6     0       0         1          6.07      0.0118             0\n 7     0       1         1          5.50      0.0270             1\n 8     0       0         0          4.23      0.0977             1\n 9     0       1         0          5.01      0.00645            0\n10     0       0         1          3.68      0.00624            1"
+  },
+  {
+    "objectID": "labs/black_politicians_lab_evaluated_code.html#raw-comparison-summary",
+    "href": "labs/black_politicians_lab_evaluated_code.html#raw-comparison-summary",
+    "title": "Black Politicians Training Aid: Evaluated Code",
+    "section": "3 Raw Comparison Summary",
+    "text": "3 Raw Comparison Summary\n\n\n# A tibble: 2 × 6\n  group                     n response_rate mean_income mean_blackpercent prop_democrat\n  &lt;chr&gt;                 &lt;int&gt;         &lt;dbl&gt;       &lt;dbl&gt;             &lt;dbl&gt;         &lt;dbl&gt;\n1 Non-Black legislators  5229         0.425        4.43            0.0627         0.501\n2 Black legislators       364         0.393        3.33            0.517          0.978"
+  },
+  {
+    "objectID": "labs/black_politicians_lab_evaluated_code.html#matched-sample-counts",
+    "href": "labs/black_politicians_lab_evaluated_code.html#matched-sample-counts",
+    "title": "Black Politicians Training Aid: Evaluated Code",
+    "section": "4 Matched Sample Counts",
+    "text": "4 Matched Sample Counts\n\n\n# A tibble: 2 × 3\n  treat     n group  \n  &lt;int&gt; &lt;int&gt; &lt;chr&gt;  \n1     0  5059 Control\n2     1   364 Treated\n\n\n# A tibble: 2 × 3\n  treat     n group  \n  &lt;int&gt; &lt;int&gt; &lt;chr&gt;  \n1     0  3110 Control\n2     1   300 Treated"
+  },
+  {
+    "objectID": "labs/black_politicians_lab_evaluated_code.html#entropy-balancing-weights-summary",
+    "href": "labs/black_politicians_lab_evaluated_code.html#entropy-balancing-weights-summary",
+    "title": "Black Politicians Training Aid: Evaluated Code",
+    "section": "5 Entropy Balancing Weights Summary",
+    "text": "5 Entropy Balancing Weights Summary\n\n\n# A tibble: 2 × 5\n  group   raw_n   ess max_weight mean_weight\n  &lt;chr&gt;   &lt;int&gt; &lt;dbl&gt;      &lt;dbl&gt;       &lt;dbl&gt;\n1 Control  5229  74.8       209.        1.00\n2 Treated   364 364           1         1"
+  },
+  {
+    "objectID": "labs/black_politicians_lab_evaluated_code.html#effect-estimates-by-design",
+    "href": "labs/black_politicians_lab_evaluated_code.html#effect-estimates-by-design",
+    "title": "Black Politicians Training Aid: Evaluated Code",
+    "section": "6 Effect Estimates By Design",
+    "text": "6 Effect Estimates By Design\n\n\n             design     estimate  std_error    t_value     p_value\n1        Raw sample -0.032080704 0.02678070 -1.1979041 0.231005149\n2    Exact matching  0.002935167 0.02647509  0.1108652 0.911727328\n3               CEM -0.022950337 0.02936416 -0.7815765 0.434517806\n4 Entropy balancing  0.065843215 0.02550395  2.5816871 0.009857088"
+  },
+  {
+    "objectID": "labs/black_politicians_lab_qa_log.html",
+    "href": "labs/black_politicians_lab_qa_log.html",
+    "title": "Quality Assurance Log: Black Politicians Evaluated Code",
+    "section": "",
+    "text": "Evaluated script reviewed: docs/labs/black_politicians_lab_evaluated_code.R\nRendered companion page reviewed: docs/labs/black_politicians_lab_evaluated_code.qmd\nBaseline reference: The Effect, Chapter 14 (“Matching”), black_politicians code examples for CEM, entropy balancing, and weighted outcome models.\nQA date: 2026-03-06\nLocal package context:\n\ncausaldata 0.1.4\nMatchIt 4.7.2\nWeightIt 1.5.1\ncobalt 4.6.2\ncem and ebal are not installed in this environment."
+  },
+  {
+    "objectID": "labs/black_politicians_lab_qa_log.html#scope",
+    "href": "labs/black_politicians_lab_qa_log.html#scope",
+    "title": "Quality Assurance Log: Black Politicians Evaluated Code",
+    "section": "",
+    "text": "Evaluated script reviewed: docs/labs/black_politicians_lab_evaluated_code.R\nRendered companion page reviewed: docs/labs/black_politicians_lab_evaluated_code.qmd\nBaseline reference: The Effect, Chapter 14 (“Matching”), black_politicians code examples for CEM, entropy balancing, and weighted outcome models.\nQA date: 2026-03-06\nLocal package context:\n\ncausaldata 0.1.4\nMatchIt 4.7.2\nWeightIt 1.5.1\ncobalt 4.6.2\ncem and ebal are not installed in this environment."
+  },
+  {
+    "objectID": "labs/black_politicians_lab_qa_log.html#source-baseline",
+    "href": "labs/black_politicians_lab_qa_log.html#source-baseline",
+    "title": "Quality Assurance Log: Black Politicians Evaluated Code",
+    "section": "2 Source Baseline",
+    "text": "2 Source Baseline\n\nChapter URL: The Effect, Chapter 14 - Matching\nCEM example block: lines around 381-427 in current chapter rendering.\nEntropy balancing block: lines around 499-529 in current chapter rendering.\nWeighted interaction regression block using CEM weights: lines around 903-944 in current chapter rendering."
+  },
+  {
+    "objectID": "labs/black_politicians_lab_qa_log.html#outcome-summary",
+    "href": "labs/black_politicians_lab_qa_log.html#outcome-summary",
+    "title": "Quality Assurance Log: Black Politicians Evaluated Code",
+    "section": "3 Outcome Summary",
+    "text": "3 Outcome Summary\n\n\n\nOutcome\nCount\n\n\n\n\nPass\n5\n\n\nPartial alignment (intentional extension)\n2\n\n\nMaterial mismatch vs book workflow\n1\n\n\nOut-of-scope relative to book example\n1\n\n\n\nThe evaluated lab code is methodologically aligned with the chapter examples, but it is not a literal reproduction of the book workflow."
+  },
+  {
+    "objectID": "labs/black_politicians_lab_qa_log.html#detailed-qa-log",
+    "href": "labs/black_politicians_lab_qa_log.html#detailed-qa-log",
+    "title": "Quality Assurance Log: Black Politicians Evaluated Code",
+    "section": "4 Detailed QA Log",
+    "text": "4 Detailed QA Log\n\n\n\n\n\n\n\n\n\n\nID\nEvaluated code claim and location\nThe Effect comparison\nResult\nAction\n\n\n\n\nB1\nUses causaldata::black_politicians, with treat = leg_black and outcome = responded (black_politicians_lab_evaluated_code.R:31-36)\nChapter code uses br &lt;- causaldata::black_politicians, D &lt;- leg_black, Y &lt;- responded in entropy balancing, and the same treatment/outcome in CEM examples.\nPass\nNone\n\n\nB2\nCEM uses quantile breaks for medianhhincom and even breaks for blackpercent (...R:81-99)\nChapter CEM code uses quantile breaks for medianhhincom and evenly spaced breaks for blackpercent.\nPass\nNone\n\n\nB3\nCEM includes additional matching covariates leg_senator and south (...R:94)\nChapter CEM example matches on medianhhincom, blackpercent, leg_democrat only.\nPartial alignment\nKeep as training extension, but label clearly as “extended CEM spec (not book-default).”\n\n\nB4\nCEM results show treated units pruned (364 -&gt; 300) via cem_counts (...R:101-104; evaluated output)\nChapter text warns that CEM can drop many treated observations and that short matching-variable lists are used to limit attrition.\nPass\nNone\n\n\nB5\nEntropy balancing includes means for core covariates and squared terms for continuous covariates (...R:109-113)\nChapter entropy-balance code constructs X with medianhhincom, blackpercent, leg_democrat, plus squared terms for the continuous covariates.\nPass\nNone\n\n\nB6\nEntropy balancing also includes extra binary terms leg_senator and south (...R:112)\nChapter entropy example uses only medianhhincom, blackpercent, leg_democrat (+ squared continuous terms).\nPartial alignment\nKeep as extension, but mark as “expanded constraints vs book baseline.”\n\n\nB7\nATT weighting behavior is consistent: treated mean weight is 1, control weights concentrated (...R:127-137; evaluated output ess, max_weight)\nChapter entropy section notes control-side balancing weights and treated units handled as focal group in ATT-style setup.\nPass\nNone\n\n\nB8\nPrimary model comparison includes lm(outcome ~ treat) across raw/exact/CEM/ebal (...R:139-163)\nChapter provides lm(responded ~ leg_black, weights = ...) after CEM/entropy workflows.\nPass\nNone\n\n\nB9\nEvaluated script does not include the weighted interaction model responded ~ leg_black*treat_out + ... that appears in the chapter’s later block (...R ends at simple design comparison)\nChapter includes weighted interaction model with CEM weights for substantive interpretation.\nMaterial mismatch\nAdd optional “book-replication” section to evaluated script/page with the interaction model.\n\n\nB10\nScript includes an exact-matching branch (...R:68-79)\nThe book’s black_politicians workflow in this chapter emphasizes CEM and entropy balancing; exact matching is not the shown main path for this dataset.\nOut-of-scope extension\nKeep for training breadth; annotate as extra method not used in the chapter’s worked code."
+  },
+  {
+    "objectID": "labs/black_politicians_lab_qa_log.html#qa-decision",
+    "href": "labs/black_politicians_lab_qa_log.html#qa-decision",
+    "title": "Quality Assurance Log: Black Politicians Evaluated Code",
+    "section": "5 QA Decision",
+    "text": "5 QA Decision\nThe current evaluated code is training-aligned with The Effect methods and dataset framing, but it is not book-identical in specification.\nIf the goal is strict replication of the chapter’s black_politicians workflow, two updates are required:\n\nAdd a “book-default spec” mode that uses only medianhhincom, blackpercent, and leg_democrat for CEM/entropy balancing.\nAdd the weighted interaction model with treat_out and substantive controls as a standard evaluated output block."
+  },
+  {
+    "objectID": "labs/black_politicians_lab_evaluated_code.html#book-replication-interaction-model-cem-weights",
+    "href": "labs/black_politicians_lab_evaluated_code.html#book-replication-interaction-model-cem-weights",
+    "title": "Black Politicians Training Aid: Evaluated Code",
+    "section": "7 Book-Replication Interaction Model (CEM Weights)",
+    "text": "7 Book-Replication Interaction Model (CEM Weights)\n\n\n              term   estimate  std_error    t_value      p_value\n2            treat -0.1885290 0.03847135  -4.900505 1.000578e-06\n3        treat_out -0.3403078 0.01620036 -21.006190 3.265435e-92\n10 treat:treat_out  0.2300735 0.05376011   4.279632 1.923667e-05"
   }
 ]
