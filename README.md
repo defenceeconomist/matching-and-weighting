@@ -58,12 +58,11 @@ The framing is aligned with the Evaluation Academy's train-the-trainer model: pr
 
 ## Roadmap Progress
 
-The report scaffold and most of the conceptual narrative are now in place. The empirical layer has started to move from placeholder structure to runnable analysis: the report now uses the `lalonde` example dataset, includes executable setup and pre-match diagnostics, and renders baseline balance outputs. The main remaining gaps are the post-adjustment analyses, treatment-effect estimates, and final cross-method comparison.
+The report now contains a full end-to-end worked example using `lalonde`, with runnable code for design, diagnostics, estimation, and synthesis across methods. The roadmap items below are complete for the current scope.
 
 Status labels used below:
 
-- `Done`: substantive prose is drafted in the report.
-- `In progress`: the section exists, but still depends on a concrete dataset, runnable code, or fuller synthesis.
+- `Done`: implemented in the report with substantive prose and runnable analysis code.
 
 | Roadmap item | Status | Current state |
 | --- | --- | --- |
@@ -73,15 +72,15 @@ Status labels used below:
 | 4. Position matching within the wider quasi-experimental design toolbox and explain when other designs may be preferable. | `Done` | The report includes a dedicated positioning section tied to the Evaluation Academy framing. |
 | 5. Define the data structure, treatment, outcome, adjustment covariates, and focal group for the estimand. | `Done` | The report defines the `lalonde` treatment indicator, outcome, design covariates, and treated focal group for the `ATT`. |
 | 6. Check initial imbalance before matching using `MatchIt` with `method = NULL`. | `Done` | The pre-match diagnostics section is now runnable and includes descriptive comparisons, `summary(m_out0, un = TRUE)`, `bal.tab()`, and a love plot. |
-| 7. Demonstrate exact matching with `MatchIt` using `method = "exact"`. | `In progress` | Method overview and commented implementation are drafted. |
-| 8. Demonstrate coarsened exact matching with `MatchIt` using `method = "cem"`. | `In progress` | Method overview and commented implementation are drafted. |
-| 9. Demonstrate entropy balancing as a weighting method that targets exact moment balance. | `In progress` | Method overview and commented `WeightIt` implementation are drafted. |
-| 10. Assess post-adjustment balance, overlap, retained sample size, and effective sample size. | `In progress` | Diagnostic sections are scaffolded, but they still need real outputs from a concrete example. |
-| 11. Estimate treatment effects only after an acceptable design has been achieved. | `In progress` | Estimation sections are included, but the code and results are still placeholders. |
-| 12. Compare methods on transparency, feasibility, precision, and target population. | `In progress` | Comparison headings are in place, but the synthesis still needs completed analyses. |
-| 13. Translate the methods into evaluator-facing guidance for programme and policy evaluation practice. | `In progress` | Guidance sections are outlined and reporting recommendations are partly drafted. |
-| 14. Discuss limitations, sensitivity to design choices, and practical guidance. | `In progress` | Limitations are listed, but the full discussion remains to be written. |
-| 15. Provide a reproducible appendix with package setup, references, and full code. | `In progress` | Package setup, references, and a runnable pre-match example are present; the appendix still needs the completed end-to-end code and any session-information details. |
+| 7. Demonstrate exact matching with `MatchIt` using `method = "exact"`. | `Done` | The report includes runnable exact-matching code, diagnostics, and an `ATT` estimate. |
+| 8. Demonstrate coarsened exact matching with `MatchIt` using `method = "cem"`. | `Done` | The report includes runnable CEM code (default and tuned variants), diagnostics, and an `ATT` estimate. |
+| 9. Demonstrate entropy balancing as a weighting method that targets exact moment balance. | `Done` | The report includes runnable `WeightIt` entropy-balancing code, tuning comparison, diagnostics, and weighted estimation. |
+| 10. Assess post-adjustment balance, overlap, retained sample size, and effective sample size. | `Done` | Post-adjustment diagnostics and retention/ESS reporting are implemented for all methods. |
+| 11. Estimate treatment effects only after an acceptable design has been achieved. | `Done` | Method-specific treatment-effect estimation is implemented and summarized comparatively. |
+| 12. Compare methods on transparency, feasibility, precision, and target population. | `Done` | A cross-method comparison section synthesizes tradeoffs across balance, retention, and interpretability. |
+| 13. Translate the methods into evaluator-facing guidance for programme and policy evaluation practice. | `Done` | The guidance section now includes method-selection and reporting recommendations for evaluators. |
+| 14. Discuss limitations, sensitivity to design choices, and practical guidance. | `Done` | A dedicated limitations section covers unmeasured confounding, specification sensitivity, and estimand drift. |
+| 15. Provide a reproducible appendix with package setup, references, and full code. | `Done` | The report includes package setup, glossary/session information, references, and a full-code companion output. |
 
 ## Proposed Package Stack
 
@@ -112,8 +111,44 @@ If you only want to render this one document, run:
 quarto render docs/matching_methods_report.qmd --to html
 ```
 
+To render all current report outputs used in this project, run:
+
+```bash
+quarto render docs/matching_methods_report.qmd --to html
+quarto render docs/matching_methods_report_full_code.qmd --to html
+quarto render docs/matching_methods_report_qa_log.qmd --to html
+```
+
+This writes:
+
+- `docs/matching_methods_report.html`
+- `docs/matching_methods_report_full_code.html`
+- `docs/matching_methods_report_qa_log.html`
+
+## Extract R Code from QMD
+
+The repository includes a helper script for extracting all R chunks from a Quarto document into a plain `.R` file:
+
+`scripts/extract_qmd_chunks.R`
+
+Default usage (matches this project's report files):
+
+```bash
+Rscript scripts/extract_qmd_chunks.R
+```
+
+Equivalent explicit usage:
+
+```bash
+Rscript scripts/extract_qmd_chunks.R \
+  docs/matching_methods_report.qmd \
+  docs/matching_methods_report_full_code.R
+```
+
+Optional third argument customizes the chunk separator format (default: `# ---- chunk %d ----`).
+
 ## Next Steps
 
-- Replace the remaining commented matching and weighting scaffolds with runnable exact matching, CEM, and entropy balancing examples.
-- Add post-adjustment diagnostics, retained-sample summaries, and treatment-effect estimates for each design.
-- Finish the comparison, evaluator guidance, limitations, and appendix using outputs from the completed analyses.
+- Add hidden-bias sensitivity analysis beyond design diagnostics (e.g., Rosenbaum-style bounds or omitted-variable benchmarking).
+- Add a concise executive-summary output tailored for training delivery alongside the full technical report.
+- Extend the worked example to at least one additional policy-style dataset to show transportability of the workflow.

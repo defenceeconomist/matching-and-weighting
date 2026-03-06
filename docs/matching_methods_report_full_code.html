@@ -617,143 +617,320 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-515"><a href="#cb1-515" aria-hidden="true" tabindex="-1"></a>ebal_effect</span>
 <span id="cb1-516"><a href="#cb1-516" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-517"><a href="#cb1-517" aria-hidden="true" tabindex="-1"></a><span class="co"># ---- chunk 28 ----</span></span>
-<span id="cb1-518"><a href="#cb1-518" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare worst-case imbalance and threshold exceedances across all methods.</span></span>
-<span id="cb1-519"><a href="#cb1-519" aria-hidden="true" tabindex="-1"></a>comparison_balance <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb1-520"><a href="#cb1-520" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="fu">c</span>(</span>
-<span id="cb1-521"><a href="#cb1-521" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Unadjusted sample"</span>,</span>
-<span id="cb1-522"><a href="#cb1-522" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Exact matching"</span>,</span>
-<span id="cb1-523"><a href="#cb1-523" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Coarsened exact matching"</span>,</span>
-<span id="cb1-524"><a href="#cb1-524" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Entropy balancing"</span></span>
-<span id="cb1-525"><a href="#cb1-525" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb1-526"><a href="#cb1-526" aria-hidden="true" tabindex="-1"></a>  <span class="at">max_abs_smd =</span> <span class="fu">c</span>(</span>
-<span id="cb1-527"><a href="#cb1-527" aria-hidden="true" tabindex="-1"></a>    <span class="fu">max</span>(<span class="fu">abs</span>(unadjusted_balance<span class="sc">$</span>Balance<span class="sc">$</span>Diff.Un), <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb1-528"><a href="#cb1-528" aria-hidden="true" tabindex="-1"></a>    <span class="fu">max</span>(<span class="fu">abs</span>(exact_balance<span class="sc">$</span>Balance<span class="sc">$</span>Diff.Adj), <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb1-529"><a href="#cb1-529" aria-hidden="true" tabindex="-1"></a>    <span class="fu">max</span>(<span class="fu">abs</span>(cem_balance<span class="sc">$</span>Balance<span class="sc">$</span>Diff.Adj), <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb1-530"><a href="#cb1-530" aria-hidden="true" tabindex="-1"></a>    <span class="fu">max</span>(<span class="fu">abs</span>(ebal_balance<span class="sc">$</span>Balance<span class="sc">$</span>Diff.Adj), <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb1-531"><a href="#cb1-531" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb1-532"><a href="#cb1-532" aria-hidden="true" tabindex="-1"></a>  <span class="at">covariates_over_0_1 =</span> <span class="fu">c</span>(</span>
-<span id="cb1-533"><a href="#cb1-533" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(<span class="fu">abs</span>(unadjusted_balance<span class="sc">$</span>Balance<span class="sc">$</span>Diff.Un) <span class="sc">&gt;</span> <span class="fl">0.1</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb1-534"><a href="#cb1-534" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(<span class="fu">abs</span>(exact_balance<span class="sc">$</span>Balance<span class="sc">$</span>Diff.Adj) <span class="sc">&gt;</span> <span class="fl">0.1</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb1-535"><a href="#cb1-535" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(<span class="fu">abs</span>(cem_balance<span class="sc">$</span>Balance<span class="sc">$</span>Diff.Adj) <span class="sc">&gt;</span> <span class="fl">0.1</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb1-536"><a href="#cb1-536" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(<span class="fu">abs</span>(ebal_balance<span class="sc">$</span>Balance<span class="sc">$</span>Diff.Adj) <span class="sc">&gt;</span> <span class="fl">0.1</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-518"><a href="#cb1-518" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit several plausible CEM variants to stress-test the chosen cutpoints.</span></span>
+<span id="cb1-519"><a href="#cb1-519" aria-hidden="true" tabindex="-1"></a>fit_cem_spec <span class="ot">&lt;-</span> <span class="cf">function</span>(label, <span class="at">cutpoints =</span> <span class="cn">NULL</span>) {</span>
+<span id="cb1-520"><a href="#cb1-520" aria-hidden="true" tabindex="-1"></a>  cem_args <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb1-521"><a href="#cb1-521" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(</span>
+<span id="cb1-522"><a href="#cb1-522" aria-hidden="true" tabindex="-1"></a>      <span class="at">formula =</span> treat <span class="sc">~</span> age <span class="sc">+</span> educ <span class="sc">+</span> race <span class="sc">+</span> married <span class="sc">+</span> nodegree <span class="sc">+</span> re74 <span class="sc">+</span> re75,</span>
+<span id="cb1-523"><a href="#cb1-523" aria-hidden="true" tabindex="-1"></a>      <span class="at">data =</span> dat,</span>
+<span id="cb1-524"><a href="#cb1-524" aria-hidden="true" tabindex="-1"></a>      <span class="at">method =</span> <span class="st">"cem"</span>,</span>
+<span id="cb1-525"><a href="#cb1-525" aria-hidden="true" tabindex="-1"></a>      <span class="at">estimand =</span> <span class="st">"ATT"</span></span>
+<span id="cb1-526"><a href="#cb1-526" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb1-527"><a href="#cb1-527" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">is.null</span>(cutpoints)) <span class="fu">list</span>() <span class="cf">else</span> <span class="fu">list</span>(<span class="at">cutpoints =</span> cutpoints)</span>
+<span id="cb1-528"><a href="#cb1-528" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-529"><a href="#cb1-529" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-530"><a href="#cb1-530" aria-hidden="true" tabindex="-1"></a>  cem_obj <span class="ot">&lt;-</span> <span class="fu">do.call</span>(matchit, cem_args)</span>
+<span id="cb1-531"><a href="#cb1-531" aria-hidden="true" tabindex="-1"></a>  cem_data <span class="ot">&lt;-</span> <span class="fu">match.data</span>(cem_obj)</span>
+<span id="cb1-532"><a href="#cb1-532" aria-hidden="true" tabindex="-1"></a>  cem_bal <span class="ot">&lt;-</span> <span class="fu">bal.tab</span>(</span>
+<span id="cb1-533"><a href="#cb1-533" aria-hidden="true" tabindex="-1"></a>    cem_obj,</span>
+<span id="cb1-534"><a href="#cb1-534" aria-hidden="true" tabindex="-1"></a>    <span class="at">un =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb1-535"><a href="#cb1-535" aria-hidden="true" tabindex="-1"></a>    <span class="at">binary =</span> <span class="st">"std"</span>,</span>
+<span id="cb1-536"><a href="#cb1-536" aria-hidden="true" tabindex="-1"></a>    <span class="at">m.threshold =</span> <span class="fl">0.1</span></span>
 <span id="cb1-537"><a href="#cb1-537" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb1-538"><a href="#cb1-538" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
-<span id="cb1-539"><a href="#cb1-539" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">max_abs_smd =</span> <span class="fu">round</span>(max_abs_smd, <span class="dv">3</span>))</span>
-<span id="cb1-540"><a href="#cb1-540" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-541"><a href="#cb1-541" aria-hidden="true" tabindex="-1"></a>comparison_balance</span>
-<span id="cb1-542"><a href="#cb1-542" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-543"><a href="#cb1-543" aria-hidden="true" tabindex="-1"></a><span class="co"># ---- chunk 29 ----</span></span>
-<span id="cb1-544"><a href="#cb1-544" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare retention and information remaining under each design.</span></span>
-<span id="cb1-545"><a href="#cb1-545" aria-hidden="true" tabindex="-1"></a>comparison_information <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb1-546"><a href="#cb1-546" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="fu">c</span>(</span>
-<span id="cb1-547"><a href="#cb1-547" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Exact matching"</span>,</span>
-<span id="cb1-548"><a href="#cb1-548" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Coarsened exact matching"</span>,</span>
-<span id="cb1-549"><a href="#cb1-549" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Entropy balancing"</span></span>
-<span id="cb1-550"><a href="#cb1-550" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb1-551"><a href="#cb1-551" aria-hidden="true" tabindex="-1"></a>  <span class="at">treated_units_used =</span> <span class="fu">c</span>(</span>
-<span id="cb1-552"><a href="#cb1-552" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(matched_exact<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">1</span>),</span>
-<span id="cb1-553"><a href="#cb1-553" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(matched_cem<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">1</span>),</span>
-<span id="cb1-554"><a href="#cb1-554" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(dat<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">1</span>)</span>
-<span id="cb1-555"><a href="#cb1-555" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb1-556"><a href="#cb1-556" aria-hidden="true" tabindex="-1"></a>  <span class="at">control_units_used =</span> <span class="fu">c</span>(</span>
-<span id="cb1-557"><a href="#cb1-557" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(matched_exact<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">0</span>),</span>
-<span id="cb1-558"><a href="#cb1-558" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(matched_cem<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">0</span>),</span>
-<span id="cb1-559"><a href="#cb1-559" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(dat<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">0</span>)</span>
-<span id="cb1-560"><a href="#cb1-560" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb1-561"><a href="#cb1-561" aria-hidden="true" tabindex="-1"></a>  <span class="at">treated_share_of_full_sample =</span> <span class="fu">c</span>(</span>
-<span id="cb1-562"><a href="#cb1-562" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(matched_exact<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">/</span> <span class="fu">sum</span>(dat<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">1</span>),</span>
-<span id="cb1-563"><a href="#cb1-563" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(matched_cem<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">/</span> <span class="fu">sum</span>(dat<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">1</span>),</span>
-<span id="cb1-564"><a href="#cb1-564" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span></span>
-<span id="cb1-565"><a href="#cb1-565" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb1-566"><a href="#cb1-566" aria-hidden="true" tabindex="-1"></a>  <span class="at">control_share_of_full_sample =</span> <span class="fu">c</span>(</span>
-<span id="cb1-567"><a href="#cb1-567" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(matched_exact<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">/</span> <span class="fu">sum</span>(dat<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">0</span>),</span>
-<span id="cb1-568"><a href="#cb1-568" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(matched_cem<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">/</span> <span class="fu">sum</span>(dat<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">0</span>),</span>
-<span id="cb1-569"><a href="#cb1-569" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span></span>
-<span id="cb1-570"><a href="#cb1-570" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb1-571"><a href="#cb1-571" aria-hidden="true" tabindex="-1"></a>  <span class="at">control_effective_sample_size =</span> <span class="fu">c</span>(</span>
-<span id="cb1-572"><a href="#cb1-572" aria-hidden="true" tabindex="-1"></a>    <span class="cn">NA_real_</span>,</span>
-<span id="cb1-573"><a href="#cb1-573" aria-hidden="true" tabindex="-1"></a>    <span class="cn">NA_real_</span>,</span>
-<span id="cb1-574"><a href="#cb1-574" aria-hidden="true" tabindex="-1"></a>    ebal_summary<span class="sc">$</span>effective.sample.size[<span class="st">"Weighted"</span>, <span class="st">"Control"</span>]</span>
-<span id="cb1-575"><a href="#cb1-575" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb1-576"><a href="#cb1-576" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
-<span id="cb1-577"><a href="#cb1-577" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb1-578"><a href="#cb1-578" aria-hidden="true" tabindex="-1"></a>    <span class="at">treated_share_of_full_sample =</span> <span class="fu">round</span>(treated_share_of_full_sample, <span class="dv">3</span>),</span>
-<span id="cb1-579"><a href="#cb1-579" aria-hidden="true" tabindex="-1"></a>    <span class="at">control_share_of_full_sample =</span> <span class="fu">round</span>(control_share_of_full_sample, <span class="dv">3</span>),</span>
-<span id="cb1-580"><a href="#cb1-580" aria-hidden="true" tabindex="-1"></a>    <span class="at">control_effective_sample_size =</span> <span class="fu">round</span>(control_effective_sample_size, <span class="dv">3</span>)</span>
-<span id="cb1-581"><a href="#cb1-581" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb1-582"><a href="#cb1-582" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-583"><a href="#cb1-583" aria-hidden="true" tabindex="-1"></a>comparison_information</span>
+<span id="cb1-538"><a href="#cb1-538" aria-hidden="true" tabindex="-1"></a>  cem_fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(outcome <span class="sc">~</span> treat, <span class="at">data =</span> cem_data, <span class="at">weights =</span> weights)</span>
+<span id="cb1-539"><a href="#cb1-539" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-540"><a href="#cb1-540" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(</span>
+<span id="cb1-541"><a href="#cb1-541" aria-hidden="true" tabindex="-1"></a>    <span class="at">specification =</span> label,</span>
+<span id="cb1-542"><a href="#cb1-542" aria-hidden="true" tabindex="-1"></a>    <span class="at">treated_retained =</span> <span class="fu">sum</span>(cem_data<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">1</span>),</span>
+<span id="cb1-543"><a href="#cb1-543" aria-hidden="true" tabindex="-1"></a>    <span class="at">control_retained =</span> <span class="fu">sum</span>(cem_data<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">0</span>),</span>
+<span id="cb1-544"><a href="#cb1-544" aria-hidden="true" tabindex="-1"></a>    <span class="at">treated_share =</span> <span class="fu">sum</span>(cem_data<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">/</span> <span class="fu">sum</span>(dat<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">1</span>),</span>
+<span id="cb1-545"><a href="#cb1-545" aria-hidden="true" tabindex="-1"></a>    <span class="at">max_abs_adjusted_smd =</span> <span class="fu">max</span>(<span class="fu">abs</span>(cem_bal<span class="sc">$</span>Balance<span class="sc">$</span>Diff.Adj), <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb1-546"><a href="#cb1-546" aria-hidden="true" tabindex="-1"></a>    <span class="at">att =</span> <span class="fu">unname</span>(<span class="fu">coef</span>(<span class="fu">summary</span>(cem_fit))[<span class="st">"treat"</span>, <span class="st">"Estimate"</span>])</span>
+<span id="cb1-547"><a href="#cb1-547" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-548"><a href="#cb1-548" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-549"><a href="#cb1-549" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-550"><a href="#cb1-550" aria-hidden="true" tabindex="-1"></a>cem_robustness <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
+<span id="cb1-551"><a href="#cb1-551" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit_cem_spec</span>(<span class="st">"Default MatchIt coarsening"</span>),</span>
+<span id="cb1-552"><a href="#cb1-552" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit_cem_spec</span>(<span class="st">"Main report cutpoints"</span>, cem_cutpoints),</span>
+<span id="cb1-553"><a href="#cb1-553" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit_cem_spec</span>(</span>
+<span id="cb1-554"><a href="#cb1-554" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Looser q4/q3 bins"</span>,</span>
+<span id="cb1-555"><a href="#cb1-555" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">age =</span> <span class="st">"q4"</span>, <span class="at">educ =</span> <span class="dv">3</span>, <span class="at">re74 =</span> <span class="st">"q4"</span>, <span class="at">re75 =</span> <span class="st">"q4"</span>)</span>
+<span id="cb1-556"><a href="#cb1-556" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb1-557"><a href="#cb1-557" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit_cem_spec</span>(</span>
+<span id="cb1-558"><a href="#cb1-558" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Sturges-rule bins"</span>,</span>
+<span id="cb1-559"><a href="#cb1-559" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">age =</span> <span class="st">"sturges"</span>, <span class="at">educ =</span> <span class="dv">4</span>, <span class="at">re74 =</span> <span class="st">"sturges"</span>, <span class="at">re75 =</span> <span class="st">"sturges"</span>)</span>
+<span id="cb1-560"><a href="#cb1-560" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-561"><a href="#cb1-561" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb1-562"><a href="#cb1-562" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb1-563"><a href="#cb1-563" aria-hidden="true" tabindex="-1"></a>    <span class="at">treated_share =</span> <span class="fu">round</span>(treated_share, <span class="dv">3</span>),</span>
+<span id="cb1-564"><a href="#cb1-564" aria-hidden="true" tabindex="-1"></a>    <span class="at">max_abs_adjusted_smd =</span> <span class="fu">round</span>(max_abs_adjusted_smd, <span class="dv">3</span>),</span>
+<span id="cb1-565"><a href="#cb1-565" aria-hidden="true" tabindex="-1"></a>    <span class="at">att =</span> <span class="fu">round</span>(att, <span class="dv">3</span>)</span>
+<span id="cb1-566"><a href="#cb1-566" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-567"><a href="#cb1-567" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-568"><a href="#cb1-568" aria-hidden="true" tabindex="-1"></a>cem_robustness</span>
+<span id="cb1-569"><a href="#cb1-569" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-570"><a href="#cb1-570" aria-hidden="true" tabindex="-1"></a><span class="co"># ---- chunk 29 ----</span></span>
+<span id="cb1-571"><a href="#cb1-571" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize how alternative cutpoints trade retained treated share against balance.</span></span>
+<span id="cb1-572"><a href="#cb1-572" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb1-573"><a href="#cb1-573" aria-hidden="true" tabindex="-1"></a>  cem_robustness,</span>
+<span id="cb1-574"><a href="#cb1-574" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> treated_share, <span class="at">y =</span> max_abs_adjusted_smd, <span class="at">label =</span> specification)</span>
+<span id="cb1-575"><a href="#cb1-575" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb1-576"><a href="#cb1-576" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fl">0.1</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb1-577"><a href="#cb1-577" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">2.8</span>) <span class="sc">+</span></span>
+<span id="cb1-578"><a href="#cb1-578" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">nudge_y =</span> <span class="fl">0.01</span>, <span class="at">check_overlap =</span> <span class="cn">TRUE</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb1-579"><a href="#cb1-579" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb1-580"><a href="#cb1-580" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Retained treated share"</span>,</span>
+<span id="cb1-581"><a href="#cb1-581" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Maximum absolute adjusted SMD"</span></span>
+<span id="cb1-582"><a href="#cb1-582" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb1-583"><a href="#cb1-583" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">max</span>(cem_robustness<span class="sc">$</span>max_abs_adjusted_smd) <span class="sc">+</span> <span class="fl">0.03</span>))</span>
 <span id="cb1-584"><a href="#cb1-584" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-585"><a href="#cb1-585" aria-hidden="true" tabindex="-1"></a><span class="co"># ---- chunk 30 ----</span></span>
-<span id="cb1-586"><a href="#cb1-586" aria-hidden="true" tabindex="-1"></a><span class="co"># Helper to extract a consistent treatment-effect row from model summaries.</span></span>
-<span id="cb1-587"><a href="#cb1-587" aria-hidden="true" tabindex="-1"></a>extract_treat_effect <span class="ot">&lt;-</span> <span class="cf">function</span>(model, method) {</span>
-<span id="cb1-588"><a href="#cb1-588" aria-hidden="true" tabindex="-1"></a>  coef_table <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">summary</span>(model))</span>
-<span id="cb1-589"><a href="#cb1-589" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Robustly locate the p-value column across lm/lm_weightit summary formats.</span></span>
-<span id="cb1-590"><a href="#cb1-590" aria-hidden="true" tabindex="-1"></a>  p_value_col <span class="ot">&lt;-</span> <span class="fu">grep</span>(<span class="st">"^Pr</span><span class="sc">\\</span><span class="st">("</span>, <span class="fu">colnames</span>(coef_table), <span class="at">value =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb1-591"><a href="#cb1-591" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-592"><a href="#cb1-592" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(p_value_col) <span class="sc">==</span> <span class="dv">0</span>) {</span>
-<span id="cb1-593"><a href="#cb1-593" aria-hidden="true" tabindex="-1"></a>    p_value_col <span class="ot">&lt;-</span> <span class="fu">tail</span>(<span class="fu">colnames</span>(coef_table), <span class="dv">1</span>)</span>
-<span id="cb1-594"><a href="#cb1-594" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
-<span id="cb1-595"><a href="#cb1-595" aria-hidden="true" tabindex="-1"></a>    p_value_col <span class="ot">&lt;-</span> p_value_col[<span class="dv">1</span>]</span>
-<span id="cb1-596"><a href="#cb1-596" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-586"><a href="#cb1-586" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare entropy-balancing designs with progressively tighter moment constraints.</span></span>
+<span id="cb1-587"><a href="#cb1-587" aria-hidden="true" tabindex="-1"></a>fit_ebal_spec <span class="ot">&lt;-</span> <span class="cf">function</span>(label, <span class="at">extra_args =</span> <span class="fu">list</span>()) {</span>
+<span id="cb1-588"><a href="#cb1-588" aria-hidden="true" tabindex="-1"></a>  ebal_args <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb1-589"><a href="#cb1-589" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(</span>
+<span id="cb1-590"><a href="#cb1-590" aria-hidden="true" tabindex="-1"></a>      <span class="at">formula =</span> treat <span class="sc">~</span> age <span class="sc">+</span> educ <span class="sc">+</span> race <span class="sc">+</span> married <span class="sc">+</span> nodegree <span class="sc">+</span> re74 <span class="sc">+</span> re75,</span>
+<span id="cb1-591"><a href="#cb1-591" aria-hidden="true" tabindex="-1"></a>      <span class="at">data =</span> dat,</span>
+<span id="cb1-592"><a href="#cb1-592" aria-hidden="true" tabindex="-1"></a>      <span class="at">method =</span> <span class="st">"ebal"</span>,</span>
+<span id="cb1-593"><a href="#cb1-593" aria-hidden="true" tabindex="-1"></a>      <span class="at">estimand =</span> <span class="st">"ATT"</span></span>
+<span id="cb1-594"><a href="#cb1-594" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb1-595"><a href="#cb1-595" aria-hidden="true" tabindex="-1"></a>    extra_args</span>
+<span id="cb1-596"><a href="#cb1-596" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb1-597"><a href="#cb1-597" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-598"><a href="#cb1-598" aria-hidden="true" tabindex="-1"></a>  treat_row <span class="ot">&lt;-</span> coef_table[<span class="st">"treat"</span>, ]</span>
-<span id="cb1-599"><a href="#cb1-599" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-600"><a href="#cb1-600" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Return one standardized row for downstream comparison tables.</span></span>
-<span id="cb1-601"><a href="#cb1-601" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(</span>
-<span id="cb1-602"><a href="#cb1-602" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> method,</span>
-<span id="cb1-603"><a href="#cb1-603" aria-hidden="true" tabindex="-1"></a>    <span class="at">estimate =</span> <span class="fu">unname</span>(treat_row[<span class="st">"Estimate"</span>]),</span>
-<span id="cb1-604"><a href="#cb1-604" aria-hidden="true" tabindex="-1"></a>    <span class="at">std_error =</span> <span class="fu">unname</span>(treat_row[<span class="st">"Std. Error"</span>]),</span>
-<span id="cb1-605"><a href="#cb1-605" aria-hidden="true" tabindex="-1"></a>    <span class="at">conf_low =</span> <span class="fu">unname</span>(treat_row[<span class="st">"Estimate"</span>] <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> treat_row[<span class="st">"Std. Error"</span>]),</span>
-<span id="cb1-606"><a href="#cb1-606" aria-hidden="true" tabindex="-1"></a>    <span class="at">conf_high =</span> <span class="fu">unname</span>(treat_row[<span class="st">"Estimate"</span>] <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> treat_row[<span class="st">"Std. Error"</span>]),</span>
-<span id="cb1-607"><a href="#cb1-607" aria-hidden="true" tabindex="-1"></a>    <span class="at">p_value =</span> <span class="fu">unname</span>(treat_row[p_value_col])</span>
-<span id="cb1-608"><a href="#cb1-608" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb1-609"><a href="#cb1-609" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-610"><a href="#cb1-610" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-611"><a href="#cb1-611" aria-hidden="true" tabindex="-1"></a><span class="co"># Bind method-specific effect rows and append design-context metadata.</span></span>
-<span id="cb1-612"><a href="#cb1-612" aria-hidden="true" tabindex="-1"></a>treatment_effect_summary <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
-<span id="cb1-613"><a href="#cb1-613" aria-hidden="true" tabindex="-1"></a>  <span class="fu">extract_treat_effect</span>(fit_exact, <span class="st">"Exact matching"</span>),</span>
-<span id="cb1-614"><a href="#cb1-614" aria-hidden="true" tabindex="-1"></a>  <span class="fu">extract_treat_effect</span>(fit_cem, <span class="st">"Coarsened exact matching"</span>),</span>
-<span id="cb1-615"><a href="#cb1-615" aria-hidden="true" tabindex="-1"></a>  <span class="fu">extract_treat_effect</span>(fit_ebal, <span class="st">"Entropy balancing"</span>)</span>
-<span id="cb1-616"><a href="#cb1-616" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
-<span id="cb1-617"><a href="#cb1-617" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb1-618"><a href="#cb1-618" aria-hidden="true" tabindex="-1"></a>    <span class="at">treated_units_used =</span> <span class="fu">c</span>(</span>
-<span id="cb1-619"><a href="#cb1-619" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sum</span>(matched_exact<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">1</span>),</span>
-<span id="cb1-620"><a href="#cb1-620" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sum</span>(matched_cem<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">1</span>),</span>
-<span id="cb1-621"><a href="#cb1-621" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sum</span>(dat<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">1</span>)</span>
-<span id="cb1-622"><a href="#cb1-622" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb1-623"><a href="#cb1-623" aria-hidden="true" tabindex="-1"></a>    <span class="at">control_basis =</span> <span class="fu">c</span>(</span>
-<span id="cb1-624"><a href="#cb1-624" aria-hidden="true" tabindex="-1"></a>      <span class="fu">paste</span>(<span class="fu">sum</span>(matched_exact<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">0</span>), <span class="st">"matched controls"</span>),</span>
-<span id="cb1-625"><a href="#cb1-625" aria-hidden="true" tabindex="-1"></a>      <span class="fu">paste</span>(<span class="fu">sum</span>(matched_cem<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">0</span>), <span class="st">"matched controls"</span>),</span>
-<span id="cb1-626"><a href="#cb1-626" aria-hidden="true" tabindex="-1"></a>      <span class="fu">paste</span>(</span>
-<span id="cb1-627"><a href="#cb1-627" aria-hidden="true" tabindex="-1"></a>        <span class="fu">sum</span>(dat<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">0</span>),</span>
-<span id="cb1-628"><a href="#cb1-628" aria-hidden="true" tabindex="-1"></a>        <span class="st">"controls; ESS"</span>,</span>
-<span id="cb1-629"><a href="#cb1-629" aria-hidden="true" tabindex="-1"></a>        <span class="fu">round</span>(ebal_summary<span class="sc">$</span>effective.sample.size[<span class="st">"Weighted"</span>, <span class="st">"Control"</span>], <span class="dv">3</span>)</span>
-<span id="cb1-630"><a href="#cb1-630" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb1-631"><a href="#cb1-631" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb1-632"><a href="#cb1-632" aria-hidden="true" tabindex="-1"></a>    <span class="at">design_note =</span> <span class="fu">c</span>(</span>
-<span id="cb1-633"><a href="#cb1-633" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Residual imbalance remains on re74"</span>,</span>
-<span id="cb1-634"><a href="#cb1-634" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Best balance among matched samples, but strongest pruning"</span>,</span>
-<span id="cb1-635"><a href="#cb1-635" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Preserves all treated units, but relies on concentrated control weights"</span></span>
-<span id="cb1-636"><a href="#cb1-636" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb1-637"><a href="#cb1-637" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb1-638"><a href="#cb1-638" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(estimate, std_error, conf_low, conf_high, p_value), <span class="sc">~</span> <span class="fu">round</span>(.x, <span class="dv">3</span>)))</span>
-<span id="cb1-639"><a href="#cb1-639" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-640"><a href="#cb1-640" aria-hidden="true" tabindex="-1"></a>treatment_effect_summary <span class="sc">|&gt;</span></span>
-<span id="cb1-641"><a href="#cb1-641" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
-<span id="cb1-642"><a href="#cb1-642" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Std. error</span><span class="st">`</span> <span class="ot">=</span> std_error,</span>
-<span id="cb1-643"><a href="#cb1-643" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">95% CI low</span><span class="st">`</span> <span class="ot">=</span> conf_low,</span>
-<span id="cb1-644"><a href="#cb1-644" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">95% CI high</span><span class="st">`</span> <span class="ot">=</span> conf_high,</span>
-<span id="cb1-645"><a href="#cb1-645" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">P-value</span><span class="st">`</span> <span class="ot">=</span> p_value,</span>
-<span id="cb1-646"><a href="#cb1-646" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Treated units used</span><span class="st">`</span> <span class="ot">=</span> treated_units_used,</span>
-<span id="cb1-647"><a href="#cb1-647" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Control basis</span><span class="st">`</span> <span class="ot">=</span> control_basis,</span>
-<span id="cb1-648"><a href="#cb1-648" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Design note</span><span class="st">`</span> <span class="ot">=</span> design_note</span>
-<span id="cb1-649"><a href="#cb1-649" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb1-650"><a href="#cb1-650" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
-<span id="cb1-651"><a href="#cb1-651" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-652"><a href="#cb1-652" aria-hidden="true" tabindex="-1"></a><span class="co"># ---- chunk 31 ----</span></span>
-<span id="cb1-653"><a href="#cb1-653" aria-hidden="true" tabindex="-1"></a><span class="co"># Capture the R session state for reproducibility.</span></span>
-<span id="cb1-654"><a href="#cb1-654" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-598"><a href="#cb1-598" aria-hidden="true" tabindex="-1"></a>  ebal_obj <span class="ot">&lt;-</span> <span class="fu">do.call</span>(weightit, ebal_args)</span>
+<span id="cb1-599"><a href="#cb1-599" aria-hidden="true" tabindex="-1"></a>  ebal_sum <span class="ot">&lt;-</span> <span class="fu">summary</span>(ebal_obj)</span>
+<span id="cb1-600"><a href="#cb1-600" aria-hidden="true" tabindex="-1"></a>  ebal_bal <span class="ot">&lt;-</span> <span class="fu">bal.tab</span>(</span>
+<span id="cb1-601"><a href="#cb1-601" aria-hidden="true" tabindex="-1"></a>    ebal_obj,</span>
+<span id="cb1-602"><a href="#cb1-602" aria-hidden="true" tabindex="-1"></a>    <span class="at">un =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb1-603"><a href="#cb1-603" aria-hidden="true" tabindex="-1"></a>    <span class="at">binary =</span> <span class="st">"std"</span>,</span>
+<span id="cb1-604"><a href="#cb1-604" aria-hidden="true" tabindex="-1"></a>    <span class="at">addl =</span> <span class="sc">~</span> <span class="fu">I</span>(age<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>(educ<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>(re74<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>(re75<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb1-605"><a href="#cb1-605" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-606"><a href="#cb1-606" aria-hidden="true" tabindex="-1"></a>  ebal_fit <span class="ot">&lt;-</span> <span class="fu">lm_weightit</span>(outcome <span class="sc">~</span> treat, <span class="at">data =</span> dat, <span class="at">weightit =</span> ebal_obj)</span>
+<span id="cb1-607"><a href="#cb1-607" aria-hidden="true" tabindex="-1"></a>  squared_terms <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"I(age^2)"</span>, <span class="st">"I(educ^2)"</span>, <span class="st">"I(re74^2)"</span>, <span class="st">"I(re75^2)"</span>)</span>
+<span id="cb1-608"><a href="#cb1-608" aria-hidden="true" tabindex="-1"></a>  mean_terms <span class="ot">&lt;-</span> <span class="fu">setdiff</span>(<span class="fu">rownames</span>(ebal_bal<span class="sc">$</span>Balance), squared_terms)</span>
+<span id="cb1-609"><a href="#cb1-609" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-610"><a href="#cb1-610" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(</span>
+<span id="cb1-611"><a href="#cb1-611" aria-hidden="true" tabindex="-1"></a>    <span class="at">specification =</span> label,</span>
+<span id="cb1-612"><a href="#cb1-612" aria-hidden="true" tabindex="-1"></a>    <span class="at">control_ess =</span> ebal_sum<span class="sc">$</span>effective.sample.size[<span class="st">"Weighted"</span>, <span class="st">"Control"</span>],</span>
+<span id="cb1-613"><a href="#cb1-613" aria-hidden="true" tabindex="-1"></a>    <span class="at">max_control_weight =</span> <span class="fu">max</span>(ebal_obj<span class="sc">$</span>weights[dat<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">0</span>]),</span>
+<span id="cb1-614"><a href="#cb1-614" aria-hidden="true" tabindex="-1"></a>    <span class="at">max_abs_adjusted_smd_means =</span> <span class="fu">max</span>(<span class="fu">abs</span>(ebal_bal<span class="sc">$</span>Balance[mean_terms, <span class="st">"Diff.Adj"</span>]), <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb1-615"><a href="#cb1-615" aria-hidden="true" tabindex="-1"></a>    <span class="at">max_abs_adjusted_smd_squares =</span> <span class="fu">max</span>(<span class="fu">abs</span>(ebal_bal<span class="sc">$</span>Balance[squared_terms, <span class="st">"Diff.Adj"</span>]), <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb1-616"><a href="#cb1-616" aria-hidden="true" tabindex="-1"></a>    <span class="at">att =</span> <span class="fu">unname</span>(<span class="fu">coef</span>(<span class="fu">summary</span>(ebal_fit))[<span class="st">"treat"</span>, <span class="st">"Estimate"</span>])</span>
+<span id="cb1-617"><a href="#cb1-617" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-618"><a href="#cb1-618" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-619"><a href="#cb1-619" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-620"><a href="#cb1-620" aria-hidden="true" tabindex="-1"></a>ebal_robustness <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
+<span id="cb1-621"><a href="#cb1-621" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit_ebal_spec</span>(<span class="st">"Means only"</span>),</span>
+<span id="cb1-622"><a href="#cb1-622" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit_ebal_spec</span>(</span>
+<span id="cb1-623"><a href="#cb1-623" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Age and earnings squares"</span>,</span>
+<span id="cb1-624"><a href="#cb1-624" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">moments =</span> <span class="fu">c</span>(<span class="at">age =</span> <span class="dv">2</span>, <span class="at">re74 =</span> <span class="dv">2</span>, <span class="at">re75 =</span> <span class="dv">2</span>))</span>
+<span id="cb1-625"><a href="#cb1-625" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb1-626"><a href="#cb1-626" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit_ebal_spec</span>(</span>
+<span id="cb1-627"><a href="#cb1-627" aria-hidden="true" tabindex="-1"></a>    <span class="st">"All continuous squares"</span>,</span>
+<span id="cb1-628"><a href="#cb1-628" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">moments =</span> <span class="fu">c</span>(<span class="at">age =</span> <span class="dv">2</span>, <span class="at">educ =</span> <span class="dv">2</span>, <span class="at">re74 =</span> <span class="dv">2</span>, <span class="at">re75 =</span> <span class="dv">2</span>))</span>
+<span id="cb1-629"><a href="#cb1-629" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-630"><a href="#cb1-630" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb1-631"><a href="#cb1-631" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), <span class="sc">~</span> <span class="fu">round</span>(.x, <span class="dv">3</span>)))</span>
+<span id="cb1-632"><a href="#cb1-632" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-633"><a href="#cb1-633" aria-hidden="true" tabindex="-1"></a>ebal_robustness</span>
+<span id="cb1-634"><a href="#cb1-634" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-635"><a href="#cb1-635" aria-hidden="true" tabindex="-1"></a><span class="co"># ---- chunk 31 ----</span></span>
+<span id="cb1-636"><a href="#cb1-636" aria-hidden="true" tabindex="-1"></a><span class="co"># Summarize how concentrated the control-side weighting becomes under entropy balancing.</span></span>
+<span id="cb1-637"><a href="#cb1-637" aria-hidden="true" tabindex="-1"></a>control_weights <span class="ot">&lt;-</span> <span class="fu">sort</span>(dat_ebal<span class="sc">$</span>ebal_weight[dat_ebal<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">0</span>], <span class="at">decreasing =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-638"><a href="#cb1-638" aria-hidden="true" tabindex="-1"></a>control_weight_share <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb1-639"><a href="#cb1-639" aria-hidden="true" tabindex="-1"></a>  <span class="at">top_controls =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">20</span>),</span>
+<span id="cb1-640"><a href="#cb1-640" aria-hidden="true" tabindex="-1"></a>  <span class="at">control_weight_share =</span> <span class="fu">sapply</span>(</span>
+<span id="cb1-641"><a href="#cb1-641" aria-hidden="true" tabindex="-1"></a>    top_controls,</span>
+<span id="cb1-642"><a href="#cb1-642" aria-hidden="true" tabindex="-1"></a>    <span class="cf">function</span>(k) <span class="fu">sum</span>(control_weights[<span class="fu">seq_len</span>(k)]) <span class="sc">/</span> <span class="fu">sum</span>(control_weights)</span>
+<span id="cb1-643"><a href="#cb1-643" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-644"><a href="#cb1-644" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb1-645"><a href="#cb1-645" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">control_weight_share =</span> <span class="fu">round</span>(control_weight_share, <span class="dv">3</span>))</span>
+<span id="cb1-646"><a href="#cb1-646" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-647"><a href="#cb1-647" aria-hidden="true" tabindex="-1"></a>control_weight_share</span>
+<span id="cb1-648"><a href="#cb1-648" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-649"><a href="#cb1-649" aria-hidden="true" tabindex="-1"></a><span class="co"># ---- chunk 32 ----</span></span>
+<span id="cb1-650"><a href="#cb1-650" aria-hidden="true" tabindex="-1"></a><span class="co"># Stress-test the entropy-balancing estimate by trimming the largest control weights.</span></span>
+<span id="cb1-651"><a href="#cb1-651" aria-hidden="true" tabindex="-1"></a>compute_ess <span class="ot">&lt;-</span> <span class="cf">function</span>(weights) {</span>
+<span id="cb1-652"><a href="#cb1-652" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>(weights)<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> <span class="fu">sum</span>(weights<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb1-653"><a href="#cb1-653" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-654"><a href="#cb1-654" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-655"><a href="#cb1-655" aria-hidden="true" tabindex="-1"></a>trim_caps <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb1-656"><a href="#cb1-656" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Original weights"</span> <span class="ot">=</span> <span class="cn">Inf</span>,</span>
+<span id="cb1-657"><a href="#cb1-657" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Cap at 99th control percentile"</span> <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="fu">quantile</span>(control_weights, <span class="fl">0.99</span>)),</span>
+<span id="cb1-658"><a href="#cb1-658" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Cap at 95th control percentile"</span> <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="fu">quantile</span>(control_weights, <span class="fl">0.95</span>))</span>
+<span id="cb1-659"><a href="#cb1-659" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-660"><a href="#cb1-660" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-661"><a href="#cb1-661" aria-hidden="true" tabindex="-1"></a>ebal_trim_sensitivity <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(<span class="fu">lapply</span>(<span class="fu">names</span>(trim_caps), <span class="cf">function</span>(label) {</span>
+<span id="cb1-662"><a href="#cb1-662" aria-hidden="true" tabindex="-1"></a>  trimmed_weights <span class="ot">&lt;-</span> dat_ebal<span class="sc">$</span>ebal_weight</span>
+<span id="cb1-663"><a href="#cb1-663" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-664"><a href="#cb1-664" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">is.finite</span>(trim_caps[[label]])) {</span>
+<span id="cb1-665"><a href="#cb1-665" aria-hidden="true" tabindex="-1"></a>    trimmed_weights[dat<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="fu">pmin</span>(</span>
+<span id="cb1-666"><a href="#cb1-666" aria-hidden="true" tabindex="-1"></a>      trimmed_weights[dat<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">0</span>],</span>
+<span id="cb1-667"><a href="#cb1-667" aria-hidden="true" tabindex="-1"></a>      trim_caps[[label]]</span>
+<span id="cb1-668"><a href="#cb1-668" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-669"><a href="#cb1-669" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-670"><a href="#cb1-670" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-671"><a href="#cb1-671" aria-hidden="true" tabindex="-1"></a>  trim_balance <span class="ot">&lt;-</span> <span class="fu">bal.tab</span>(</span>
+<span id="cb1-672"><a href="#cb1-672" aria-hidden="true" tabindex="-1"></a>    treat <span class="sc">~</span> age <span class="sc">+</span> educ <span class="sc">+</span> race <span class="sc">+</span> married <span class="sc">+</span> nodegree <span class="sc">+</span> re74 <span class="sc">+</span> re75,</span>
+<span id="cb1-673"><a href="#cb1-673" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> dat,</span>
+<span id="cb1-674"><a href="#cb1-674" aria-hidden="true" tabindex="-1"></a>    <span class="at">weights =</span> trimmed_weights,</span>
+<span id="cb1-675"><a href="#cb1-675" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">"weighting"</span>,</span>
+<span id="cb1-676"><a href="#cb1-676" aria-hidden="true" tabindex="-1"></a>    <span class="at">estimand =</span> <span class="st">"ATT"</span>,</span>
+<span id="cb1-677"><a href="#cb1-677" aria-hidden="true" tabindex="-1"></a>    <span class="at">un =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb1-678"><a href="#cb1-678" aria-hidden="true" tabindex="-1"></a>    <span class="at">binary =</span> <span class="st">"std"</span></span>
+<span id="cb1-679"><a href="#cb1-679" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-680"><a href="#cb1-680" aria-hidden="true" tabindex="-1"></a>  trim_fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(outcome <span class="sc">~</span> treat, <span class="at">data =</span> dat, <span class="at">weights =</span> trimmed_weights)</span>
+<span id="cb1-681"><a href="#cb1-681" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-682"><a href="#cb1-682" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(</span>
+<span id="cb1-683"><a href="#cb1-683" aria-hidden="true" tabindex="-1"></a>    <span class="at">diagnostic =</span> label,</span>
+<span id="cb1-684"><a href="#cb1-684" aria-hidden="true" tabindex="-1"></a>    <span class="at">control_ess =</span> <span class="fu">compute_ess</span>(trimmed_weights[dat<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">0</span>]),</span>
+<span id="cb1-685"><a href="#cb1-685" aria-hidden="true" tabindex="-1"></a>    <span class="at">max_control_weight =</span> <span class="fu">max</span>(trimmed_weights[dat<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">0</span>]),</span>
+<span id="cb1-686"><a href="#cb1-686" aria-hidden="true" tabindex="-1"></a>    <span class="at">max_abs_adjusted_smd =</span> <span class="fu">max</span>(<span class="fu">abs</span>(trim_balance<span class="sc">$</span>Balance<span class="sc">$</span>Diff.Adj), <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb1-687"><a href="#cb1-687" aria-hidden="true" tabindex="-1"></a>    <span class="at">att =</span> <span class="fu">unname</span>(<span class="fu">coef</span>(<span class="fu">summary</span>(trim_fit))[<span class="st">"treat"</span>, <span class="st">"Estimate"</span>])</span>
+<span id="cb1-688"><a href="#cb1-688" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-689"><a href="#cb1-689" aria-hidden="true" tabindex="-1"></a>})) <span class="sc">|&gt;</span></span>
+<span id="cb1-690"><a href="#cb1-690" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), <span class="sc">~</span> <span class="fu">round</span>(.x, <span class="dv">3</span>)))</span>
+<span id="cb1-691"><a href="#cb1-691" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-692"><a href="#cb1-692" aria-hidden="true" tabindex="-1"></a>ebal_trim_sensitivity</span>
+<span id="cb1-693"><a href="#cb1-693" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-694"><a href="#cb1-694" aria-hidden="true" tabindex="-1"></a><span class="co"># ---- chunk 33 ----</span></span>
+<span id="cb1-695"><a href="#cb1-695" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare worst-case imbalance and threshold exceedances across all methods.</span></span>
+<span id="cb1-696"><a href="#cb1-696" aria-hidden="true" tabindex="-1"></a>comparison_balance <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb1-697"><a href="#cb1-697" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="fu">c</span>(</span>
+<span id="cb1-698"><a href="#cb1-698" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Unadjusted sample"</span>,</span>
+<span id="cb1-699"><a href="#cb1-699" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Exact matching"</span>,</span>
+<span id="cb1-700"><a href="#cb1-700" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Coarsened exact matching"</span>,</span>
+<span id="cb1-701"><a href="#cb1-701" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Entropy balancing"</span></span>
+<span id="cb1-702"><a href="#cb1-702" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb1-703"><a href="#cb1-703" aria-hidden="true" tabindex="-1"></a>  <span class="at">max_abs_smd =</span> <span class="fu">c</span>(</span>
+<span id="cb1-704"><a href="#cb1-704" aria-hidden="true" tabindex="-1"></a>    <span class="fu">max</span>(<span class="fu">abs</span>(unadjusted_balance<span class="sc">$</span>Balance<span class="sc">$</span>Diff.Un), <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb1-705"><a href="#cb1-705" aria-hidden="true" tabindex="-1"></a>    <span class="fu">max</span>(<span class="fu">abs</span>(exact_balance<span class="sc">$</span>Balance<span class="sc">$</span>Diff.Adj), <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb1-706"><a href="#cb1-706" aria-hidden="true" tabindex="-1"></a>    <span class="fu">max</span>(<span class="fu">abs</span>(cem_balance<span class="sc">$</span>Balance<span class="sc">$</span>Diff.Adj), <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb1-707"><a href="#cb1-707" aria-hidden="true" tabindex="-1"></a>    <span class="fu">max</span>(<span class="fu">abs</span>(ebal_balance<span class="sc">$</span>Balance<span class="sc">$</span>Diff.Adj), <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-708"><a href="#cb1-708" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb1-709"><a href="#cb1-709" aria-hidden="true" tabindex="-1"></a>  <span class="at">covariates_over_0_1 =</span> <span class="fu">c</span>(</span>
+<span id="cb1-710"><a href="#cb1-710" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(<span class="fu">abs</span>(unadjusted_balance<span class="sc">$</span>Balance<span class="sc">$</span>Diff.Un) <span class="sc">&gt;</span> <span class="fl">0.1</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb1-711"><a href="#cb1-711" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(<span class="fu">abs</span>(exact_balance<span class="sc">$</span>Balance<span class="sc">$</span>Diff.Adj) <span class="sc">&gt;</span> <span class="fl">0.1</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb1-712"><a href="#cb1-712" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(<span class="fu">abs</span>(cem_balance<span class="sc">$</span>Balance<span class="sc">$</span>Diff.Adj) <span class="sc">&gt;</span> <span class="fl">0.1</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb1-713"><a href="#cb1-713" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(<span class="fu">abs</span>(ebal_balance<span class="sc">$</span>Balance<span class="sc">$</span>Diff.Adj) <span class="sc">&gt;</span> <span class="fl">0.1</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-714"><a href="#cb1-714" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-715"><a href="#cb1-715" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb1-716"><a href="#cb1-716" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">max_abs_smd =</span> <span class="fu">round</span>(max_abs_smd, <span class="dv">3</span>))</span>
+<span id="cb1-717"><a href="#cb1-717" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-718"><a href="#cb1-718" aria-hidden="true" tabindex="-1"></a>comparison_balance</span>
+<span id="cb1-719"><a href="#cb1-719" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-720"><a href="#cb1-720" aria-hidden="true" tabindex="-1"></a><span class="co"># ---- chunk 34 ----</span></span>
+<span id="cb1-721"><a href="#cb1-721" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare retention and information remaining under each design.</span></span>
+<span id="cb1-722"><a href="#cb1-722" aria-hidden="true" tabindex="-1"></a>comparison_information <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb1-723"><a href="#cb1-723" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="fu">c</span>(</span>
+<span id="cb1-724"><a href="#cb1-724" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Exact matching"</span>,</span>
+<span id="cb1-725"><a href="#cb1-725" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Coarsened exact matching"</span>,</span>
+<span id="cb1-726"><a href="#cb1-726" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Entropy balancing"</span></span>
+<span id="cb1-727"><a href="#cb1-727" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb1-728"><a href="#cb1-728" aria-hidden="true" tabindex="-1"></a>  <span class="at">treated_units_used =</span> <span class="fu">c</span>(</span>
+<span id="cb1-729"><a href="#cb1-729" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(matched_exact<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">1</span>),</span>
+<span id="cb1-730"><a href="#cb1-730" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(matched_cem<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">1</span>),</span>
+<span id="cb1-731"><a href="#cb1-731" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(dat<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb1-732"><a href="#cb1-732" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb1-733"><a href="#cb1-733" aria-hidden="true" tabindex="-1"></a>  <span class="at">control_units_used =</span> <span class="fu">c</span>(</span>
+<span id="cb1-734"><a href="#cb1-734" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(matched_exact<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">0</span>),</span>
+<span id="cb1-735"><a href="#cb1-735" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(matched_cem<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">0</span>),</span>
+<span id="cb1-736"><a href="#cb1-736" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(dat<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">0</span>)</span>
+<span id="cb1-737"><a href="#cb1-737" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb1-738"><a href="#cb1-738" aria-hidden="true" tabindex="-1"></a>  <span class="at">treated_share_of_full_sample =</span> <span class="fu">c</span>(</span>
+<span id="cb1-739"><a href="#cb1-739" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(matched_exact<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">/</span> <span class="fu">sum</span>(dat<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">1</span>),</span>
+<span id="cb1-740"><a href="#cb1-740" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(matched_cem<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">/</span> <span class="fu">sum</span>(dat<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">1</span>),</span>
+<span id="cb1-741"><a href="#cb1-741" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span></span>
+<span id="cb1-742"><a href="#cb1-742" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb1-743"><a href="#cb1-743" aria-hidden="true" tabindex="-1"></a>  <span class="at">control_share_of_full_sample =</span> <span class="fu">c</span>(</span>
+<span id="cb1-744"><a href="#cb1-744" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(matched_exact<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">/</span> <span class="fu">sum</span>(dat<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">0</span>),</span>
+<span id="cb1-745"><a href="#cb1-745" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(matched_cem<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">/</span> <span class="fu">sum</span>(dat<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">0</span>),</span>
+<span id="cb1-746"><a href="#cb1-746" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span></span>
+<span id="cb1-747"><a href="#cb1-747" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb1-748"><a href="#cb1-748" aria-hidden="true" tabindex="-1"></a>  <span class="at">control_effective_sample_size =</span> <span class="fu">c</span>(</span>
+<span id="cb1-749"><a href="#cb1-749" aria-hidden="true" tabindex="-1"></a>    <span class="cn">NA_real_</span>,</span>
+<span id="cb1-750"><a href="#cb1-750" aria-hidden="true" tabindex="-1"></a>    <span class="cn">NA_real_</span>,</span>
+<span id="cb1-751"><a href="#cb1-751" aria-hidden="true" tabindex="-1"></a>    ebal_summary<span class="sc">$</span>effective.sample.size[<span class="st">"Weighted"</span>, <span class="st">"Control"</span>]</span>
+<span id="cb1-752"><a href="#cb1-752" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-753"><a href="#cb1-753" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb1-754"><a href="#cb1-754" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb1-755"><a href="#cb1-755" aria-hidden="true" tabindex="-1"></a>    <span class="at">treated_share_of_full_sample =</span> <span class="fu">round</span>(treated_share_of_full_sample, <span class="dv">3</span>),</span>
+<span id="cb1-756"><a href="#cb1-756" aria-hidden="true" tabindex="-1"></a>    <span class="at">control_share_of_full_sample =</span> <span class="fu">round</span>(control_share_of_full_sample, <span class="dv">3</span>),</span>
+<span id="cb1-757"><a href="#cb1-757" aria-hidden="true" tabindex="-1"></a>    <span class="at">control_effective_sample_size =</span> <span class="fu">round</span>(control_effective_sample_size, <span class="dv">3</span>)</span>
+<span id="cb1-758"><a href="#cb1-758" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-759"><a href="#cb1-759" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-760"><a href="#cb1-760" aria-hidden="true" tabindex="-1"></a>comparison_information</span>
+<span id="cb1-761"><a href="#cb1-761" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-762"><a href="#cb1-762" aria-hidden="true" tabindex="-1"></a><span class="co"># ---- chunk 35 ----</span></span>
+<span id="cb1-763"><a href="#cb1-763" aria-hidden="true" tabindex="-1"></a><span class="co"># Helper to extract a consistent treatment-effect row from model summaries.</span></span>
+<span id="cb1-764"><a href="#cb1-764" aria-hidden="true" tabindex="-1"></a>extract_treat_effect <span class="ot">&lt;-</span> <span class="cf">function</span>(model, method) {</span>
+<span id="cb1-765"><a href="#cb1-765" aria-hidden="true" tabindex="-1"></a>  coef_table <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">summary</span>(model))</span>
+<span id="cb1-766"><a href="#cb1-766" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Robustly locate the p-value column across lm/lm_weightit summary formats.</span></span>
+<span id="cb1-767"><a href="#cb1-767" aria-hidden="true" tabindex="-1"></a>  p_value_col <span class="ot">&lt;-</span> <span class="fu">grep</span>(<span class="st">"^Pr</span><span class="sc">\\</span><span class="st">("</span>, <span class="fu">colnames</span>(coef_table), <span class="at">value =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-768"><a href="#cb1-768" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-769"><a href="#cb1-769" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(p_value_col) <span class="sc">==</span> <span class="dv">0</span>) {</span>
+<span id="cb1-770"><a href="#cb1-770" aria-hidden="true" tabindex="-1"></a>    p_value_col <span class="ot">&lt;-</span> <span class="fu">tail</span>(<span class="fu">colnames</span>(coef_table), <span class="dv">1</span>)</span>
+<span id="cb1-771"><a href="#cb1-771" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb1-772"><a href="#cb1-772" aria-hidden="true" tabindex="-1"></a>    p_value_col <span class="ot">&lt;-</span> p_value_col[<span class="dv">1</span>]</span>
+<span id="cb1-773"><a href="#cb1-773" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-774"><a href="#cb1-774" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-775"><a href="#cb1-775" aria-hidden="true" tabindex="-1"></a>  treat_row <span class="ot">&lt;-</span> coef_table[<span class="st">"treat"</span>, ]</span>
+<span id="cb1-776"><a href="#cb1-776" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-777"><a href="#cb1-777" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Return one standardized row for downstream comparison tables.</span></span>
+<span id="cb1-778"><a href="#cb1-778" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(</span>
+<span id="cb1-779"><a href="#cb1-779" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> method,</span>
+<span id="cb1-780"><a href="#cb1-780" aria-hidden="true" tabindex="-1"></a>    <span class="at">estimate =</span> <span class="fu">unname</span>(treat_row[<span class="st">"Estimate"</span>]),</span>
+<span id="cb1-781"><a href="#cb1-781" aria-hidden="true" tabindex="-1"></a>    <span class="at">std_error =</span> <span class="fu">unname</span>(treat_row[<span class="st">"Std. Error"</span>]),</span>
+<span id="cb1-782"><a href="#cb1-782" aria-hidden="true" tabindex="-1"></a>    <span class="at">conf_low =</span> <span class="fu">unname</span>(treat_row[<span class="st">"Estimate"</span>] <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> treat_row[<span class="st">"Std. Error"</span>]),</span>
+<span id="cb1-783"><a href="#cb1-783" aria-hidden="true" tabindex="-1"></a>    <span class="at">conf_high =</span> <span class="fu">unname</span>(treat_row[<span class="st">"Estimate"</span>] <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> treat_row[<span class="st">"Std. Error"</span>]),</span>
+<span id="cb1-784"><a href="#cb1-784" aria-hidden="true" tabindex="-1"></a>    <span class="at">p_value =</span> <span class="fu">unname</span>(treat_row[p_value_col])</span>
+<span id="cb1-785"><a href="#cb1-785" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-786"><a href="#cb1-786" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-787"><a href="#cb1-787" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-788"><a href="#cb1-788" aria-hidden="true" tabindex="-1"></a><span class="co"># Bind method-specific effect rows and append design-context metadata.</span></span>
+<span id="cb1-789"><a href="#cb1-789" aria-hidden="true" tabindex="-1"></a>treatment_effect_summary <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
+<span id="cb1-790"><a href="#cb1-790" aria-hidden="true" tabindex="-1"></a>  <span class="fu">extract_treat_effect</span>(fit_exact, <span class="st">"Exact matching"</span>),</span>
+<span id="cb1-791"><a href="#cb1-791" aria-hidden="true" tabindex="-1"></a>  <span class="fu">extract_treat_effect</span>(fit_cem, <span class="st">"Coarsened exact matching"</span>),</span>
+<span id="cb1-792"><a href="#cb1-792" aria-hidden="true" tabindex="-1"></a>  <span class="fu">extract_treat_effect</span>(fit_ebal, <span class="st">"Entropy balancing"</span>)</span>
+<span id="cb1-793"><a href="#cb1-793" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb1-794"><a href="#cb1-794" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb1-795"><a href="#cb1-795" aria-hidden="true" tabindex="-1"></a>    <span class="at">treated_units_used =</span> <span class="fu">c</span>(</span>
+<span id="cb1-796"><a href="#cb1-796" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sum</span>(matched_exact<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">1</span>),</span>
+<span id="cb1-797"><a href="#cb1-797" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sum</span>(matched_cem<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">1</span>),</span>
+<span id="cb1-798"><a href="#cb1-798" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sum</span>(dat<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb1-799"><a href="#cb1-799" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb1-800"><a href="#cb1-800" aria-hidden="true" tabindex="-1"></a>    <span class="at">control_basis =</span> <span class="fu">c</span>(</span>
+<span id="cb1-801"><a href="#cb1-801" aria-hidden="true" tabindex="-1"></a>      <span class="fu">paste</span>(<span class="fu">sum</span>(matched_exact<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">0</span>), <span class="st">"matched controls"</span>),</span>
+<span id="cb1-802"><a href="#cb1-802" aria-hidden="true" tabindex="-1"></a>      <span class="fu">paste</span>(<span class="fu">sum</span>(matched_cem<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">0</span>), <span class="st">"matched controls"</span>),</span>
+<span id="cb1-803"><a href="#cb1-803" aria-hidden="true" tabindex="-1"></a>      <span class="fu">paste</span>(</span>
+<span id="cb1-804"><a href="#cb1-804" aria-hidden="true" tabindex="-1"></a>        <span class="fu">sum</span>(dat<span class="sc">$</span>treat <span class="sc">==</span> <span class="dv">0</span>),</span>
+<span id="cb1-805"><a href="#cb1-805" aria-hidden="true" tabindex="-1"></a>        <span class="st">"controls; ESS"</span>,</span>
+<span id="cb1-806"><a href="#cb1-806" aria-hidden="true" tabindex="-1"></a>        <span class="fu">round</span>(ebal_summary<span class="sc">$</span>effective.sample.size[<span class="st">"Weighted"</span>, <span class="st">"Control"</span>], <span class="dv">3</span>)</span>
+<span id="cb1-807"><a href="#cb1-807" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb1-808"><a href="#cb1-808" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb1-809"><a href="#cb1-809" aria-hidden="true" tabindex="-1"></a>    <span class="at">design_note =</span> <span class="fu">c</span>(</span>
+<span id="cb1-810"><a href="#cb1-810" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Residual imbalance remains on re74"</span>,</span>
+<span id="cb1-811"><a href="#cb1-811" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Best balance among matched samples, but strongest pruning"</span>,</span>
+<span id="cb1-812"><a href="#cb1-812" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Preserves all treated units, but relies on concentrated control weights"</span></span>
+<span id="cb1-813"><a href="#cb1-813" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-814"><a href="#cb1-814" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb1-815"><a href="#cb1-815" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(estimate, std_error, conf_low, conf_high, p_value), <span class="sc">~</span> <span class="fu">round</span>(.x, <span class="dv">3</span>)))</span>
+<span id="cb1-816"><a href="#cb1-816" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-817"><a href="#cb1-817" aria-hidden="true" tabindex="-1"></a>treatment_effect_summary <span class="sc">|&gt;</span></span>
+<span id="cb1-818"><a href="#cb1-818" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb1-819"><a href="#cb1-819" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Std. error</span><span class="st">`</span> <span class="ot">=</span> std_error,</span>
+<span id="cb1-820"><a href="#cb1-820" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">95% CI low</span><span class="st">`</span> <span class="ot">=</span> conf_low,</span>
+<span id="cb1-821"><a href="#cb1-821" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">95% CI high</span><span class="st">`</span> <span class="ot">=</span> conf_high,</span>
+<span id="cb1-822"><a href="#cb1-822" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">P-value</span><span class="st">`</span> <span class="ot">=</span> p_value,</span>
+<span id="cb1-823"><a href="#cb1-823" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Treated units used</span><span class="st">`</span> <span class="ot">=</span> treated_units_used,</span>
+<span id="cb1-824"><a href="#cb1-824" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Control basis</span><span class="st">`</span> <span class="ot">=</span> control_basis,</span>
+<span id="cb1-825"><a href="#cb1-825" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Design note</span><span class="st">`</span> <span class="ot">=</span> design_note</span>
+<span id="cb1-826"><a href="#cb1-826" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb1-827"><a href="#cb1-827" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
+<span id="cb1-828"><a href="#cb1-828" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-829"><a href="#cb1-829" aria-hidden="true" tabindex="-1"></a><span class="co"># ---- chunk 36 ----</span></span>
+<span id="cb1-830"><a href="#cb1-830" aria-hidden="true" tabindex="-1"></a><span class="co"># Capture the R session state for reproducibility.</span></span>
+<span id="cb1-831"><a href="#cb1-831" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </main>
 <!-- /main column -->

@@ -599,7 +599,7 @@ plot(
 cem_balance
 ```
 
-The diagnostics support a clear conclusion. The default CEM design is not invalid, but it is too restrictive for the substantive goal here because it achieves its balance partly by narrowing the treated sample too sharply. The custom specification still improves balance markedly relative to the raw data, keeps every reported adjusted standardized mean difference under `0.1`, and preserves more treated units. On those terms, it is the stronger final design for this report.
+The diagnostics support a clear conclusion. The default CEM design is not invalid, but it is too restrictive for the substantive goal here because it achieves its balance partly by narrowing the treated sample too sharply. The custom specification still improves balance markedly relative to the raw data, keeps every reported adjusted standardized mean difference under `0.1`, and preserves more treated units. It is retained as the report's main CEM illustration because it keeps the coarsening choices explicit while delivering an acceptable balance-retention compromise, though the robustness section later shows that nearby cutpoint choices can also be defensible.
 
 Taken together, the standardized-difference plot and the distribution plots provide a stronger diagnostic than either alone: mean differences shrink, and the treated and control distributions also line up more closely on the key continuous covariates. The substantive lesson is not that one universal set of bins exists. It is that coarsening choices are part of the causal design and should be justified in terms of overlap, retained sample, and the target population, not chosen only to optimize a single balance statistic.
 
@@ -815,6 +815,210 @@ ebal_effect
 
 For estimation after weighting, the package documentation recommends `lm_weightit()` or `glm_weightit()` rather than a plain weighted regression when the analyst wants standard errors that account for weight estimation [@greifer2025weightit]. That matters here. The entropy-balancing estimate remains positive, but once uncertainty is computed using the documented robust variance that adjusts for estimation of the weights, the result is less decisive than a naive weighted regression would suggest. That is the right interpretation for evaluator-facing work: entropy balancing can improve observed design quality substantially, but the final estimate still depends on a concentrated set of control observations and its uncertainty should be reported on those terms.
 
+## Robustness Checks
+
+The main specifications above are deliberately simple enough to teach. That does not make them unique. A defensible evaluator workflow should check whether nearby design choices materially change balance, retention, weight concentration, or the estimated `ATT`. The purpose of the checks below is not to keep searching until one preferred estimate appears. It is to show how sensitive the design remains to plausible implementation choices and whether the qualitative conclusions survive those changes.
+
+### Alternative CEM Cutpoints
+
+The first robustness exercise revisits the CEM design with several nearby coarsening rules. The comparison uses the same covariate set and `ATT` target each time, but varies the binning strategy for the continuous covariates. This is the natural sensitivity check for CEM because the method's notion of comparability is defined directly by those cutpoints.
+
+```{r}
+# Fit several plausible CEM variants to stress-test the chosen cutpoints.
+fit_cem_spec <- function(label, cutpoints = NULL) {
+  cem_args <- c(
+    list(
+      formula = treat ~ age + educ + race + married + nodegree + re74 + re75,
+      data = dat,
+      method = "cem",
+      estimand = "ATT"
+    ),
+    if (is.null(cutpoints)) list() else list(cutpoints = cutpoints)
+  )
+
+  cem_obj <- do.call(matchit, cem_args)
+  cem_data <- match.data(cem_obj)
+  cem_bal <- bal.tab(
+    cem_obj,
+    un = TRUE,
+    binary = "std",
+    m.threshold = 0.1
+  )
+  cem_fit <- lm(outcome ~ treat, data = cem_data, weights = weights)
+
+  tibble(
+    specification = label,
+    treated_retained = sum(cem_data$treat == 1),
+    control_retained = sum(cem_data$treat == 0),
+    treated_share = sum(cem_data$treat == 1) / sum(dat$treat == 1),
+    max_abs_adjusted_smd = max(abs(cem_bal$Balance$Diff.Adj), na.rm = TRUE),
+    att = unname(coef(summary(cem_fit))["treat", "Estimate"])
+  )
+}
+
+cem_robustness <- bind_rows(
+  fit_cem_spec("Default MatchIt coarsening"),
+  fit_cem_spec("Main report cutpoints", cem_cutpoints),
+  fit_cem_spec(
+    "Looser q4/q3 bins",
+    list(age = "q4", educ = 3, re74 = "q4", re75 = "q4")
+  ),
+  fit_cem_spec(
+    "Sturges-rule bins",
+    list(age = "sturges", educ = 4, re74 = "sturges", re75 = "sturges")
+  )
+) |>
+  mutate(
+    treated_share = round(treated_share, 3),
+    max_abs_adjusted_smd = round(max_abs_adjusted_smd, 3),
+    att = round(att, 3)
+  )
+
+cem_robustness
+```
+
+```{r fig.height=4.8, fig.width=7.2}
+# Visualize how alternative cutpoints trade retained treated share against balance.
+ggplot(
+  cem_robustness,
+  aes(x = treated_share, y = max_abs_adjusted_smd, label = specification)
+) +
+  geom_hline(yintercept = 0.1, linetype = "dashed") +
+  geom_point(size = 2.8) +
+  geom_text(nudge_y = 0.01, check_overlap = TRUE, size = 3) +
+  labs(
+    x = "Retained treated share",
+    y = "Maximum absolute adjusted SMD"
+  ) +
+  coord_cartesian(ylim = c(0, max(cem_robustness$max_abs_adjusted_smd) + 0.03))
+```
+
+The robustness table shows why CEM should be reported as a design family rather than as a single mechanically determined result. The default coarsening remains the most restrictive design. The main report specification keeps imbalance below `0.1`, but so do nearby alternatives such as the looser `q4/q3` bins and the `Sturges`-rule specification. Those alternatives differ materially in how many treated units they retain and in the resulting `ATT`. In other words, the broad lesson is stable, but the precise matched sample and effect estimate are still design-contingent. That is exactly the kind of sensitivity an evaluator should surface rather than conceal.
+
+### Alternative Entropy-Balancing Constraints
+
+The second robustness exercise asks how much the entropy-balancing result depends on the exact set of balance constraints. The default design imposes exact mean balance only. The alternatives below add second-moment constraints first for age and prior earnings, then for all continuous covariates. This tests whether the gain from tighter balance targets is worth the resulting concentration of weight on a smaller subset of controls.
+
+```{r}
+# Compare entropy-balancing designs with progressively tighter moment constraints.
+fit_ebal_spec <- function(label, extra_args = list()) {
+  ebal_args <- c(
+    list(
+      formula = treat ~ age + educ + race + married + nodegree + re74 + re75,
+      data = dat,
+      method = "ebal",
+      estimand = "ATT"
+    ),
+    extra_args
+  )
+
+  ebal_obj <- do.call(weightit, ebal_args)
+  ebal_sum <- summary(ebal_obj)
+  ebal_bal <- bal.tab(
+    ebal_obj,
+    un = TRUE,
+    binary = "std",
+    addl = ~ I(age^2) + I(educ^2) + I(re74^2) + I(re75^2)
+  )
+  ebal_fit <- lm_weightit(outcome ~ treat, data = dat, weightit = ebal_obj)
+  squared_terms <- c("I(age^2)", "I(educ^2)", "I(re74^2)", "I(re75^2)")
+  mean_terms <- setdiff(rownames(ebal_bal$Balance), squared_terms)
+
+  tibble(
+    specification = label,
+    control_ess = ebal_sum$effective.sample.size["Weighted", "Control"],
+    max_control_weight = max(ebal_obj$weights[dat$treat == 0]),
+    max_abs_adjusted_smd_means = max(abs(ebal_bal$Balance[mean_terms, "Diff.Adj"]), na.rm = TRUE),
+    max_abs_adjusted_smd_squares = max(abs(ebal_bal$Balance[squared_terms, "Diff.Adj"]), na.rm = TRUE),
+    att = unname(coef(summary(ebal_fit))["treat", "Estimate"])
+  )
+}
+
+ebal_robustness <- bind_rows(
+  fit_ebal_spec("Means only"),
+  fit_ebal_spec(
+    "Age and earnings squares",
+    list(moments = c(age = 2, re74 = 2, re75 = 2))
+  ),
+  fit_ebal_spec(
+    "All continuous squares",
+    list(moments = c(age = 2, educ = 2, re74 = 2, re75 = 2))
+  )
+) |>
+  mutate(across(where(is.numeric), ~ round(.x, 3)))
+
+ebal_robustness
+```
+
+The pattern is clear. Moving beyond mean balance does what it is supposed to do: the squared-term imbalance falls sharply and can be driven essentially to zero. But the price is steep. The control effective sample size drops from about `98` under the default design to the mid-`30s`, while the largest control weights rise above `50`. The `ATT` also shifts by a few hundred dollars across these specifications. That does not mean the default design is uniquely correct. It means the stronger constraints buy tighter distributional balance only by making the weighted comparison far more fragile, which is why the report keeps the default mean-balance design as its main entropy-balancing specification.
+
+### Sensitivity-Oriented Diagnostics
+
+The final robustness exercise focuses on influence rather than on formal balance constraints. If the default entropy-balancing estimate is driven almost entirely by a handful of heavily weighted controls, then mild weight trimming should move the estimate sharply and balance should deteriorate quickly. If the estimate is more stable, the trimmed results should stay in the same broad range while making the influence tradeoff more transparent.
+
+```{r}
+# Summarize how concentrated the control-side weighting becomes under entropy balancing.
+control_weights <- sort(dat_ebal$ebal_weight[dat_ebal$treat == 0], decreasing = TRUE)
+control_weight_share <- tibble(
+  top_controls = c(1, 5, 10, 20),
+  control_weight_share = sapply(
+    top_controls,
+    function(k) sum(control_weights[seq_len(k)]) / sum(control_weights)
+  )
+) |>
+  mutate(control_weight_share = round(control_weight_share, 3))
+
+control_weight_share
+```
+
+```{r}
+# Stress-test the entropy-balancing estimate by trimming the largest control weights.
+compute_ess <- function(weights) {
+  sum(weights)^2 / sum(weights^2)
+}
+
+trim_caps <- c(
+  "Original weights" = Inf,
+  "Cap at 99th control percentile" = as.numeric(quantile(control_weights, 0.99)),
+  "Cap at 95th control percentile" = as.numeric(quantile(control_weights, 0.95))
+)
+
+ebal_trim_sensitivity <- bind_rows(lapply(names(trim_caps), function(label) {
+  trimmed_weights <- dat_ebal$ebal_weight
+
+  if (is.finite(trim_caps[[label]])) {
+    trimmed_weights[dat$treat == 0] <- pmin(
+      trimmed_weights[dat$treat == 0],
+      trim_caps[[label]]
+    )
+  }
+
+  trim_balance <- bal.tab(
+    treat ~ age + educ + race + married + nodegree + re74 + re75,
+    data = dat,
+    weights = trimmed_weights,
+    method = "weighting",
+    estimand = "ATT",
+    un = TRUE,
+    binary = "std"
+  )
+  trim_fit <- lm(outcome ~ treat, data = dat, weights = trimmed_weights)
+
+  tibble(
+    diagnostic = label,
+    control_ess = compute_ess(trimmed_weights[dat$treat == 0]),
+    max_control_weight = max(trimmed_weights[dat$treat == 0]),
+    max_abs_adjusted_smd = max(abs(trim_balance$Balance$Diff.Adj), na.rm = TRUE),
+    att = unname(coef(summary(trim_fit))["treat", "Estimate"])
+  )
+})) |>
+  mutate(across(where(is.numeric), ~ round(.x, 3)))
+
+ebal_trim_sensitivity
+```
+
+These diagnostics clarify the character of the weighting design. The top `20` controls carry roughly one third of the total control weight, so the weighted comparison is meaningfully concentrated even though no rows are dropped. At the same time, mild trimming of the upper tail does not collapse the estimate: capping the weights at the `99`th or `95`th control percentile nudges the `ATT` downward only modestly, while the worst adjusted mean difference remains below `0.03`. That is a useful sensitivity result. It suggests the default entropy-balancing estimate is influenced by the upper tail of the weight distribution, but not reducible to a single or very small handful of comparison units.
+
 ## Iterating on Design Quality
 
 The `MatchIt` documentation presents design as an iterative process rather than a one-shot procedure. A typical workflow is to choose a provisional specification, inspect balance and remaining sample size, revise the design, and only move to effect estimation once the specification has been settled [@ho2011matchit]. That sequencing matters because a matched or weighted analysis can look technically complete while still failing the basic design test: the treated and untreated groups may remain too different on important pre-treatment covariates, or balance may have been improved only by discarding so many units that the resulting estimate no longer answers the original policy question.
@@ -860,7 +1064,7 @@ comparison_balance
 
 The comparison table makes the ranking on observed mean balance clear. In the raw sample, the largest absolute standardized mean difference is about `1.882`, and nine reported covariates or covariate terms exceed the `0.1` threshold. Exact matching reduces imbalance sharply, but one covariate remains above that threshold after adjustment, with a largest absolute standardized mean difference of about `0.130`. That is consistent with the earlier diagnostic: the exact-matching design is transparent, but because it could only be implemented on a reduced set of mostly discrete covariates, it does not fully resolve imbalance on all substantively important pre-treatment variables.
 
-The custom CEM design improves on that compromise. It brings the largest adjusted standardized mean difference down to about `0.077` and leaves no reported covariate above `0.1`. On this metric, it is the strongest matching-based design in the report because it keeps the full set of design covariates inside the adjustment while still leaving a matched sample to inspect directly. Entropy balancing goes one step further by driving the included mean differences essentially to zero, which is exactly what the method is designed to do under the default `ATT` specification [@greifer2025weightit]. But that should be interpreted carefully. It means entropy balancing is strongest here on observed mean balance, not that it dominates the other methods on every dimension of design quality.
+The custom CEM design improves on that compromise. It brings the largest adjusted standardized mean difference down to about `0.077` and leaves no reported covariate above `0.1`. On this metric, it serves as the report's main matched-sample specification because it keeps the full set of design covariates inside the adjustment while still leaving a matched sample to inspect directly. Entropy balancing goes one step further by driving the included mean differences essentially to zero, which is exactly what the method is designed to do under the default `ATT` specification [@greifer2025weightit]. But that should be interpreted carefully. It means entropy balancing is strongest here on observed mean balance, not that it dominates the other methods on every dimension of design quality.
 
 ### Sample Retention and Effective Sample Size
 
@@ -917,7 +1121,7 @@ Entropy balancing looks different because no units are literally dropped. All `1
 
 Taken together, the three methods illustrate a genuine design triangle rather than a simple performance ranking. Exact matching is the most transparent. It forces the analyst to say exactly which covariates define comparability, and the resulting subclasses are easy to explain. But that same transparency exposes its main weakness in moderate-dimensional settings: once the covariate set includes continuous or finely coded variables, the design becomes infeasible unless the analyst either drops variables from the exact constraints or accepts severe support loss. In this worked example, exact matching remained useful as a teaching device and as a narrow design option, but it was not the strongest final design on the full covariate set.
 
-CEM is the most balanced compromise within the matching family. It preserves the subclassification logic and audit trail of exact matching while allowing continuous covariates to remain inside the design through explicit coarsening choices [@iacus2012cem; @ho2011matchit]. That makes it especially attractive for evaluator training, because it keeps the design decisions legible. The main cost is that tuning is substantive rather than automatic. Analysts must justify the coarsening rules and must be willing to accept that different cutpoints can materially change retention, balance, and the treated population represented by the estimate. Here, CEM is the strongest option if the priority is an inspectable matched design with all reported imbalance below a conventional threshold.
+CEM is the most balanced compromise within the matching family. It preserves the subclassification logic and audit trail of exact matching while allowing continuous covariates to remain inside the design through explicit coarsening choices [@iacus2012cem; @ho2011matchit]. That makes it especially attractive for evaluator training, because it keeps the design decisions legible. The main cost is that tuning is substantive rather than automatic. Analysts must justify the coarsening rules and must be willing to accept that different cutpoints can materially change retention, balance, and the treated population represented by the estimate. Here, CEM is a defensible option when the priority is an inspectable matched design with all reported imbalance below a conventional threshold.
 
 Entropy balancing is strongest when the main objective is to preserve the treated population while imposing very strong observed balance on the included covariate moments. It avoids the severe pruning that often makes exact matching or CEM unattractive for an `ATT` analysis, and in this report it delivers the best observed balance of all three methods. But its tradeoff is less visible unless weight diagnostics are reported carefully. The design becomes harder to explain in unit-level terms, and the estimate can depend heavily on a relatively small subset of controls with large weights. For evaluator-facing practice, that makes entropy balancing highly useful, but only when overlap and weight dispersion are checked as seriously as balance itself [@hainmueller2012entropy; @greifer2025weightit].
 
@@ -1046,7 +1250,7 @@ All three adjusted designs yield positive point estimates for the `ATT`, which i
 
 But the table also shows why the treatment-effect comparison cannot be separated from the design diagnostics. The CEM estimate is attached to a much narrower treated population because only `r treatment_effect_summary$treated_units_used[treatment_effect_summary$method == "Coarsened exact matching"]` treated units remain after pruning. Exact matching retains far more treated units, but it does so with a weaker design on the full covariate set because imbalance remains on `re74`. Entropy balancing preserves all treated units, yet its comparison rests on a weighted control sample with effective sample size `r round(ebal_summary$effective.sample.size["Weighted", "Control"], 3)`, so the estimate depends on a concentrated subset of controls rather than on the full raw control pool in any substantive sense.
 
-The appropriate evaluator-facing conclusion is therefore qualified rather than categorical. In this worked example, the sign of the estimated programme effect is stable across methods, but the magnitude and represented population are not. If preserving the original treated population is the priority, entropy balancing gives the most defensible summary estimate. If the priority is an auditable matched sample with all reported mean imbalance below a conventional threshold, the custom CEM design is the stronger matched-sample result. Either way, the report should present the treatment effect together with the retention or weighting costs that make that estimate possible.
+The appropriate evaluator-facing conclusion is therefore qualified rather than categorical. In this worked example, the sign of the estimated programme effect is stable across methods, but the magnitude and represented population are not. If preserving the original treated population is the priority, entropy balancing gives the most defensible summary estimate. If the priority is an auditable matched sample with all reported mean imbalance below a conventional threshold, the report's main CEM specification provides a defensible matched-sample result. Either way, the report should present the treatment effect together with the retention or weighting costs that make that estimate possible.
 
 ## Limitations
 
@@ -1066,7 +1270,7 @@ Taken together, these limitations reinforce the report's broader argument. Match
 
 This report compared exact matching, coarsened exact matching, and entropy balancing as design-stage tools for observational causal inference, not as interchangeable algorithms. The central lesson is that method choice should follow the causal question rather than precede it. In practice, that means defining the estimand first, choosing defensible pre-treatment covariates, checking overlap before trusting any adjusted estimate, and evaluating balance together with retained sample size or effective sample size rather than treating any one diagnostic as sufficient [@ho2011matchit]. Matching and weighting are most useful when they make the comparison problem more visible and more disciplined, not when they are used to hide a weak design behind better-looking tables.
 
-The worked example also clarifies the tradeoffs among the methods. Exact matching is the most transparent, but it becomes restrictive quickly and can leave important continuous covariates outside the design. CEM is often the strongest compromise within the matching family because it keeps the subclassification logic auditable while allowing continuous covariates to remain inside the design through explicit coarsening choices. Entropy balancing achieved the strongest observed mean balance in this report and preserved the full treated group, but it did so by concentrating influence on a smaller effective control sample. There is therefore no universal winner. If the priority is an inspectable matched sample with visible design rules, CEM is the stronger choice here. If the priority is to preserve the original treated population while achieving very strong observed balance, entropy balancing is the more defensible summary design.
+The worked example also clarifies the tradeoffs among the methods. Exact matching is the most transparent, but it becomes restrictive quickly and can leave important continuous covariates outside the design. CEM is often the strongest compromise within the matching family because it keeps the subclassification logic auditable while allowing continuous covariates to remain inside the design through explicit coarsening choices. Entropy balancing achieved the strongest observed mean balance in this report and preserved the full treated group, but it did so by concentrating influence on a smaller effective control sample. There is therefore no universal winner. If the priority is an inspectable matched sample with visible design rules, CEM remains a strong choice, but the robustness checks show that the exact cutpoints still matter. If the priority is to preserve the original treated population while achieving very strong observed balance, entropy balancing is the more defensible summary design.
 
 For evaluator practice, the practical implication is straightforward. Matching and weighting should be used when they are the strongest defensible option within the wider quasi-experimental toolkit, not as the default response to non-randomized data [@govuk_qed_slides]. When acceptable balance requires severe pruning, unstable weights, or major drift from the original estimand, the right conclusion may be that the available data do not support the policy question cleanly enough. That is not a failure of the workflow; it is one of its main virtues. Used well, these methods improve evaluation not by manufacturing certainty, but by making the limits of the available comparison explicit.
 

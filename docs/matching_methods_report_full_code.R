@@ -515,6 +515,183 @@ ebal_effect <- {
 ebal_effect
 
 # ---- chunk 28 ----
+# Fit several plausible CEM variants to stress-test the chosen cutpoints.
+fit_cem_spec <- function(label, cutpoints = NULL) {
+  cem_args <- c(
+    list(
+      formula = treat ~ age + educ + race + married + nodegree + re74 + re75,
+      data = dat,
+      method = "cem",
+      estimand = "ATT"
+    ),
+    if (is.null(cutpoints)) list() else list(cutpoints = cutpoints)
+  )
+
+  cem_obj <- do.call(matchit, cem_args)
+  cem_data <- match.data(cem_obj)
+  cem_bal <- bal.tab(
+    cem_obj,
+    un = TRUE,
+    binary = "std",
+    m.threshold = 0.1
+  )
+  cem_fit <- lm(outcome ~ treat, data = cem_data, weights = weights)
+
+  tibble(
+    specification = label,
+    treated_retained = sum(cem_data$treat == 1),
+    control_retained = sum(cem_data$treat == 0),
+    treated_share = sum(cem_data$treat == 1) / sum(dat$treat == 1),
+    max_abs_adjusted_smd = max(abs(cem_bal$Balance$Diff.Adj), na.rm = TRUE),
+    att = unname(coef(summary(cem_fit))["treat", "Estimate"])
+  )
+}
+
+cem_robustness <- bind_rows(
+  fit_cem_spec("Default MatchIt coarsening"),
+  fit_cem_spec("Main report cutpoints", cem_cutpoints),
+  fit_cem_spec(
+    "Looser q4/q3 bins",
+    list(age = "q4", educ = 3, re74 = "q4", re75 = "q4")
+  ),
+  fit_cem_spec(
+    "Sturges-rule bins",
+    list(age = "sturges", educ = 4, re74 = "sturges", re75 = "sturges")
+  )
+) |>
+  mutate(
+    treated_share = round(treated_share, 3),
+    max_abs_adjusted_smd = round(max_abs_adjusted_smd, 3),
+    att = round(att, 3)
+  )
+
+cem_robustness
+
+# ---- chunk 29 ----
+# Visualize how alternative cutpoints trade retained treated share against balance.
+ggplot(
+  cem_robustness,
+  aes(x = treated_share, y = max_abs_adjusted_smd, label = specification)
+) +
+  geom_hline(yintercept = 0.1, linetype = "dashed") +
+  geom_point(size = 2.8) +
+  geom_text(nudge_y = 0.01, check_overlap = TRUE, size = 3) +
+  labs(
+    x = "Retained treated share",
+    y = "Maximum absolute adjusted SMD"
+  ) +
+  coord_cartesian(ylim = c(0, max(cem_robustness$max_abs_adjusted_smd) + 0.03))
+
+# ---- chunk 30 ----
+# Compare entropy-balancing designs with progressively tighter moment constraints.
+fit_ebal_spec <- function(label, extra_args = list()) {
+  ebal_args <- c(
+    list(
+      formula = treat ~ age + educ + race + married + nodegree + re74 + re75,
+      data = dat,
+      method = "ebal",
+      estimand = "ATT"
+    ),
+    extra_args
+  )
+
+  ebal_obj <- do.call(weightit, ebal_args)
+  ebal_sum <- summary(ebal_obj)
+  ebal_bal <- bal.tab(
+    ebal_obj,
+    un = TRUE,
+    binary = "std",
+    addl = ~ I(age^2) + I(educ^2) + I(re74^2) + I(re75^2)
+  )
+  ebal_fit <- lm_weightit(outcome ~ treat, data = dat, weightit = ebal_obj)
+  squared_terms <- c("I(age^2)", "I(educ^2)", "I(re74^2)", "I(re75^2)")
+  mean_terms <- setdiff(rownames(ebal_bal$Balance), squared_terms)
+
+  tibble(
+    specification = label,
+    control_ess = ebal_sum$effective.sample.size["Weighted", "Control"],
+    max_control_weight = max(ebal_obj$weights[dat$treat == 0]),
+    max_abs_adjusted_smd_means = max(abs(ebal_bal$Balance[mean_terms, "Diff.Adj"]), na.rm = TRUE),
+    max_abs_adjusted_smd_squares = max(abs(ebal_bal$Balance[squared_terms, "Diff.Adj"]), na.rm = TRUE),
+    att = unname(coef(summary(ebal_fit))["treat", "Estimate"])
+  )
+}
+
+ebal_robustness <- bind_rows(
+  fit_ebal_spec("Means only"),
+  fit_ebal_spec(
+    "Age and earnings squares",
+    list(moments = c(age = 2, re74 = 2, re75 = 2))
+  ),
+  fit_ebal_spec(
+    "All continuous squares",
+    list(moments = c(age = 2, educ = 2, re74 = 2, re75 = 2))
+  )
+) |>
+  mutate(across(where(is.numeric), ~ round(.x, 3)))
+
+ebal_robustness
+
+# ---- chunk 31 ----
+# Summarize how concentrated the control-side weighting becomes under entropy balancing.
+control_weights <- sort(dat_ebal$ebal_weight[dat_ebal$treat == 0], decreasing = TRUE)
+control_weight_share <- tibble(
+  top_controls = c(1, 5, 10, 20),
+  control_weight_share = sapply(
+    top_controls,
+    function(k) sum(control_weights[seq_len(k)]) / sum(control_weights)
+  )
+) |>
+  mutate(control_weight_share = round(control_weight_share, 3))
+
+control_weight_share
+
+# ---- chunk 32 ----
+# Stress-test the entropy-balancing estimate by trimming the largest control weights.
+compute_ess <- function(weights) {
+  sum(weights)^2 / sum(weights^2)
+}
+
+trim_caps <- c(
+  "Original weights" = Inf,
+  "Cap at 99th control percentile" = as.numeric(quantile(control_weights, 0.99)),
+  "Cap at 95th control percentile" = as.numeric(quantile(control_weights, 0.95))
+)
+
+ebal_trim_sensitivity <- bind_rows(lapply(names(trim_caps), function(label) {
+  trimmed_weights <- dat_ebal$ebal_weight
+
+  if (is.finite(trim_caps[[label]])) {
+    trimmed_weights[dat$treat == 0] <- pmin(
+      trimmed_weights[dat$treat == 0],
+      trim_caps[[label]]
+    )
+  }
+
+  trim_balance <- bal.tab(
+    treat ~ age + educ + race + married + nodegree + re74 + re75,
+    data = dat,
+    weights = trimmed_weights,
+    method = "weighting",
+    estimand = "ATT",
+    un = TRUE,
+    binary = "std"
+  )
+  trim_fit <- lm(outcome ~ treat, data = dat, weights = trimmed_weights)
+
+  tibble(
+    diagnostic = label,
+    control_ess = compute_ess(trimmed_weights[dat$treat == 0]),
+    max_control_weight = max(trimmed_weights[dat$treat == 0]),
+    max_abs_adjusted_smd = max(abs(trim_balance$Balance$Diff.Adj), na.rm = TRUE),
+    att = unname(coef(summary(trim_fit))["treat", "Estimate"])
+  )
+})) |>
+  mutate(across(where(is.numeric), ~ round(.x, 3)))
+
+ebal_trim_sensitivity
+
+# ---- chunk 33 ----
 # Compare worst-case imbalance and threshold exceedances across all methods.
 comparison_balance <- tibble(
   method = c(
@@ -540,7 +717,7 @@ comparison_balance <- tibble(
 
 comparison_balance
 
-# ---- chunk 29 ----
+# ---- chunk 34 ----
 # Compare retention and information remaining under each design.
 comparison_information <- tibble(
   method = c(
@@ -582,7 +759,7 @@ comparison_information <- tibble(
 
 comparison_information
 
-# ---- chunk 30 ----
+# ---- chunk 35 ----
 # Helper to extract a consistent treatment-effect row from model summaries.
 extract_treat_effect <- function(model, method) {
   coef_table <- coef(summary(model))
@@ -649,7 +826,7 @@ treatment_effect_summary |>
   ) |>
   knitr::kable()
 
-# ---- chunk 31 ----
+# ---- chunk 36 ----
 # Capture the R session state for reproducibility.
 sessionInfo()
 
