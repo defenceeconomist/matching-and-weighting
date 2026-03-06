@@ -1,0 +1,71 @@
+---
+title: "Quality Assurance Log: NSW + CPS Benchmark Evaluated Code"
+subtitle: "Comparison Against Mixtape Matching Benchmark Workflow"
+date: "2026-03-06"
+format:
+  html:
+    toc: true
+execute:
+  echo: false
+  eval: false
+---
+
+## Scope
+
+- Evaluated script reviewed: `docs/labs/nsw_cps_benchmark_lab_evaluated_code.R`
+- Rendered companion page reviewed: `docs/labs/nsw_cps_benchmark_lab_evaluated_code.qmd`
+- Baseline reference: *Causal Inference: The Mixtape* matching benchmark pattern (`nsw_mixtape` treated units versus observational CPS controls, compared to the NSW experimental estimate).
+- QA date: `2026-03-06`
+- Local package context:
+  - `causaldata 0.1.4`
+  - `MatchIt 4.7.2`
+  - `WeightIt 1.5.1`
+  - `cobalt 4.6.2`
+  - `dplyr 1.1.4`
+  - `ggplot2 4.0.0`
+
+## Source Baseline
+
+- Dataset source package: [`causaldata`](https://cran.r-project.org/package=causaldata)
+- `nsw_mixtape` and `cps_mixtape` documentation: [CRAN reference index](https://search.r-project.org/CRAN/refmans/causaldata/html/00Index.html)
+- Conceptual baseline for this lab: observational-versus-experimental benchmarking in the NSW/CPS matching example used in Mixtape teaching materials.
+
+## Outcome Summary
+
+| Outcome | Count |
+|---|---:|
+| Pass | 8 |
+| Partial alignment (intentional extension) | 2 |
+| Material mismatch vs benchmark intent | 0 |
+| Out-of-scope relative to baseline | 0 |
+
+The evaluated NSW/CPS code is **methodologically aligned** with the benchmarking objective: compare observational adjustment methods against the known NSW experimental estimate.
+
+## Detailed QA Log
+
+| ID | Evaluated code claim and location | Baseline comparison | Result | Action |
+|---|---|---|---|---|
+| N1 | Uses `causaldata::nsw_mixtape` and `causaldata::cps_mixtape` and maps `outcome = re78` (`nsw_cps_benchmark_lab_evaluated_code.R:28-49`) | Matches the intended NSW/CPS benchmark dataset setup. | Pass | None |
+| N2 | Experimental benchmark is estimated on NSW data only via `lm(outcome ~ treat, data = benchmark_dat)` (`...R:60-61`) | Correct benchmark definition for NSW treated versus NSW controls. | Pass | None |
+| N3 | Observational sample is NSW treated + CPS controls (`...R:35-39`) | Matches the benchmarking design used in Mixtape-style comparisons. | Pass | None |
+| N4 | Raw observational estimate is reported before any adjustment (`...R:89-100`, `...R:242`) | Required baseline to show observational bias before design-stage adjustment. | Pass | None |
+| N5 | Baseline imbalance is diagnosed with `matchit(..., method = NULL)` and `bal.tab` (`...R:103-111`) | Consistent with design-first diagnostics used elsewhere in this repository. | Pass | None |
+| N6 | Exact matching branch uses a discrete formula and adds continuous diagnostics (`...R:157-179`) | Reasonable transparency-first branch, but not part of canonical NSW/CPS benchmark scripts. | Partial alignment | Keep as training extension and label as supplemental branch. |
+| N7 | CEM branch includes age/earnings coarsening via documented cutpoints (`...R:182-204`) | Aligned with the objective of reducing severe imbalance while preserving an ATT focus. | Pass | None |
+| N8 | Entropy balancing branch includes first and second moments for continuous covariates (`...R:212-221`) | Aligned with standard entropy-balancing practice for strong mean-moment balance. | Pass | None |
+| N9 | Weight diagnostics report ESS and maximum weight (`...R:229-241`) | Appropriate for checking weight concentration risk in benchmark recovery. | Pass | None |
+| N10 | Final output reports `benchmark_gap` and `abs_benchmark_gap` for each method (`...R:271-277`) | Directly implements the lab's core benchmark criterion. | Pass | None |
+
+## QA Decision
+
+The evaluated NSW/CPS benchmark code is **ready for training use**.
+
+It reproduces the core benchmark logic correctly and exposes method tradeoffs (balance, retention, and benchmark gap) in a way that is consistent with the repository's design-first style.
+
+Two branches (exact matching and explicit propensity-overlap summaries) are intentional pedagogic extensions beyond a strict minimal NSW/CPS benchmark script and should remain labeled as such.
+
+## Optional Tightening If Strict Replication Is Needed
+
+1. Add a "minimal benchmark mode" that keeps only raw, CEM, and entropy balancing branches.
+2. Freeze a single CEM cutpoint specification and report robustness variants separately.
+3. Add a fixed tolerance rule for benchmark closeness (for example, absolute gap under a pre-specified threshold) for pass/fail reporting.

@@ -16,7 +16,7 @@ Supporting pages for implementation and audit:
 
 ## Dataset Expansion Labs
 
-The dataset expansion workstream is scaffolded as additional labs:
+The dataset expansion workstream is available as additional labs and training aids:
 
 - [Dataset Expansion Lab Hub](labs/index.qmd)
 - [Black Politicians Lab](labs/black_politicians_lab.qmd)

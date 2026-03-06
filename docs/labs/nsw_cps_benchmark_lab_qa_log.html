@@ -8,7 +8,7 @@
 
 <meta name="dcterms.date" content="2026-03-06">
 
-<title>Quality Assurance Log: Black Politicians Evaluated Code – Matching and Weighting</title>
+<title>Quality Assurance Log: NSW + CPS Benchmark Evaluated Code – Matching and Weighting</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -127,6 +127,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#outcome-summary" id="toc-outcome-summary" class="nav-link" data-scroll-target="#outcome-summary"><span class="header-section-number">3</span> Outcome Summary</a></li>
   <li><a href="#detailed-qa-log" id="toc-detailed-qa-log" class="nav-link" data-scroll-target="#detailed-qa-log"><span class="header-section-number">4</span> Detailed QA Log</a></li>
   <li><a href="#qa-decision" id="toc-qa-decision" class="nav-link" data-scroll-target="#qa-decision"><span class="header-section-number">5</span> QA Decision</a></li>
+  <li><a href="#optional-tightening-if-strict-replication-is-needed" id="toc-optional-tightening-if-strict-replication-is-needed" class="nav-link" data-scroll-target="#optional-tightening-if-strict-replication-is-needed"><span class="header-section-number">6</span> Optional Tightening If Strict Replication Is Needed</a></li>
   </ul>
 </nav>
     </div>
@@ -135,8 +136,8 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Quality Assurance Log: Black Politicians Evaluated Code</h1>
-<p class="subtitle lead">Comparison Against The Effect (Chapter 14: Matching)</p>
+<h1 class="title">Quality Assurance Log: NSW + CPS Benchmark Evaluated Code</h1>
+<p class="subtitle lead">Comparison Against Mixtape Matching Benchmark Workflow</p>
 </div>
 
 
@@ -162,9 +163,9 @@ ul.task-list li input[type="checkbox"] {
 <section id="scope" class="level2" data-number="1">
 <h2 data-number="1" class="anchored" data-anchor-id="scope"><span class="header-section-number">1</span> Scope</h2>
 <ul>
-<li>Evaluated script reviewed: <code>docs/labs/black_politicians_lab_evaluated_code.R</code></li>
-<li>Rendered companion page reviewed: <code>docs/labs/black_politicians_lab_evaluated_code.qmd</code></li>
-<li>Baseline reference: <em>The Effect</em>, Chapter 14 (“Matching”), <code>black_politicians</code> code examples for CEM, entropy balancing, and weighted outcome models.</li>
+<li>Evaluated script reviewed: <code>docs/labs/nsw_cps_benchmark_lab_evaluated_code.R</code></li>
+<li>Rendered companion page reviewed: <code>docs/labs/nsw_cps_benchmark_lab_evaluated_code.qmd</code></li>
+<li>Baseline reference: <em>Causal Inference: The Mixtape</em> matching benchmark pattern (<code>nsw_mixtape</code> treated units versus observational CPS controls, compared to the NSW experimental estimate).</li>
 <li>QA date: <code>2026-03-06</code></li>
 <li>Local package context:
 <ul>
@@ -172,17 +173,17 @@ ul.task-list li input[type="checkbox"] {
 <li><code>MatchIt 4.7.2</code></li>
 <li><code>WeightIt 1.5.1</code></li>
 <li><code>cobalt 4.6.2</code></li>
-<li><code>cem</code> and <code>ebal</code> are not installed in this environment.</li>
+<li><code>dplyr 1.1.4</code></li>
+<li><code>ggplot2 4.0.0</code></li>
 </ul></li>
 </ul>
 </section>
 <section id="source-baseline" class="level2" data-number="2">
 <h2 data-number="2" class="anchored" data-anchor-id="source-baseline"><span class="header-section-number">2</span> Source Baseline</h2>
 <ul>
-<li>Chapter URL: <a href="https://theeffectbook.net/ch-Matching.html">The Effect, Chapter 14 - Matching</a></li>
-<li>CEM example block: lines around <code>381-427</code> in current chapter rendering.</li>
-<li>Entropy balancing block: lines around <code>499-529</code> in current chapter rendering.</li>
-<li>Weighted interaction regression block using CEM weights: lines around <code>903-944</code> in current chapter rendering.</li>
+<li>Dataset source package: <a href="https://cran.r-project.org/package=causaldata"><code>causaldata</code></a></li>
+<li><code>nsw_mixtape</code> and <code>cps_mixtape</code> documentation: <a href="https://search.r-project.org/CRAN/refmans/causaldata/html/00Index.html">CRAN reference index</a></li>
+<li>Conceptual baseline for this lab: observational-versus-experimental benchmarking in the NSW/CPS matching example used in Mixtape teaching materials.</li>
 </ul>
 </section>
 <section id="outcome-summary" class="level2" data-number="3">
@@ -197,23 +198,23 @@ ul.task-list li input[type="checkbox"] {
 <tbody>
 <tr class="odd">
 <td>Pass</td>
-<td style="text-align: right;">7</td>
+<td style="text-align: right;">8</td>
 </tr>
 <tr class="even">
 <td>Partial alignment (intentional extension)</td>
 <td style="text-align: right;">2</td>
 </tr>
 <tr class="odd">
-<td>Material mismatch vs book workflow</td>
+<td>Material mismatch vs benchmark intent</td>
 <td style="text-align: right;">0</td>
 </tr>
 <tr class="even">
-<td>Out-of-scope relative to book example</td>
-<td style="text-align: right;">1</td>
+<td>Out-of-scope relative to baseline</td>
+<td style="text-align: right;">0</td>
 </tr>
 </tbody>
 </table>
-<p>The evaluated lab code is <strong>methodologically aligned</strong> with the chapter examples, but it is <strong>not a literal reproduction</strong> of the book workflow.</p>
+<p>The evaluated NSW/CPS code is <strong>methodologically aligned</strong> with the benchmarking objective: compare observational adjustment methods against the known NSW experimental estimate.</p>
 </section>
 <section id="detailed-qa-log" class="level2" data-number="4">
 <h2 data-number="4" class="anchored" data-anchor-id="detailed-qa-log"><span class="header-section-number">4</span> Detailed QA Log</h2>
@@ -229,92 +230,97 @@ ul.task-list li input[type="checkbox"] {
 <tr class="header">
 <th>ID</th>
 <th>Evaluated code claim and location</th>
-<th>The Effect comparison</th>
+<th>Baseline comparison</th>
 <th>Result</th>
 <th>Action</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>B1</td>
-<td>Uses <code>causaldata::black_politicians</code>, with <code>treat = leg_black</code> and <code>outcome = responded</code> (<code>black_politicians_lab_evaluated_code.R:31-36</code>)</td>
-<td>Chapter code uses <code>br &lt;- causaldata::black_politicians</code>, <code>D &lt;- leg_black</code>, <code>Y &lt;- responded</code> in entropy balancing, and the same treatment/outcome in CEM examples.</td>
+<td>N1</td>
+<td>Uses <code>causaldata::nsw_mixtape</code> and <code>causaldata::cps_mixtape</code> and maps <code>outcome = re78</code> (<code>nsw_cps_benchmark_lab_evaluated_code.R:28-49</code>)</td>
+<td>Matches the intended NSW/CPS benchmark dataset setup.</td>
 <td>Pass</td>
 <td>None</td>
 </tr>
 <tr class="even">
-<td>B2</td>
-<td>CEM uses quantile breaks for <code>medianhhincom</code> and even breaks for <code>blackpercent</code> (<code>...R:81-99</code>)</td>
-<td>Chapter CEM code uses quantile breaks for <code>medianhhincom</code> and evenly spaced breaks for <code>blackpercent</code>.</td>
+<td>N2</td>
+<td>Experimental benchmark is estimated on NSW data only via <code>lm(outcome ~ treat, data = benchmark_dat)</code> (<code>...R:60-61</code>)</td>
+<td>Correct benchmark definition for NSW treated versus NSW controls.</td>
 <td>Pass</td>
 <td>None</td>
 </tr>
 <tr class="odd">
-<td>B3</td>
-<td>CEM includes additional matching covariates <code>leg_senator</code> and <code>south</code> (<code>...R:94</code>)</td>
-<td>Chapter CEM example matches on <code>medianhhincom</code>, <code>blackpercent</code>, <code>leg_democrat</code> only.</td>
+<td>N3</td>
+<td>Observational sample is NSW treated + CPS controls (<code>...R:35-39</code>)</td>
+<td>Matches the benchmarking design used in Mixtape-style comparisons.</td>
+<td>Pass</td>
+<td>None</td>
+</tr>
+<tr class="even">
+<td>N4</td>
+<td>Raw observational estimate is reported before any adjustment (<code>...R:89-100</code>, <code>...R:242</code>)</td>
+<td>Required baseline to show observational bias before design-stage adjustment.</td>
+<td>Pass</td>
+<td>None</td>
+</tr>
+<tr class="odd">
+<td>N5</td>
+<td>Baseline imbalance is diagnosed with <code>matchit(..., method = NULL)</code> and <code>bal.tab</code> (<code>...R:103-111</code>)</td>
+<td>Consistent with design-first diagnostics used elsewhere in this repository.</td>
+<td>Pass</td>
+<td>None</td>
+</tr>
+<tr class="even">
+<td>N6</td>
+<td>Exact matching branch uses a discrete formula and adds continuous diagnostics (<code>...R:157-179</code>)</td>
+<td>Reasonable transparency-first branch, but not part of canonical NSW/CPS benchmark scripts.</td>
 <td>Partial alignment</td>
-<td>Keep as training extension, but label clearly as “extended CEM spec (not book-default).”</td>
+<td>Keep as training extension and label as supplemental branch.</td>
+</tr>
+<tr class="odd">
+<td>N7</td>
+<td>CEM branch includes age/earnings coarsening via documented cutpoints (<code>...R:182-204</code>)</td>
+<td>Aligned with the objective of reducing severe imbalance while preserving an ATT focus.</td>
+<td>Pass</td>
+<td>None</td>
 </tr>
 <tr class="even">
-<td>B4</td>
-<td>CEM results show treated units pruned (<code>364 -&gt; 300</code>) via <code>cem_counts</code> (<code>...R:101-104</code>; evaluated output)</td>
-<td>Chapter text warns that CEM can drop many treated observations and that short matching-variable lists are used to limit attrition.</td>
+<td>N8</td>
+<td>Entropy balancing branch includes first and second moments for continuous covariates (<code>...R:212-221</code>)</td>
+<td>Aligned with standard entropy-balancing practice for strong mean-moment balance.</td>
 <td>Pass</td>
 <td>None</td>
 </tr>
 <tr class="odd">
-<td>B5</td>
-<td>Entropy balancing includes means for core covariates and squared terms for continuous covariates (<code>...R:109-113</code>)</td>
-<td>Chapter entropy-balance code constructs <code>X</code> with <code>medianhhincom</code>, <code>blackpercent</code>, <code>leg_democrat</code>, plus squared terms for the continuous covariates.</td>
+<td>N9</td>
+<td>Weight diagnostics report ESS and maximum weight (<code>...R:229-241</code>)</td>
+<td>Appropriate for checking weight concentration risk in benchmark recovery.</td>
 <td>Pass</td>
 <td>None</td>
 </tr>
 <tr class="even">
-<td>B6</td>
-<td>Entropy balancing also includes extra binary terms <code>leg_senator</code> and <code>south</code> (<code>...R:112</code>)</td>
-<td>Chapter entropy example uses only <code>medianhhincom</code>, <code>blackpercent</code>, <code>leg_democrat</code> (+ squared continuous terms).</td>
-<td>Partial alignment</td>
-<td>Keep as extension, but mark as “expanded constraints vs book baseline.”</td>
-</tr>
-<tr class="odd">
-<td>B7</td>
-<td>ATT weighting behavior is consistent: treated mean weight is 1, control weights concentrated (<code>...R:127-137</code>; evaluated output <code>ess</code>, <code>max_weight</code>)</td>
-<td>Chapter entropy section notes control-side balancing weights and treated units handled as focal group in ATT-style setup.</td>
+<td>N10</td>
+<td>Final output reports <code>benchmark_gap</code> and <code>abs_benchmark_gap</code> for each method (<code>...R:271-277</code>)</td>
+<td>Directly implements the lab’s core benchmark criterion.</td>
 <td>Pass</td>
 <td>None</td>
-</tr>
-<tr class="even">
-<td>B8</td>
-<td>Primary model comparison includes <code>lm(outcome ~ treat)</code> across raw/exact/CEM/ebal (<code>...R:139-163</code>)</td>
-<td>Chapter provides <code>lm(responded ~ leg_black, weights = ...)</code> after CEM/entropy workflows.</td>
-<td>Pass</td>
-<td>None</td>
-</tr>
-<tr class="odd">
-<td>B9</td>
-<td>Evaluated script includes the weighted interaction model <code>outcome ~ treat*treat_out + ...</code> with CEM weights and reports key terms (<code>black_politicians_lab_evaluated_code.R:165-192</code>)</td>
-<td>Chapter includes weighted interaction model with CEM weights for substantive interpretation.</td>
-<td>Pass</td>
-<td>None</td>
-</tr>
-<tr class="even">
-<td>B10</td>
-<td>Script includes an exact-matching branch (<code>...R:68-79</code>)</td>
-<td>The book’s <code>black_politicians</code> workflow in this chapter emphasizes CEM and entropy balancing; exact matching is not the shown main path for this dataset.</td>
-<td>Out-of-scope extension</td>
-<td>Keep for training breadth; annotate as extra method not used in the chapter’s worked code.</td>
 </tr>
 </tbody>
 </table>
 </section>
 <section id="qa-decision" class="level2" data-number="5">
 <h2 data-number="5" class="anchored" data-anchor-id="qa-decision"><span class="header-section-number">5</span> QA Decision</h2>
-<p>The evaluated code is <strong>training-aligned</strong> with <em>The Effect</em> methods and now includes the chapter-style weighted interaction model block.</p>
-<p>Remaining differences are intentional training extensions (expanded CEM/entropy covariate constraints and an additional exact-matching branch), not material mismatches.</p>
-<p>If strict chapter replication is needed, the remaining optional change is:</p>
+<p>The evaluated NSW/CPS benchmark code is <strong>ready for training use</strong>.</p>
+<p>It reproduces the core benchmark logic correctly and exposes method tradeoffs (balance, retention, and benchmark gap) in a way that is consistent with the repository’s design-first style.</p>
+<p>Two branches (exact matching and explicit propensity-overlap summaries) are intentional pedagogic extensions beyond a strict minimal NSW/CPS benchmark script and should remain labeled as such.</p>
+</section>
+<section id="optional-tightening-if-strict-replication-is-needed" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="optional-tightening-if-strict-replication-is-needed"><span class="header-section-number">6</span> Optional Tightening If Strict Replication Is Needed</h2>
 <ol type="1">
-<li>Add a “book-default spec” mode that uses only <code>medianhhincom</code>, <code>blackpercent</code>, and <code>leg_democrat</code> for CEM/entropy balancing.</li>
+<li>Add a “minimal benchmark mode” that keeps only raw, CEM, and entropy balancing branches.</li>
+<li>Freeze a single CEM cutpoint specification and report robustness variants separately.</li>
+<li>Add a fixed tolerance rule for benchmark closeness (for example, absolute gap under a pre-specified threshold) for pass/fail reporting.</li>
 </ol>
 
 

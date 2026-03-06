@@ -189,13 +189,13 @@ Status labels used below:
 | Roadmap item | Status | Why this dataset fits |
 | --- | --- | --- |
 | 16. Add `causaldata::black_politicians` as the first non-`lalonde` worked example. | `Done` | Implemented as a training aid with linked full-code, evaluated-code, and QA-log outputs. The current implementation keeps the design-first comparison focus (exact/CEM/entropy balancing) and includes a chapter-alignment QA trace against *The Effect*. |
-| 17. Add a benchmarking appendix using `causaldata::nsw_mixtape` plus `causaldata::cps_mixtape`. | `Next` | This comes directly from the Mixtape matching chapter and is useful even though it is close to `lalonde`. The value is not novelty of topic but benchmarking: it lets the report compare observational matching and weighting estimates against the known NSW experimental result and show more explicitly how poor overlap with observational controls can distort conclusions. |
+| 17. Add a benchmarking appendix using `causaldata::nsw_mixtape` plus `causaldata::cps_mixtape`. | `Done` | Implemented as a full lab bundle with linked lab, full-code, evaluated-code, and QA-log outputs. The workflow benchmarks observational estimates against the NSW experimental reference and reports benchmark gaps across raw, exact, CEM, and entropy-balancing designs. |
 | 18. Add a short teaching appendix using `causaldata::titanic` for subclassification and simple exact matching. | `Later` | This is not the best policy-style example, so it should not displace the main report narrative. It is still a strong classroom dataset because the treatment, covariates, and curse-of-dimensionality problem are visually transparent and easy to explain in slides or training notes. |
 | 19. Document a small acquisition layer for book-native datasets. | `Next` | `MatchIt`, `WeightIt`, and `cobalt` are already installed locally, but `causaldata` is not. The cleanest path is either to add `causaldata` as a documented dependency or to vendor the specific source files needed for the roadmap datasets into a reproducible `data/raw` workflow. |
 
 ### Planned sequence
 
 1. Maintain `black_politicians` as the primary non-`lalonde` training example and keep chapter-alignment QA checks current as lab code evolves.
-2. Implement `nsw_mixtape` plus `cps_mixtape` as a validation appendix that compares adjusted observational estimates with the known experimental benchmark.
+2. Keep the NSW/CPS benchmark lab aligned with the Mixtape objective as code evolves and rerun benchmark-gap QA after substantive method changes.
 3. Add `titanic` only as a compact pedagogic appendix or slide-friendly note, not as the main substantive extension.
 4. If dataset expansion becomes a recurring pattern, move the common data-ingest and diagnostics code into reusable helper chunks so each new example only changes the treatment, outcome, and covariate specification.

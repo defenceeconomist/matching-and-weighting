@@ -1,0 +1,91 @@
+---
+title: "NSW + CPS Benchmark: Evaluated Code"
+format:
+  html:
+    toc: true
+    code-links:
+      - text: Lab
+        href: nsw_cps_benchmark_lab.html
+      - text: Full Code
+        href: nsw_cps_benchmark_lab_full_code.html
+      - text: QA Log
+        href: nsw_cps_benchmark_lab_qa_log.html
+      - text: Evaluated Script
+        href: nsw_cps_benchmark_lab_evaluated_code.R
+execute:
+  echo: false
+  eval: true
+  warning: false
+  message: false
+---
+
+This page runs the evaluated workflow script and shows processed benchmark outputs.
+
+```{r}
+#| include: false
+source("nsw_cps_benchmark_lab_evaluated_code.R", local = knitr::knit_global())
+```
+
+## Evaluated Script
+
+```{r}
+#| results: asis
+cat("```r\n")
+cat(readLines("nsw_cps_benchmark_lab_evaluated_code.R"), sep = "\n")
+cat("\n```")
+```
+
+## Processed Data Preview
+
+```{r}
+dat_preview
+```
+
+## Experimental Benchmark Summary
+
+```{r}
+benchmark_summary
+```
+
+## Raw Observational Summary
+
+```{r}
+raw_summary
+```
+
+## Overlap Summary
+
+```{r}
+overlap_summary
+```
+
+## Matched Sample Counts
+
+```{r}
+exact_counts
+cem_counts
+```
+
+## Entropy Balancing Weights Summary
+
+```{r}
+ebal_weight_summary
+```
+
+## Retention By Design
+
+```{r}
+method_retention
+```
+
+## Effect Estimates And Benchmark Gaps
+
+```{r}
+estimate_comparison
+```
+
+## Closest Designs To Benchmark
+
+```{r}
+benchmark_gap_rank
+```
