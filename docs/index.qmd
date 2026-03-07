@@ -40,6 +40,7 @@ If you are new to the site, the recommended sequence is:
 The main report bundle is:
 
 - [Matching Methods Report](report/matching_methods_report.qmd)
+- [Synthesis Report: Main Report versus *The Mixtape*, *The Effect*, and Gertler Chapter 8](report/matching_synthesis_report.qmd)
 - [Notes on *The Effect*: Matching](report/effectbook_matching_notes.qmd)
 - [Notes on *The Mixtape*: Matching and Subclassification](report/mixtape_matching_subclassification_notes.qmd)
 - [Notes on Gertler et al.: Matching](report/gertler_matching_notes.qmd)

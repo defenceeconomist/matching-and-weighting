@@ -5,6 +5,7 @@ project:
     - index.qmd
     - report/index.qmd
     - report/matching_methods_report.qmd
+    - report/matching_synthesis_report.qmd
     - report/effectbook_matching_notes.qmd
     - report/mixtape_matching_subclassification_notes.qmd
     - report/gertler_matching_notes.qmd

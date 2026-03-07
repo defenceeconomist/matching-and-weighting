@@ -1,0 +1,241 @@
+---
+title: "Synthesis Report: Main Matching Report Versus The Mixtape, The Effect, and Gertler Chapter 8"
+subtitle: "A comparative cross-walk across framing, methods, diagnostics, and evaluator guidance"
+author: "Luke Heley"
+date: 7 March 2026
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+---
+
+## Purpose
+
+This synthesis compares the repo's main report, [*Matching and Weighting for Causal Inference*](matching_methods_report.qmd), with the three companion source-note pages:
+
+- [*The Mixtape*: Matching and Subclassification](mixtape_matching_subclassification_notes.qmd)
+- [*The Effect*: Matching](effectbook_matching_notes.qmd)
+- [Gertler et al., Chapter 8: Matching](gertler_matching_notes.qmd)
+
+The goal is not to rank the sources, but to show where the main report is already well aligned, where it deliberately departs from the books, and where the books suggest useful extensions.
+
+## Executive Synthesis
+
+- The main report is closest to *The Effect* in overall intellectual style: both treat matching as a design problem, stress estimands and weighting logic, and insist that balance must be read alongside overlap and the effective target population.
+- The main report is closest to *The Mixtape* in its emphasis on subclassification logic, the curse of dimensionality, and the balance-versus-retention tradeoff, even though the report does not foreground the NSW benchmark case inside the main article.
+- The main report is closest to Gertler chapter 8 in audience and evaluator workflow: both are written with practical policy evaluation in mind and both insist that matching should be judged against stronger quasi-experimental alternatives rather than treated as a default.
+- The main report's biggest deliberate departure from all three sources is its decision to center exact matching, CEM, and entropy balancing while largely bracketing propensity-score matching. That makes the report more auditable and design-transparent, but it also means it leaves out one family of methods that all three source texts discuss directly.
+- Relative to the books, the main report is stronger on auditability and transparent diagnostics, but weaker on two canonical teaching bridges: subclassification as a standalone entry point and propensity-score methods as the standard high-dimensional workaround.
+
+## Comparison Matrix
+
+| Dimension | Main report | *The Mixtape* | *The Effect* | Gertler chapter 8 |
+|---|---|---|---|---|
+| Core framing | Design-stage comparison of exact matching, CEM, and entropy balancing for `ATT` estimation | Matching grows out of subclassification and the curse of dimensionality | Matching is another way to close back doors and is easiest to understand through weights | Matching constructs an artificial comparison group for evaluation when randomization is unavailable |
+| Main pedagogic entry point | Method comparison plus evaluator workflow | Subclassification first, then exact and approximate matching | Weighting logic first, then matching variants and assumptions | Policy-evaluation workflow, then propensity-score matching |
+| Most emphasized methods | Exact matching, CEM, entropy balancing | Subclassification, exact matching, nearest neighbor, propensity scores, CEM | Mahalanobis matching, CEM, entropy balancing, propensity-score weighting | Exact matching as intuition, then propensity-score matching and matched DiD |
+| Role of propensity scores | Deliberately deemphasized in the main teaching flow | Central response to dimensionality | Important multivariate design device | Main practical workaround |
+| Diagnostics emphasis | Very strong on balance, overlap, retained sample, effective sample size, and target population | Strong on overlap and balance, especially through the curse-of-dimensionality discussion | Strong on balance, overlap, weight concentration, and estimand shifts | Strong on baseline covariates and common support; less detailed on modern diagnostic tooling |
+| View of matching | Useful but second-best; should be compared with other QEDs | Useful if it improves credible comparisons under selection on observables | Useful preprocessing for estimation, not identification by itself | Useful fallback or complement, weaker than stronger designs |
+| Closest repo bridge | Main `lalonde` report | `titanic` and NSW/CPS labs | `black_politicians` lab and design-first diagnostics | HISP logic, matched DiD, synthetic-control escalation |
+
+## Where The Main Report Strongly Aligns
+
+### 1. Design Before Estimation
+
+All four sources treat matching as a design problem before it is an estimation problem.
+
+- The main report says adjustment should begin with the estimand, the covariate set, and the overlap question.
+- *The Mixtape* reaches the same conclusion through subclassification: credible effects come from within-stratum comparability, not from a single raw mean difference.
+- *The Effect* makes the same point by separating design from post-match estimation and by treating weighting as the language that reveals what the design has done.
+- Gertler chapter 8 is less formal in language, but its evaluator workflow is the same in substance: gather baseline covariates, assess common support, match, then estimate.
+
+This is the clearest area of convergence. The main report is fully inside the mainstream of these texts on this point.
+
+### 2. Matching Only Solves Selection on Observables
+
+The main report and all three books are explicit that matching cannot repair omitted confounding.
+
+- The main report stresses exchangeability, positivity, and the risk of unmeasured confounders.
+- *The Effect* is especially direct that balance is necessary but not sufficient.
+- *The Mixtape* grounds the entire matching chapter in identifying assumptions rather than software.
+- Gertler chapter 8 repeatedly says the quality of the match depends on whether the data capture the variables that actually drove enrollment.
+
+There is no substantive disagreement here. If anything, the main report amplifies a caution that is already common to all three texts.
+
+### 3. Overlap, Retention, and Target Population Matter
+
+The main report's strongest comparative advantage is that it operationalizes a theme that is present in all three books: better balance is not free.
+
+- *The Mixtape* emphasizes this through subclassification sparsity and the curse of dimensionality.
+- *The Effect* emphasizes it through weighting, common support, and the distinction between nominal and effective estimands.
+- Gertler chapter 8 emphasizes it through common support and the warning that some treated units may not have credible matches.
+
+The main report goes further by making sample retention, pruning, and effective sample size part of the central comparison across methods. This is not a break from the source texts. It is a more auditable implementation of their shared logic.
+
+### 4. Matching Should Sit Inside a Wider QED Toolkit
+
+The main report argues that matching should not be the default response to observational data. That position is strongly supported by the books.
+
+- *The Mixtape* frames matching as one design strategy among several ways to address causal identification.
+- *The Effect* treats matching as a back-door-closing device, not a universal solution.
+- Gertler chapter 8 is the most explicit about escalation: if stronger designs exist, they should be preferred, and if baseline outcomes exist, matched DiD is better than matching alone.
+
+The main report's section on positioning matching among quasi-experimental designs is therefore highly consistent with the source material, especially with Gertler.
+
+## Where The Main Report Deliberately Departs
+
+### 1. It Replaces Propensity-Score Matching With a More Transparent Core Trio
+
+This is the biggest difference.
+
+- *The Mixtape* treats propensity scores as a central response to high-dimensional matching problems.
+- *The Effect* includes propensity-score weighting as part of the main conceptual arc.
+- Gertler chapter 8 makes propensity-score matching the chapter's main practical method after the exact-matching intuition fails.
+
+The main report instead centers:
+
+- exact matching
+- CEM
+- entropy balancing
+
+That choice has a clear rationale. These methods make the design rule, balance target, and retention cost easier to inspect directly than a single modeled balancing score. For evaluator training, that is defensible and arguably preferable.
+
+But the tradeoff is also clear: the main report underrepresents the specific method family that the books treat as the canonical multivariate workaround. That means a reader who moves from the books into the report may notice an intentional gap rather than a seamless continuation.
+
+### 2. It Is More Diagnostic and Auditable Than Any One Source Chapter
+
+The main report is less like a textbook chapter and more like a training document that expects to be inspected.
+
+Compared with the books, it does more of the following in one place:
+
+- reports pre-adjustment diagnostics explicitly
+- compares methods side by side under a common estimand
+- treats effective sample size as a first-order output
+- shows how design tuning changes the retained sample
+- frames weighting as a possible source of fragility rather than only as a balance success
+
+This is a strength, especially for government and evaluation training, but it also changes the tone. The report is more operational than the books and less interested in surveying the full matching literature.
+
+### 3. It Gives Entropy Balancing More Prominence Than The Books Do
+
+*The Effect* gives entropy balancing meaningful attention, but *The Mixtape* and Gertler chapter 8 do not place it at the center of the chapter-level narrative in the same way the main report does.
+
+That creates a distinctive repo identity:
+
+- exact matching = transparency benchmark
+- CEM = interpretable matched-sample compromise
+- entropy balancing = strongest observed mean balance with weighting costs made explicit
+
+This is coherent, but it means the report is best understood as a selective comparative methods report rather than as a neutral summary of the matching chapters in the three books.
+
+## What Each Source Adds To The Main Report
+
+### *The Mixtape*: Stronger Conceptual On-Ramp Through Subclassification
+
+The main report already uses subclassification as background logic, but *The Mixtape* gives it more pedagogic weight.
+
+What *The Mixtape* adds:
+
+- subclassification as the cleanest first explanation of matching
+- a more explicit bridge from simple support cells to exact matching
+- the NSW benchmark as an external discipline on observational adjustment
+- a fuller discussion of approximate matching variants beyond CEM
+
+Implication for the repo:
+
+- The main report could be strengthened by a short standalone subsection or boxed insert that presents subclassification as the conceptual precursor to exact matching and CEM.
+- A direct signpost to the NSW/CPS benchmark lab would make the connection to the chapter more visible.
+
+### *The Effect*: Strongest Conceptual Match To The Report
+
+Among the three sources, *The Effect* is the closest conceptual relative of the main report.
+
+What *The Effect* adds:
+
+- a stronger weighting-based language for understanding what matching is doing
+- clearer treatment of estimand shifts after trimming or weighting
+- explicit discussion of estimation after matching
+- an integrated presentation of Mahalanobis matching, CEM, entropy balancing, and propensity-score weighting
+
+Implication for the repo:
+
+- The main report could borrow more of *The Effect*'s language around "what population is represented after adjustment."
+- A compact appendix on propensity-score weighting would close one of the main gaps between the report and the chapter without changing the report's design-first identity.
+
+### Gertler Chapter 8: Strongest Evaluator Escalation Logic
+
+Gertler is the least method-comparative of the three sources, but it contributes the clearest applied decision rule.
+
+What Gertler adds:
+
+- matching as a fallback when stronger designs are unavailable
+- a strict rule that only baseline covariates belong in the design
+- matched DiD as the preferred upgrade when baseline outcomes exist
+- synthetic control as the better analogue when the design problem is aggregate and unit counts are small
+
+Implication for the repo:
+
+- The main report already says matching belongs inside a wider quasi-experimental toolkit, but it could adopt Gertler's escalation logic more explicitly.
+- A short decision rule such as "matching alone, matched DiD, or synthetic control?" would make the evaluator workflow even stronger.
+
+## Cross-Source Tensions And How The Main Report Resolves Them
+
+### Transparency Versus Standard Practice
+
+The books, especially *The Mixtape* and Gertler, give propensity-score methods a central place because they are historically standard responses to multivariate confounding. The main report chooses not to follow that default and instead prefers methods whose design consequences are easier to inspect.
+
+That is a genuine tension, but the report resolves it coherently:
+
+- it trades breadth for transparency
+- it prefers visible design rules over modeled balancing scores
+- it puts auditability ahead of textbook completeness
+
+For this repo's stated audience, that is a defensible choice.
+
+### Benchmarking Versus Workflow Training
+
+*The Mixtape* uses the NSW setting to discipline matching against an experimental benchmark. Gertler uses HISP to show how matching behaves inside a practical impact-evaluation workflow. The main report chooses a third path: a comparative methods article on `lalonde` that foregrounds diagnostics and design tradeoffs.
+
+That means the report is strongest as a methods primer, but not yet as a chapter-by-chapter bridge to the canonical examples in the books. The labs already solve much of that problem. The gap is mostly one of signposting.
+
+### Method Breadth Versus Design Discipline
+
+Taken together, the three books cover:
+
+- subclassification
+- exact matching
+- approximate matching
+- nearest neighbor methods
+- propensity-score matching
+- propensity-score weighting
+- CEM
+- entropy balancing
+- matched DiD
+- synthetic control linkages
+
+The main report intentionally covers a narrower set. That narrower scope makes the article cleaner, but it also means readers need the surrounding repo materials to see the full landscape. The site as a whole already has much of that material. The synthesis implication is that the repo is broader than the main report, but the main report does not yet advertise that breadth strongly enough.
+
+## Practical Recommendations
+
+### High-Priority Additions
+
+1. Add a short subclassification bridge near the start of the main report, drawing directly on the existing *Mixtape* notes and the `titanic` teaching lab.
+2. Add a compact "why propensity scores are omitted here" note, so the main report's method choice reads as deliberate rather than accidental.
+3. Add a one-page appendix or short companion note on propensity-score weighting, using *The Effect* as the conceptual anchor.
+4. Add an evaluator escalation box that states when to prefer matching alone, matched DiD, or synthetic control, drawing on Gertler chapter 8.
+
+### Lower-Priority Improvements
+
+1. Add a short paragraph in the main report that links trimming and extreme weights to estimand drift in the language used by *The Effect*.
+2. Add a direct link from the main report to the NSW/CPS benchmark lab so the *Mixtape* bridge is visible from the main article.
+3. Add a short cross-walk table inside the report hub so readers can move from each source chapter to the relevant repo artifact.
+
+## Bottom-Line Assessment
+
+The main report is not a generic summary of matching. It is a selective, design-first, evaluator-oriented synthesis that is closest in spirit to *The Effect*, supported conceptually by *The Mixtape*, and disciplined in practical decision rules by Gertler chapter 8.
+
+Its main strengths relative to the books are transparency, diagnostic discipline, and auditability. Its main gap relative to the books is the limited treatment of propensity-score methods and the lack of a stronger subclassification bridge in the main article itself.
+
+As a repo-level package, however, the gap is narrower than it first appears. The labs and companion note pages already contain many of the missing bridges. The next improvement is therefore not a major rewrite of the main report, but a better synthesis layer that makes those relationships explicit. This page is intended to provide that layer.
