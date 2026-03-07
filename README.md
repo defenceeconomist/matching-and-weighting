@@ -204,3 +204,66 @@ Status labels used below:
 3. Keep the NSW/CPS benchmark lab aligned with the Mixtape objective as code evolves and rerun benchmark-gap QA after substantive method changes.
 4. Keep `titanic` as a compact pedagogic appendix or slide-friendly note, not as the main substantive extension.
 5. Prioritize sensitivity-analysis additions next so the methods workflow extends beyond observed-balance diagnostics.
+
+## Fetch Processed EvidenceBase Data
+
+The repository includes a reusable Docker Compose fetch pipeline for processed EvidenceBase documents stored in Redis and Qdrant.
+
+Use the wrapper script when you want to fetch a file by collection and filename:
+
+```bash
+scripts/fetch_evidencebase_source.sh evaluation gertler_ch8.pdf
+```
+
+The command above writes JSON outputs to:
+
+`data/evidencebase/evaluation/gertler_ch8/`
+
+You can also call the compose service directly:
+
+```bash
+docker compose -f docker-compose.evidencebase-fetch.yml run --rm \
+  evidencebase-fetch \
+  --collection evaluation \
+  --source gertler_ch8.pdf
+```
+
+By default, the compose file joins an external Docker network named `evidencebase_net` and expects:
+
+- Redis at `evidencebase-redis:6379`, DB `2`
+- Qdrant at `evidencebase-qdrant:6333`
+- Qdrant collection naming like `evidencebase_<collection>`
+
+If your local EvidenceBase stack uses a different external network name, override it when running. For example, on this machine the active network is `mcp-evidencebase_default`:
+
+```bash
+scripts/fetch_evidencebase_source.sh evaluation gertler_ch8.pdf mcp-evidencebase_default
+```
+
+Or:
+
+```bash
+EVIDENCEBASE_NETWORK=mcp-evidencebase_default \
+docker compose -f docker-compose.evidencebase-fetch.yml run --rm \
+  evidencebase-fetch \
+  --collection evaluation \
+  --source gertler_ch8.pdf
+```
+
+The fetcher also accepts a full source key:
+
+```bash
+docker compose -f docker-compose.evidencebase-fetch.yml run --rm \
+  evidencebase-fetch \
+  --source-key evaluation/gertler_ch8.pdf
+```
+
+Files produced per fetched source:
+
+- `manifest.json`
+- `source_meta.json`
+- `document_meta.json`
+- `document_sources.json`
+- `partition.json`
+- `sections.json`
+- `chunks.json`
