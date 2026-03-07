@@ -58,7 +58,7 @@ The framing is aligned with the Evaluation Academy's train-the-trainer model: pr
 
 ## Roadmap Progress
 
-The report now contains a full end-to-end worked example using `lalonde`, with runnable code for design, diagnostics, estimation, and synthesis across methods. The roadmap items below are complete for the current scope.
+The report now contains a full end-to-end worked example using `lalonde`, with runnable code for design, diagnostics, estimation, and synthesis across methods. A 7 March 2026 update, informed by review of the Mixtape Sessions unconfoundedness lecture materials, also strengthened the report's identification logic around DAG-style covariate selection, backdoor reasoning, and explicit bad-control exclusions. The roadmap items below are complete for the current scope unless marked otherwise.
 
 Status labels used below:
 
@@ -67,10 +67,10 @@ Status labels used below:
 | Roadmap item | Status | Current state |
 | --- | --- | --- |
 | 1. Introduce the causal question, estimand, and observational setting. | `Done` | The report now frames the worked example as a retrospective employment-programme evaluation targeting the `ATT` with the `lalonde` data. |
-| 2. Summarize the causal inference background. | `Done` | The report covers potential outcomes, confounding, exchangeability, positivity, common support, consistency, and SUTVA. |
+| 2. Summarize the causal inference background. | `Done` | The report covers potential outcomes, confounding, exchangeability, positivity, common support, consistency, SUTVA, and a DAG/backdoor bridge for translating unconfoundedness into a control strategy. |
 | 3. Introduce subclassification as a motivating conditioning strategy and explain the curse of dimensionality. | `Done` | Both topics are drafted in the causal inference background section. |
 | 4. Position matching within the wider quasi-experimental design toolbox and explain when other designs may be preferable. | `Done` | The report includes a dedicated positioning section tied to the Evaluation Academy framing. |
-| 5. Define the data structure, treatment, outcome, adjustment covariates, and focal group for the estimand. | `Done` | The report defines the `lalonde` treatment indicator, outcome, design covariates, and treated focal group for the `ATT`. |
+| 5. Define the data structure, treatment, outcome, adjustment covariates, and focal group for the estimand. | `Done` | The report defines the `lalonde` treatment indicator, outcome, design covariates, treated focal group for the `ATT`, and a covariate-audit rationale for why post-treatment or otherwise inappropriate controls are excluded. |
 | 6. Check initial imbalance before matching using `MatchIt` with `method = NULL`. | `Done` | The pre-match diagnostics section is now runnable and includes descriptive comparisons, `summary(m_out0, un = TRUE)`, `bal.tab()`, and a love plot. |
 | 7. Demonstrate exact matching with `MatchIt` using `method = "exact"`. | `Done` | The report includes runnable exact-matching code, diagnostics, and an `ATT` estimate. |
 | 8. Demonstrate coarsened exact matching with `MatchIt` using `method = "cem"`. | `Done` | The report includes runnable CEM code (default and tuned variants), diagnostics, and an `ATT` estimate. |
@@ -78,7 +78,7 @@ Status labels used below:
 | 10. Assess post-adjustment balance, overlap, retained sample size, and effective sample size. | `Done` | Post-adjustment diagnostics and retention/ESS reporting are implemented for all methods. |
 | 11. Estimate treatment effects only after an acceptable design has been achieved. | `Done` | Method-specific treatment-effect estimation is implemented and summarized comparatively. |
 | 12. Compare methods on transparency, feasibility, precision, and target population. | `Done` | A cross-method comparison section synthesizes tradeoffs across balance, retention, and interpretability. |
-| 13. Translate the methods into evaluator-facing guidance for programme and policy evaluation practice. | `Done` | The guidance section now includes method-selection and reporting recommendations for evaluators. |
+| 13. Translate the methods into evaluator-facing guidance for programme and policy evaluation practice. | `Done` | The guidance section now includes method-selection advice plus reporting recommendations that require analysts to justify the design covariates and document excluded bad controls. |
 | 14. Discuss limitations, sensitivity to design choices, and practical guidance. | `Done` | A dedicated limitations section covers unmeasured confounding, specification sensitivity, and estimand drift. |
 | 15. Provide a reproducible appendix with package setup, references, and full code. | `Done` | The report includes package setup, glossary/session information, references, and a full-code companion output. |
 
@@ -228,6 +228,7 @@ Status labels used below:
 | 18. Add a short teaching appendix using `causaldata::titanic` for subclassification and simple exact matching. | `Done` | Implemented as a compact teaching lab with an executed narrative page and a linked full-code companion. The workflow focuses on visible support cells, exact matching on discrete covariates, and a simple subclassification comparison. |
 | 19. Add slide outputs that bridge the main report into the lab bundle. | `Done` | The repo now includes a main report training deck plus a separate pre-lab background lecture with speaker notes, both rendered in `docs/slides/` and linked from the site navigation. |
 | 20. Add sensitivity-analysis extensions beyond balance and retention diagnostics. | `Next` | This is the main remaining methods gap: the report currently explains design limitations clearly, but it does not yet include a formal hidden-bias or omitted-variable sensitivity workflow. |
+| 21. Add a compact DAG or bad-controls appendix that visualizes covariate-selection mistakes. | `Done` | Implemented as `docs/articles/dag_bad_controls_appendix.qmd` and linked from the article hub, homepage, and main report. The appendix uses compact DAG visuals to distinguish confounders from colliders and post-treatment bad controls, with explicit references to *The Mixtape* and the Mixtape Sessions unconfoundedness deck. |
 
 
 ### Planned sequence

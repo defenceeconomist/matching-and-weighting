@@ -2,7 +2,7 @@
 title: "Matching and Weighting for Causal Inference"
 subtitle: "Exact Matching, Coarsened Exact Matching, and Entropy Balancing"
 author: "Luke Heley"
-date: 6 March 2026
+date: 7 March 2026
 bibliography: ../references.bib
 link-citations: true
 format:
@@ -32,6 +32,7 @@ execute:
 - Exact matching is the most transparent design, but it remains a partial solution here because feasible exact constraints leave residual imbalance on prior earnings.
 - The report's tuned CEM specification is the strongest matched-sample compromise: it brings all reported covariates below the conventional absolute standardized-difference threshold of `0.1`, but it does so by pruning the treated sample from `185` units to `81`.
 - Entropy balancing achieves the strongest observed mean balance and preserves all treated units, but the weighted comparison depends on a much smaller effective control sample, so the gain in balance comes with concentrated weights rather than explicit sample loss.
+- A credible adjusted design depends on more than using pre-treatment variables mechanically: the covariate set has to be justified from the treatment-assignment story so that confounders are targeted and colliders, mediators, or other bad controls are not smuggled into the design.
 - For evaluator practice, the main implication is that method choice should follow the causal question and the available overlap. In this example, entropy balancing is the strongest summary design when preserving the original treated population is the priority, while CEM is the clearest option when an auditable matched sample matters most.
 
 ## Introduction
@@ -113,6 +114,20 @@ For adjusted comparisons to support causal interpretation, several assumptions m
 
 Taken together, these assumptions clarify what matching and weighting can and cannot do. They can improve comparability on observed covariates and make overlap problems visible, but they cannot rescue a design that lacks a defensible treatment definition, suffers from interference, or omits key confounders. A credible matching exercise therefore depends as much on substantive knowledge of the programme and assignment process as on statistical implementation.
 
+### From Unconfoundedness to a Control Strategy
+
+The practical problem is turning the abstract claim of unconfoundedness into a defensible control strategy. A useful bridge is the directed acyclic graph (DAG): a simplified causal map of how treatment assignment and outcomes are jointly generated. In the Mixtape teaching sequence, DAGs are used to make the backdoor problem concrete. A covariate belongs in the design when it helps block a non-causal backdoor path between treatment and outcome, not simply because it is available in the dataset [@cunningham2021mixtape]. Framed that way, matching and weighting are not generic balancing routines. They are design tools that operationalize a prior causal story about which observed differences matter.
+
+That bridge is helpful because it prevents a common mistake in applied evaluation: treating "all baseline variables" as automatically safe controls. Pre-treatment timing is necessary, but it is not sufficient. Some pre-treatment variables can still be colliders^[A collider is a variable influenced by two or more other variables. Conditioning on a collider can create a spurious association that was not present before adjustment.] or close proxies for selection mechanisms that should not be conditioned on mechanically. A DAG does not prove identification, but it does force the analyst to say which variables are meant to block confounding and which variables are being kept out because they would distort the comparison instead [@cunningham2021mixtape].
+
+### Choosing Covariates for Design
+
+For matching and weighting, the default target should be pre-treatment common causes of treatment assignment and the outcome, plus strong pre-treatment predictors of the untreated potential outcome when they improve precision without changing the causal story [@ho2011matchit; @cunningham2021mixtape]. In practice, that means the analyst should work outward from the assignment process: who got treated, why they got treated, what administrators, caseworkers, or participants knew at the time, and which observed characteristics plausibly shaped both programme take-up and later outcomes.
+
+The same logic implies a clear exclusion rule. Variables changed by treatment should not be used in the design, because they are mediators or descendants of treatment rather than pre-treatment confounders. Nor is kitchen-sink adjustment automatically safer. Conditioning on a collider or other bad control can open a spurious path rather than close one, producing a design that looks statistically sophisticated but is causally less credible. The practical standard is therefore not "include everything observed"; it is "include the variables that make the treatment assignment story more credible and exclude variables that treatment could have changed or that would induce new bias if conditioned on" [@cunningham2021mixtape].
+
+For a compact visual version of that rule, see the [DAG and Bad Controls Appendix](dag_bad_controls_appendix.qmd).
+
 ### Subclassification as a Motivating Strategy
 
 One useful way to understand design-stage adjustment is through subclassification. The basic idea is to divide the data into strata^[A stratum is simply a group of cases that look alike on the matching variables.] defined by pre-treatment covariates, compare treated and untreated outcomes within each stratum, and then aggregate those stratum-specific contrasts using appropriate weights [@cunningham2021subclassification]. Within a stratum, treated and untreated units are more comparable because they share the same covariate pattern, or at least a more similar one than in the full unmatched sample.
@@ -172,6 +187,17 @@ This is a useful teaching dataset because it mirrors a common evaluator problem:
 Substantively, the example can be read as a retrospective employment-programme evaluation. The causal question is whether participation in the training programme increased later earnings for the people who actually enrolled. That makes the `ATT` the natural starting estimand, because the policy-relevant contrast is the earnings those participants observed in 1978 versus the earnings they would plausibly have had without the programme.
 
 The covariate set is also instructive for evaluator practice. Demographic variables such as age, education, and race are combined with marital status, degree completion, and two lagged earnings measures (`re74` and `re75`) that proxy prior labour-market attachment and earnings potential. In a real evaluation, the equivalent task would be to identify pre-treatment variables that are plausibly related both to programme take-up and to later outcomes.
+
+::: {.callout-note}
+## Design-Side Covariate Audit
+
+For this worked example, the design covariates are justified as pre-treatment predictors of programme selection and later earnings, not simply as all available columns in the dataset.
+
+- `age`, `educ`, `race`, `married`, and `nodegree` are treated as background characteristics that may shape both programme participation and labour-market outcomes.
+- `re74` and `re75` are especially important because they proxy prior earnings capacity and labour-market attachment, which are likely to matter for both enrolment and post-programme earnings.
+- `re78` is excluded from the design because it is the post-treatment outcome, not a baseline covariate.
+- The broader design rule is to exclude variables that could have been changed by treatment or that would only be observed after selection into the programme.
+:::
 
 ### Package Setup
 
@@ -1191,8 +1217,9 @@ The caution is that the design cost appears in the weights rather than in the ro
 Evaluator-facing reporting should make the design auditable rather than merely reproducible. At minimum, the report should state:
 
 - the estimand
+- the assignment-process story or DAG-style reasoning used to choose the design covariates
 - the covariates used for design
-- why those covariates were chosen and why post-treatment variables were excluded
+- why those covariates were chosen and which candidate variables were excluded as post-treatment variables, mediators, colliders, or other bad controls
 - the exact matching variables, CEM cutpoints, or entropy-balancing moments and constraints used
 - balance before and after adjustment
 - overlap diagnostics, including any common-support restrictions
@@ -1324,8 +1351,14 @@ Average treatment effect on the treated: the average effect of the intervention 
 `ATE`  
 Average treatment effect: the average effect of the intervention across the full target population.
 
+`Backdoor path`  
+A non-causal path between treatment and outcome that creates spurious association unless it is blocked by an appropriate conditioning set.
+
 `Balance`  
 The extent to which the treatment and comparison groups are similar on observed pre-treatment covariates after adjustment.
+
+`Collider`  
+A variable influenced by two or more other variables; conditioning on it can introduce bias by opening a previously blocked non-causal path.
 
 `Common support`  
 The region where treated and comparison units have sufficiently similar covariate values to make adjustment credible.
@@ -1347,6 +1380,9 @@ The outcome that would have been observed for the same unit under the treatment 
 
 `Covariates`  
 Observed characteristics measured before treatment that are used to describe units and adjust for differences between groups.
+
+`Directed acyclic graph (DAG)`  
+A causal diagram made of nodes and one-way arrows that is used to reason about confounding, conditioning sets, and which variables should or should not be controlled for.
 
 `Entropy balancing`  
 A weighting method that chooses unit weights so the reweighted comparison group matches the treatment group on specified covariate moments.
