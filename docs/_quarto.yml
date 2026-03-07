@@ -6,6 +6,7 @@ project:
     - NEWS.md
     - articles/index.qmd
     - articles/matching_methods_report.qmd
+    - articles/lalonde_background_appendix.qmd
     - articles/dag_bad_controls_appendix.qmd
     - articles/matching_synthesis_report.qmd
     - articles/propensity_score_weighting_companion.qmd
