@@ -1,0 +1,67 @@
+---
+title: "Quality Assurance Log: HISP IE in Practice Evaluated Code"
+subtitle: "Comparison Against HISP Book Replication Do-File"
+date: "2026-03-07"
+format:
+  html:
+    toc: true
+execute:
+  echo: false
+  eval: false
+---
+
+## Scope
+
+- Evaluated workflow reviewed: `docs/labs/hisp_ie_practice_lab_full_code.R`
+- Evaluated wrapper reviewed: `docs/labs/hisp_ie_practice_lab_evaluated_code.R`
+- Source baseline: `data/IE in practice files/HISP Book replication.do`
+- QA date: `2026-03-07`
+- Local R package context used by the evaluated workflow:
+  - `haven`
+  - `readr`
+  - `dplyr`
+  - `ggplot2`
+  - `MatchIt`
+  - `sandwich`
+  - `boot`
+  - `broom`
+  - `nlme`
+
+## Outcome Summary
+
+| Outcome | Count |
+|---|---:|
+| Pass | 9 |
+| Partial alignment | 2 |
+| Material mismatch vs source do-file | 0 |
+| Out-of-scope relative to request | 0 |
+
+The HISP lab bundle is **substantively aligned** with the Stata source. The R code follows the same method order, sample restrictions, core variables, and comparison logic as the main book replication script.
+
+## Detailed QA Log
+
+| ID | Evaluated code claim and location | Baseline comparison | Result | Action |
+|---|---|---|---|---|
+| H1 | The workflow exports every `.dta` file in `data/IE in practice files` to `.csv` before reading `evaluation.csv` ([hisp_ie_practice_lab_full_code.R](/Users/lukeheley/Developer/matching-trg/docs/labs/hisp_ie_practice_lab_full_code.R#L73), [hisp_ie_practice_lab_full_code.R](/Users/lukeheley/Developer/matching-trg/docs/labs/hisp_ie_practice_lab_full_code.R#L585)) | The do-file opens `evaluation.dta` directly and does not include a CSV conversion step because it runs in Stata ([HISP Book replication.do](/Users/lukeheley/Developer/matching-trg/data/IE%20in%20practice%20files/HISP%20Book%20replication.do#L24)). The CSV export is required by the user request and preserves the Stata input as the source. | Pass | None |
+| H2 | The R script defines the same control set used throughout the do-file ([hisp_ie_practice_lab_full_code.R](/Users/lukeheley/Developer/matching-trg/docs/labs/hisp_ie_practice_lab_full_code.R#L56)) | Matches Stata `global controls age_hh age_sp educ_hh educ_sp female_hh indigenous hhsize dirtfloor bathroom land hospital_distance` ([HISP Book replication.do](/Users/lukeheley/Developer/matching-trg/data/IE%20in%20practice%20files/HISP%20Book%20replication.do#L32)). | Pass | None |
+| H3 | Method 1 reproduces the treatment-locality, enrolled-household before-after branch with the same mean comparison and clustered regressions ([hisp_ie_practice_lab_full_code.R](/Users/lukeheley/Developer/matching-trg/docs/labs/hisp_ie_practice_lab_full_code.R#L617)) | Matches the do-file's sample restriction and models for Method 1 ([HISP Book replication.do](/Users/lukeheley/Developer/matching-trg/data/IE%20in%20practice%20files/HISP%20Book%20replication.do#L43)). | Pass | None |
+| H4 | Method 2 reproduces the follow-up enrolled-versus-not-enrolled comparison in treatment localities with clustered regressions and the same controls ([hisp_ie_practice_lab_full_code.R](/Users/lukeheley/Developer/matching-trg/docs/labs/hisp_ie_practice_lab_full_code.R#L657)) | Matches the do-file's Method 2 sample restriction and models ([HISP Book replication.do](/Users/lukeheley/Developer/matching-trg/data/IE%20in%20practice%20files/HISP%20Book%20replication.do#L61)). | Pass | None |
+| H5 | Method 3 keeps `eligible == 1`, tests baseline balance, compares baseline and follow-up outcome means, and estimates clustered follow-up regressions ([hisp_ie_practice_lab_full_code.R](/Users/lukeheley/Developer/matching-trg/docs/labs/hisp_ie_practice_lab_full_code.R#L697)) | Matches the randomized-assignment branch in the do-file ([HISP Book replication.do](/Users/lukeheley/Developer/matching-trg/data/IE%20in%20practice%20files/HISP%20Book%20replication.do#L79)). | Pass | None |
+| H6 | Method 4 estimates randomized-promotion IV models using `promotion_locality` as the instrument for `enrolled_rp`, and preserves first-stage output ([hisp_ie_practice_lab_full_code.R](/Users/lukeheley/Developer/matching-trg/docs/labs/hisp_ie_practice_lab_full_code.R#L759), [hisp_ie_practice_lab_full_code.R](/Users/lukeheley/Developer/matching-trg/docs/labs/hisp_ie_practice_lab_full_code.R#L231)) | Matches the do-file's IV setup and the `first` reporting logic ([HISP Book replication.do](/Users/lukeheley/Developer/matching-trg/data/IE%20in%20practice%20files/HISP%20Book%20replication.do#L108)). | Pass | None |
+| H7 | Method 5 recreates the cutoff-normalized left and right running variables, the linear RDD specifications, and the density/participation/follow-up diagnostic plots ([hisp_ie_practice_lab_full_code.R](/Users/lukeheley/Developer/matching-trg/docs/labs/hisp_ie_practice_lab_full_code.R#L835), [hisp_ie_practice_lab_full_code.R](/Users/lukeheley/Developer/matching-trg/docs/labs/hisp_ie_practice_lab_full_code.R#L889)) | Aligns with the do-file's RDD logic and graph sequence ([HISP Book replication.do](/Users/lukeheley/Developer/matching-trg/data/IE%20in%20practice%20files/HISP%20Book%20replication.do#L135)). The exact `rdplot` rendering is not reproduced because the local R workflow uses `ggplot2` diagnostics rather than `rdrobust`. | Partial alignment | Keep the current plots; only add `rdrobust` if exact figure replication becomes necessary. |
+| H8 | Method 6 reproduces the difference-in-differences branch by building `enrolled_round` and estimating the same clustered specifications with and without controls ([hisp_ie_practice_lab_full_code.R](/Users/lukeheley/Developer/matching-trg/docs/labs/hisp_ie_practice_lab_full_code.R#L937)) | Matches the do-file's DiD section ([HISP Book replication.do](/Users/lukeheley/Developer/matching-trg/data/IE%20in%20practice%20files/HISP%20Book%20replication.do#L230)). | Pass | None |
+| H9 | Method 7 reshapes the panel wide, fits a probit propensity score, uses random-order nearest-neighbor matching for the restricted and full covariate sets, and reports support, bootstrap ATT, and weighted regression estimates ([hisp_ie_practice_lab_full_code.R](/Users/lukeheley/Developer/matching-trg/docs/labs/hisp_ie_practice_lab_full_code.R#L986), [hisp_ie_practice_lab_full_code.R](/Users/lukeheley/Developer/matching-trg/docs/labs/hisp_ie_practice_lab_full_code.R#L399)) | Matches the do-file's matching structure and sequencing ([HISP Book replication.do](/Users/lukeheley/Developer/matching-trg/data/IE%20in%20practice%20files/HISP%20Book%20replication.do#L251)). `MatchIt` substitutes for `psmatch2`, but the branch remains probit-based, one-to-one, and random-order nearest neighbor. | Pass | None |
+| H10 | The matched difference-in-differences section uses matched subclasses to build pairwise DDs and then fits the weighted `diff ~ enrolled` regression on the matched sample ([hisp_ie_practice_lab_full_code.R](/Users/lukeheley/Developer/matching-trg/docs/labs/hisp_ie_practice_lab_full_code.R#L1028)) | Matches the do-file's manual matched-DD calculation and regression follow-up ([HISP Book replication.do](/Users/lukeheley/Developer/matching-trg/data/IE%20in%20practice%20files/HISP%20Book%20replication.do#L339)). | Pass | None |
+| H11 | The power section computes baseline and follow-up means, standard deviations, ICC estimates, no-cluster sample sizes for the same MDE grids, and clustered sample-size adjustments for the same cluster counts ([hisp_ie_practice_lab_full_code.R](/Users/lukeheley/Developer/matching-trg/docs/labs/hisp_ie_practice_lab_full_code.R#L1066)) | Aligns with the do-file's Chapter 15 sequence ([HISP Book replication.do](/Users/lukeheley/Developer/matching-trg/data/IE%20in%20practice%20files/HISP%20Book%20replication.do#L360)). The R version uses normal-approximation formulas and an iterative design-effect adjustment instead of Stata's `sampsi` and `sampclus` commands. | Partial alignment | Keep the current implementation unless exact `sampsi`/`sampclus` parity is required. |
+
+## QA Decision
+
+The HISP IE in Practice bundle is **ready for use**.
+
+It follows the book replication do-file closely enough to support teaching, inspection, and reruns in R. The main deviations are implementation-level substitutions where the Stata-specific commands do not have an identical local R equivalent in the current environment.
+
+## Residual Risks
+
+1. Matching estimates use `MatchIt` as the nearest-neighbor engine rather than `psmatch2`, so very small tie-breaking differences remain possible.
+2. The RDD visuals are analytically aligned but not pixel-identical to the Stata figures that depend on `rdplot`.
+3. The power-calculation tables are logically aligned with the Stata workflow, but exact numeric parity with `sampsi` and `sampclus` is not guaranteed.

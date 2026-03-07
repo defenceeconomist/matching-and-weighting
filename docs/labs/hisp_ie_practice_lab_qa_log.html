@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="dcterms.date" content="2026-03-07">
 
-<title>Dataset Expansion Labs – Matching and Weighting</title>
+<title>Quality Assurance Log: HISP IE in Practice Evaluated Code – Matching and Weighting</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -72,7 +73,7 @@ ul.task-list li input[type="checkbox"] {
 
 </head>
 
-<body class="nav-sidebar docked nav-fixed quarto-light">
+<body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -98,7 +99,7 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Reports</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../labs/index.html" aria-current="page"> 
+    <a class="nav-link" href="../labs/index.html"> 
 <span class="menu-text">Additional Labs</span></a>
   </li>  
   <li class="nav-item">
@@ -111,66 +112,21 @@ ul.task-list li input[type="checkbox"] {
 </div>
       </div> <!-- /container-fluid -->
     </nav>
-  <nav class="quarto-secondary-nav">
-    <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-        <i class="bi bi-layout-text-sidebar-reverse"></i>
-      </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../labs/index.html">Dataset Expansion Labs</a></li></ol></nav>
-        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-        </a>
-    </div>
-  </nav>
 </header>
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
-    <div class="sidebar-menu-container"> 
-    <ul class="list-unstyled mt-1">
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../labs/index.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Dataset Expansion Labs</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../labs/main_report_1hr_lab_teaching_aid.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Teaching Aid: Delivering the Main Report in a 1-Hour Lab</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../labs/black_politicians_lab.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Lab: Black Politicians Training Aid</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../labs/nsw_cps_benchmark_lab.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Lab: NSW + CPS Benchmark</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../labs/titanic_teaching_lab.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Lab: Titanic Teaching Example</span></a>
-  </div>
-</li>
-    </ul>
-    </div>
-</nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#roadmap-aligned-labs" id="toc-roadmap-aligned-labs" class="nav-link active" data-scroll-target="#roadmap-aligned-labs"><span class="header-section-number">1</span> Roadmap-Aligned Labs</a></li>
-  <li><a href="#recommended-sequence" id="toc-recommended-sequence" class="nav-link" data-scroll-target="#recommended-sequence"><span class="header-section-number">2</span> Recommended Sequence</a></li>
-  <li><a href="#working-rule" id="toc-working-rule" class="nav-link" data-scroll-target="#working-rule"><span class="header-section-number">3</span> Working Rule</a></li>
+  <li><a href="#scope" id="toc-scope" class="nav-link active" data-scroll-target="#scope"><span class="header-section-number">1</span> Scope</a></li>
+  <li><a href="#outcome-summary" id="toc-outcome-summary" class="nav-link" data-scroll-target="#outcome-summary"><span class="header-section-number">2</span> Outcome Summary</a></li>
+  <li><a href="#detailed-qa-log" id="toc-detailed-qa-log" class="nav-link" data-scroll-target="#detailed-qa-log"><span class="header-section-number">3</span> Detailed QA Log</a></li>
+  <li><a href="#qa-decision" id="toc-qa-decision" class="nav-link" data-scroll-target="#qa-decision"><span class="header-section-number">4</span> QA Decision</a></li>
+  <li><a href="#residual-risks" id="toc-residual-risks" class="nav-link" data-scroll-target="#residual-risks"><span class="header-section-number">5</span> Residual Risks</a></li>
   </ul>
 </nav>
     </div>
@@ -179,7 +135,8 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Dataset Expansion Labs</h1>
+<h1 class="title">Quality Assurance Log: HISP IE in Practice Evaluated Code</h1>
+<p class="subtitle lead">Comparison Against HISP Book Replication Do-File</p>
 </div>
 
 
@@ -187,6 +144,12 @@ ul.task-list li input[type="checkbox"] {
 <div class="quarto-title-meta">
 
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">March 7, 2026</p>
+    </div>
+  </div>
   
     
   </div>
@@ -196,71 +159,162 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>This section collects the secondary worked examples that sit alongside the main <code>lalonde</code> report.</p>
-<p>Use these pages as extensions of the same design-first workflow:</p>
+<section id="scope" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="scope"><span class="header-section-number">1</span> Scope</h2>
 <ul>
-<li>start with the benchmarked policy-style examples if you want the closest match to the main report</li>
-<li>use the Titanic page when you want a compact teaching example for support, exact matching, and subclassification</li>
-<li>treat each lab as a self-contained notebook with its own assumptions, diagnostics, and tradeoffs</li>
+<li>Evaluated workflow reviewed: <code>docs/labs/hisp_ie_practice_lab_full_code.R</code></li>
+<li>Evaluated wrapper reviewed: <code>docs/labs/hisp_ie_practice_lab_evaluated_code.R</code></li>
+<li>Source baseline: <code>data/IE in practice files/HISP Book replication.do</code></li>
+<li>QA date: <code>2026-03-07</code></li>
+<li>Local R package context used by the evaluated workflow:
+<ul>
+<li><code>haven</code></li>
+<li><code>readr</code></li>
+<li><code>dplyr</code></li>
+<li><code>ggplot2</code></li>
+<li><code>MatchIt</code></li>
+<li><code>sandwich</code></li>
+<li><code>boot</code></li>
+<li><code>broom</code></li>
+<li><code>nlme</code></li>
+</ul></li>
 </ul>
-<section id="roadmap-aligned-labs" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="roadmap-aligned-labs"><span class="header-section-number">1</span> Roadmap-Aligned Labs</h2>
+</section>
+<section id="outcome-summary" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="outcome-summary"><span class="header-section-number">2</span> Outcome Summary</h2>
 <table class="caption-top table">
 <thead>
 <tr class="header">
-<th>Lab</th>
-<th>Dataset(s)</th>
-<th>Current status</th>
-<th>Link</th>
+<th>Outcome</th>
+<th style="text-align: right;">Count</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>Main Report 1-Hour Teaching Aid</td>
-<td><code>MatchIt::lalonde</code> plus report outputs</td>
-<td>Facilitator guide</td>
-<td><a href="../labs/main_report_1hr_lab_teaching_aid.html">Open</a></td>
+<td>Pass</td>
+<td style="text-align: right;">9</td>
 </tr>
 <tr class="even">
-<td>Black Politicians Lab</td>
-<td><code>causaldata::black_politicians</code></td>
-<td>Training aid</td>
-<td><a href="../labs/black_politicians_lab.html">Open</a> · <a href="../labs/black_politicians_lab_full_code.html">Full code</a> · <a href="../labs/black_politicians_lab_evaluated_code.html">Evaluated code</a> · <a href="../labs/black_politicians_lab_qa_log.html">QA log</a></td>
+<td>Partial alignment</td>
+<td style="text-align: right;">2</td>
 </tr>
 <tr class="odd">
-<td>HISP IE in Practice Lab</td>
-<td><code>evaluation.dta</code> converted to <code>evaluation.csv</code> from the HISP case-study bundle</td>
-<td>Stata-to-R replication lab</td>
-<td><a href="../labs/hisp_ie_practice_lab.html">Open</a> · <a href="../labs/hisp_ie_practice_lab_full_code.html">Full code</a> · <a href="../labs/hisp_ie_practice_lab_evaluated_code.html">Evaluated code</a> · <a href="../labs/hisp_ie_practice_lab_qa_log.html">QA log</a></td>
+<td>Material mismatch vs source do-file</td>
+<td style="text-align: right;">0</td>
 </tr>
 <tr class="even">
-<td>NSW + CPS Benchmark Lab</td>
-<td><code>causaldata::nsw_mixtape</code>, <code>causaldata::cps_mixtape</code></td>
-<td>Benchmark lab</td>
-<td><a href="../labs/nsw_cps_benchmark_lab.html">Open</a> · <a href="../labs/nsw_cps_benchmark_lab_full_code.html">Full code</a> · <a href="../labs/nsw_cps_benchmark_lab_evaluated_code.html">Evaluated code</a> · <a href="../labs/nsw_cps_benchmark_lab_qa_log.html">QA log</a></td>
+<td>Out-of-scope relative to request</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+<p>The HISP lab bundle is <strong>substantively aligned</strong> with the Stata source. The R code follows the same method order, sample restrictions, core variables, and comparison logic as the main book replication script.</p>
+</section>
+<section id="detailed-qa-log" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="detailed-qa-log"><span class="header-section-number">3</span> Detailed QA Log</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>ID</th>
+<th>Evaluated code claim and location</th>
+<th>Baseline comparison</th>
+<th>Result</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>H1</td>
+<td>The workflow exports every <code>.dta</code> file in <code>data/IE in practice files</code> to <code>.csv</code> before reading <code>evaluation.csv</code> (<a href="../Users/lukeheley/Developer/matching-trg/docs/labs/hisp_ie_practice_lab_full_code.R#L73">hisp_ie_practice_lab_full_code.R</a>, <a href="../Users/lukeheley/Developer/matching-trg/docs/labs/hisp_ie_practice_lab_full_code.R#L585">hisp_ie_practice_lab_full_code.R</a>)</td>
+<td>The do-file opens <code>evaluation.dta</code> directly and does not include a CSV conversion step because it runs in Stata (<a href="../Users/lukeheley/Developer/matching-trg/data/IE in practice files/HISP Book replication.do#L24">HISP Book replication.do</a>). The CSV export is required by the user request and preserves the Stata input as the source.</td>
+<td>Pass</td>
+<td>None</td>
+</tr>
+<tr class="even">
+<td>H2</td>
+<td>The R script defines the same control set used throughout the do-file (<a href="../Users/lukeheley/Developer/matching-trg/docs/labs/hisp_ie_practice_lab_full_code.R#L56">hisp_ie_practice_lab_full_code.R</a>)</td>
+<td>Matches Stata <code>global controls age_hh age_sp educ_hh educ_sp female_hh indigenous hhsize dirtfloor bathroom land hospital_distance</code> (<a href="../Users/lukeheley/Developer/matching-trg/data/IE in practice files/HISP Book replication.do#L32">HISP Book replication.do</a>).</td>
+<td>Pass</td>
+<td>None</td>
 </tr>
 <tr class="odd">
-<td>Titanic Teaching Lab</td>
-<td><code>causaldata::titanic</code></td>
-<td>Teaching lab</td>
-<td><a href="../labs/titanic_teaching_lab.html">Open</a> · <a href="../labs/titanic_teaching_lab_full_code.html">Full code</a></td>
+<td>H3</td>
+<td>Method 1 reproduces the treatment-locality, enrolled-household before-after branch with the same mean comparison and clustered regressions (<a href="../Users/lukeheley/Developer/matching-trg/docs/labs/hisp_ie_practice_lab_full_code.R#L617">hisp_ie_practice_lab_full_code.R</a>)</td>
+<td>Matches the do-file’s sample restriction and models for Method 1 (<a href="../Users/lukeheley/Developer/matching-trg/data/IE in practice files/HISP Book replication.do#L43">HISP Book replication.do</a>).</td>
+<td>Pass</td>
+<td>None</td>
+</tr>
+<tr class="even">
+<td>H4</td>
+<td>Method 2 reproduces the follow-up enrolled-versus-not-enrolled comparison in treatment localities with clustered regressions and the same controls (<a href="../Users/lukeheley/Developer/matching-trg/docs/labs/hisp_ie_practice_lab_full_code.R#L657">hisp_ie_practice_lab_full_code.R</a>)</td>
+<td>Matches the do-file’s Method 2 sample restriction and models (<a href="../Users/lukeheley/Developer/matching-trg/data/IE in practice files/HISP Book replication.do#L61">HISP Book replication.do</a>).</td>
+<td>Pass</td>
+<td>None</td>
+</tr>
+<tr class="odd">
+<td>H5</td>
+<td>Method 3 keeps <code>eligible == 1</code>, tests baseline balance, compares baseline and follow-up outcome means, and estimates clustered follow-up regressions (<a href="../Users/lukeheley/Developer/matching-trg/docs/labs/hisp_ie_practice_lab_full_code.R#L697">hisp_ie_practice_lab_full_code.R</a>)</td>
+<td>Matches the randomized-assignment branch in the do-file (<a href="../Users/lukeheley/Developer/matching-trg/data/IE in practice files/HISP Book replication.do#L79">HISP Book replication.do</a>).</td>
+<td>Pass</td>
+<td>None</td>
+</tr>
+<tr class="even">
+<td>H6</td>
+<td>Method 4 estimates randomized-promotion IV models using <code>promotion_locality</code> as the instrument for <code>enrolled_rp</code>, and preserves first-stage output (<a href="../Users/lukeheley/Developer/matching-trg/docs/labs/hisp_ie_practice_lab_full_code.R#L759">hisp_ie_practice_lab_full_code.R</a>, <a href="../Users/lukeheley/Developer/matching-trg/docs/labs/hisp_ie_practice_lab_full_code.R#L231">hisp_ie_practice_lab_full_code.R</a>)</td>
+<td>Matches the do-file’s IV setup and the <code>first</code> reporting logic (<a href="../Users/lukeheley/Developer/matching-trg/data/IE in practice files/HISP Book replication.do#L108">HISP Book replication.do</a>).</td>
+<td>Pass</td>
+<td>None</td>
+</tr>
+<tr class="odd">
+<td>H7</td>
+<td>Method 5 recreates the cutoff-normalized left and right running variables, the linear RDD specifications, and the density/participation/follow-up diagnostic plots (<a href="../Users/lukeheley/Developer/matching-trg/docs/labs/hisp_ie_practice_lab_full_code.R#L835">hisp_ie_practice_lab_full_code.R</a>, <a href="../Users/lukeheley/Developer/matching-trg/docs/labs/hisp_ie_practice_lab_full_code.R#L889">hisp_ie_practice_lab_full_code.R</a>)</td>
+<td>Aligns with the do-file’s RDD logic and graph sequence (<a href="../Users/lukeheley/Developer/matching-trg/data/IE in practice files/HISP Book replication.do#L135">HISP Book replication.do</a>). The exact <code>rdplot</code> rendering is not reproduced because the local R workflow uses <code>ggplot2</code> diagnostics rather than <code>rdrobust</code>.</td>
+<td>Partial alignment</td>
+<td>Keep the current plots; only add <code>rdrobust</code> if exact figure replication becomes necessary.</td>
+</tr>
+<tr class="even">
+<td>H8</td>
+<td>Method 6 reproduces the difference-in-differences branch by building <code>enrolled_round</code> and estimating the same clustered specifications with and without controls (<a href="../Users/lukeheley/Developer/matching-trg/docs/labs/hisp_ie_practice_lab_full_code.R#L937">hisp_ie_practice_lab_full_code.R</a>)</td>
+<td>Matches the do-file’s DiD section (<a href="../Users/lukeheley/Developer/matching-trg/data/IE in practice files/HISP Book replication.do#L230">HISP Book replication.do</a>).</td>
+<td>Pass</td>
+<td>None</td>
+</tr>
+<tr class="odd">
+<td>H9</td>
+<td>Method 7 reshapes the panel wide, fits a probit propensity score, uses random-order nearest-neighbor matching for the restricted and full covariate sets, and reports support, bootstrap ATT, and weighted regression estimates (<a href="../Users/lukeheley/Developer/matching-trg/docs/labs/hisp_ie_practice_lab_full_code.R#L986">hisp_ie_practice_lab_full_code.R</a>, <a href="../Users/lukeheley/Developer/matching-trg/docs/labs/hisp_ie_practice_lab_full_code.R#L399">hisp_ie_practice_lab_full_code.R</a>)</td>
+<td>Matches the do-file’s matching structure and sequencing (<a href="../Users/lukeheley/Developer/matching-trg/data/IE in practice files/HISP Book replication.do#L251">HISP Book replication.do</a>). <code>MatchIt</code> substitutes for <code>psmatch2</code>, but the branch remains probit-based, one-to-one, and random-order nearest neighbor.</td>
+<td>Pass</td>
+<td>None</td>
+</tr>
+<tr class="even">
+<td>H10</td>
+<td>The matched difference-in-differences section uses matched subclasses to build pairwise DDs and then fits the weighted <code>diff ~ enrolled</code> regression on the matched sample (<a href="../Users/lukeheley/Developer/matching-trg/docs/labs/hisp_ie_practice_lab_full_code.R#L1028">hisp_ie_practice_lab_full_code.R</a>)</td>
+<td>Matches the do-file’s manual matched-DD calculation and regression follow-up (<a href="../Users/lukeheley/Developer/matching-trg/data/IE in practice files/HISP Book replication.do#L339">HISP Book replication.do</a>).</td>
+<td>Pass</td>
+<td>None</td>
+</tr>
+<tr class="odd">
+<td>H11</td>
+<td>The power section computes baseline and follow-up means, standard deviations, ICC estimates, no-cluster sample sizes for the same MDE grids, and clustered sample-size adjustments for the same cluster counts (<a href="../Users/lukeheley/Developer/matching-trg/docs/labs/hisp_ie_practice_lab_full_code.R#L1066">hisp_ie_practice_lab_full_code.R</a>)</td>
+<td>Aligns with the do-file’s Chapter 15 sequence (<a href="../Users/lukeheley/Developer/matching-trg/data/IE in practice files/HISP Book replication.do#L360">HISP Book replication.do</a>). The R version uses normal-approximation formulas and an iterative design-effect adjustment instead of Stata’s <code>sampsi</code> and <code>sampclus</code> commands.</td>
+<td>Partial alignment</td>
+<td>Keep the current implementation unless exact <code>sampsi</code>/<code>sampclus</code> parity is required.</td>
 </tr>
 </tbody>
 </table>
 </section>
-<section id="recommended-sequence" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="recommended-sequence"><span class="header-section-number">2</span> Recommended Sequence</h2>
-<ol type="1">
-<li>Start with the Main Report 1-Hour Teaching Aid if you want a facilitator script for delivering the <code>lalonde</code> material live.</li>
-<li>Move to the Black Politicians lab for a second design-first matching workflow with richer covariates.</li>
-<li>Use the HISP IE in Practice lab when you want a Stata-to-R replication that walks through weaker and stronger impact-evaluation designs in the order used in the book case study.</li>
-<li>Use the NSW + CPS benchmark lab when you want to compare observational designs against an experimental reference.</li>
-<li>Use the Titanic lab for slide-friendly teaching on exact support cells and low-dimensional adjustment.</li>
-</ol>
+<section id="qa-decision" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="qa-decision"><span class="header-section-number">4</span> QA Decision</h2>
+<p>The HISP IE in Practice bundle is <strong>ready for use</strong>.</p>
+<p>It follows the book replication do-file closely enough to support teaching, inspection, and reruns in R. The main deviations are implementation-level substitutions where the Stata-specific commands do not have an identical local R equivalent in the current environment.</p>
 </section>
-<section id="working-rule" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="working-rule"><span class="header-section-number">3</span> Working Rule</h2>
-<p>Keep the same standard across all labs: define the estimand first, inspect imbalance before adjustment, and compare balance against retention after design changes.</p>
+<section id="residual-risks" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="residual-risks"><span class="header-section-number">5</span> Residual Risks</h2>
+<ol type="1">
+<li>Matching estimates use <code>MatchIt</code> as the nearest-neighbor engine rather than <code>psmatch2</code>, so very small tie-breaking differences remain possible.</li>
+<li>The RDD visuals are analytically aligned but not pixel-identical to the Stata figures that depend on <code>rdplot</code>.</li>
+<li>The power-calculation tables are logically aligned with the Stata workflow, but exact numeric parity with <code>sampsi</code> and <code>sampclus</code> is not guaranteed.</li>
+</ol>
 
 
 </section>

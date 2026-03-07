@@ -1,0 +1,121 @@
+---
+title: "HISP IE in Practice: Evaluated Code"
+format:
+  html:
+    toc: true
+    code-links:
+      - text: Lab
+        href: hisp_ie_practice_lab.html
+      - text: Full Code
+        href: hisp_ie_practice_lab_full_code.html
+      - text: QA Log
+        href: hisp_ie_practice_lab_qa_log.html
+      - text: Evaluated Script
+        href: hisp_ie_practice_lab_evaluated_code.R
+execute:
+  echo: false
+  eval: true
+  warning: false
+  message: false
+---
+
+This page runs the evaluated HISP workflow script and shows processed outputs for each branch of the translated Stata replication.
+
+```{r}
+#| include: false
+source("hisp_ie_practice_lab_evaluated_code.R", local = knitr::knit_global())
+```
+
+## Evaluated Script
+
+```{r}
+#| results: asis
+cat("```r\n")
+cat(readLines("hisp_ie_practice_lab_evaluated_code.R"), sep = "\n")
+cat("\n```")
+```
+
+## CSV Export Manifest
+
+```{r}
+csv_export_manifest
+```
+
+## Data Overview
+
+```{r}
+data_overview
+panel_completeness
+data_preview
+```
+
+## Effect Summary Across The Do-File Sequence
+
+```{r}
+effect_pathway_summary
+```
+
+## Mean-Comparison Checks
+
+```{r}
+method_1_ttest
+method_2_ttest
+method_3_outcome_ttests
+method_6_ttests
+```
+
+## Randomized-Assignment Baseline Balance
+
+```{r}
+method_3_baseline_control_ttests
+```
+
+## Instrumental-Variables Branch
+
+```{r}
+method_4_ttests
+method_4_first_stage
+method_4_iv_regressions
+```
+
+## Regression-Discontinuity Branch
+
+```{r}
+method_5_regressions
+```
+
+```{r}
+rdd_density_plot
+rdd_participation_plot
+rdd_followup_plot
+```
+
+## Matching Branch
+
+```{r}
+matching_wide_summary
+matching_restricted_support
+matching_restricted_regression[matching_restricted_regression$term == "enrolled", ]
+matching_restricted_bootstrap
+matching_full_support
+matching_full_regression[matching_full_regression$term == "enrolled", ]
+matching_full_bootstrap
+matched_did_manual_summary
+matched_did_regression[matched_did_regression$term == "enrolled", ]
+```
+
+```{r}
+matching_restricted_ps_plot
+matching_full_ps_plot
+```
+
+## Power Calculations
+
+```{r}
+power_parameter_summary
+power_health_no_cluster_90
+power_health_no_cluster_80
+power_hospital_no_cluster_80
+power_health_clustered_100
+power_health_clustered_varying_clusters
+```

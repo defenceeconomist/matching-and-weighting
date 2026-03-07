@@ -1,0 +1,32 @@
+---
+title: "HISP IE in Practice: Full Code"
+format:
+  html:
+    toc: false
+    code-links:
+      - text: Lab
+        href: hisp_ie_practice_lab.html
+      - text: Evaluated Code
+        href: hisp_ie_practice_lab_evaluated_code.html
+      - text: QA Log
+        href: hisp_ie_practice_lab_qa_log.html
+execute:
+  echo: false
+  eval: true
+  warning: false
+  message: false
+---
+
+This document contains the complete executable R script for `hisp_ie_practice_lab.qmd`.
+
+```{r}
+#| include: false
+source("hisp_ie_practice_lab_full_code.R", local = knitr::knit_global())
+```
+
+```{r}
+#| results: asis
+cat("```r\n")
+cat(readLines("hisp_ie_practice_lab_full_code.R"), sep = "\n")
+cat("\n```")
+```
