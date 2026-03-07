@@ -14,5 +14,5 @@ Use this section for the single live workshop deck and the standalone speaking n
 1. Keep the workshop deck aligned with `articles/matching_methods_report.qmd`.
 2. Keep the main report open during the worked-example segment of the talk.
 3. Use the speaking notes page when you want timing prompts, transitions, and lab instructions outside presenter view.
-4. Hand off first to the Black Politicians lab, then to NSW + CPS, HISP, or Titanic depending on the session goal.
+4. Hand off first to the LaLonde main report lab, then to Black Politicians, NSW + CPS, HISP, or Titanic depending on the session goal.
 5. Keep the deck tied to the evaluated-code and QA outputs so the workshop stays auditable.

@@ -15,7 +15,7 @@ format:
     center: false
     width: 1400
     height: 850
-    footer: "Matching and Weighting"
+    footer: '<a href="../index.html">Back to site</a>'
     preview-links: auto
 execute:
   echo: false
@@ -223,7 +223,8 @@ What changes is the data structure, the support problem, and the kind of design 
 
 | Lab | Best use in teaching | Core run order |
 |---|---|---|
-| Black Politicians | First post-talk matching exercise | `Step 1` to `Step 7` |
+| LaLonde Main Report Lab | Direct worksheet version of the main report | `Step 1` to `Step 8` |
+| Black Politicians | First dataset extension after the report lab | `Step 1` to `Step 7` |
 | NSW + CPS | Benchmark recovery against an experiment | `Step 1` to `Step 8` |
 | HISP IE in Practice | When matching should not be the default | `Step 1` to `Step 10` |
 | Titanic | Short support-cells and exact-matching recap | `Support Cells` to `Comparison Of Estimates` |
@@ -236,7 +237,37 @@ What changes is the data structure, the support problem, and the kind of design 
 - the retention or weighting cost they had to admit
 - the design they would defend, plus one claim they still would not make
 
-## Exercise 1: Black Politicians
+## Exercise 1: LaLonde Main Report Lab
+
+::: {.lab-grid}
+::: {.lab-card}
+**Run these sections**
+
+- `Step 1: Load Packages And Prepare The Data`
+- `Step 2: Describe The Raw Comparison`
+- `Step 3: Build The Baseline Balance Benchmark`
+- `Step 4` to `Step 6`: exact, `CEM`, entropy balancing
+- `Step 7: Compare The Methods Side By Side`
+- `Step 8: Write The Design Judgement`
+:::
+
+::: {.lab-card}
+**Capture these outputs**
+
+- `pre_match_summary`
+- `unadjusted_balance`
+- `exact_retention`
+- `cem_comparison`
+- `ebal_weight_diagnostics`
+- the final design judgement
+:::
+:::
+
+::: {.small-note}
+Default first breakout: it keeps the dataset fixed and turns the report into a worksheet.
+:::
+
+## Exercise 2: Black Politicians
 
 ::: {.lab-grid}
 ::: {.lab-card}
@@ -261,10 +292,10 @@ What changes is the data structure, the support problem, and the kind of design 
 :::
 
 ::: {.small-note}
-Default first breakout: strongest direct continuation of the main report's logic.
+Best first dataset extension once the room has seen the report workflow on familiar data.
 :::
 
-## Exercise 2: NSW + CPS Benchmark
+## Exercise 3: NSW + CPS Benchmark
 
 ::: {.lab-grid}
 ::: {.lab-card}
@@ -293,7 +324,7 @@ Default first breakout: strongest direct continuation of the main report's logic
 Best benchmark question: which design gets closest to the experiment without hiding too much cost?
 :::
 
-## Exercise 3: HISP IE in Practice
+## Exercise 4: HISP IE in Practice
 
 ::: {.lab-grid}
 ::: {.lab-card}
@@ -320,7 +351,7 @@ Best benchmark question: which design gets closest to the experiment without hid
 Use this lab to teach escalation: matching is part of the toolkit, not the automatic endpoint.
 :::
 
-## Exercise 4: Titanic
+## Exercise 5: Titanic
 
 ::: {.lab-grid}
 ::: {.lab-card}
@@ -355,6 +386,7 @@ Open the main report, the workshop notes, and the first lab before you start the
 - [Workshop speaking notes](matching_workshop_notes.html)
 - [Main report](../articles/matching_methods_report.html)
 - [Labs hub](../labs/index.html)
+- [LaLonde main report lab](../labs/lalonde_main_report_lab.html)
 - [Black Politicians lab](../labs/black_politicians_lab.html)
 
 ## Closing Line

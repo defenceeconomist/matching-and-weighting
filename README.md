@@ -104,18 +104,18 @@ quarto render
 
 This renders:
 
-- `_site/index.html`
-- `_site/articles/matching_methods_report.html` (main article)
-- `_site/labs/index.html` and lab pages
-- `_site/labs/black_politicians_lab.html`
-- `_site/labs/black_politicians_lab_full_code.html`
-- `_site/labs/black_politicians_lab_evaluated_code.html`
-- `_site/labs/black_politicians_lab_qa_log.html`
-- `_site/labs/titanic_teaching_lab.html`
-- `_site/labs/titanic_teaching_lab_full_code.html`
-- `_site/slides/index.html` and slide pages
-- `_site/articles/matching_methods_report_full_code.html`
-- `_site/articles/matching_methods_report_qa_log.html`
+- `docs/_site/index.html`
+- `docs/_site/articles/matching_methods_report.html` (main article)
+- `docs/_site/labs/index.html` and lab pages
+- `docs/_site/labs/black_politicians_lab.html`
+- `docs/_site/labs/black_politicians_lab_full_code.html`
+- `docs/_site/labs/black_politicians_lab_evaluated_code.html`
+- `docs/_site/labs/black_politicians_lab_qa_log.html`
+- `docs/_site/labs/titanic_teaching_lab.html`
+- `docs/_site/labs/titanic_teaching_lab_full_code.html`
+- `docs/_site/slides/index.html` and slide pages
+- `docs/_site/articles/matching_methods_report_full_code.html`
+- `docs/_site/articles/matching_methods_report_qa_log.html`
 
 If you only want the main article, run:
 
@@ -136,8 +136,8 @@ quarto render slides/matching_workshop.qmd
 The repository includes a GitLab CI pipeline in `.gitlab-ci.yml` that:
 
 - renders the Quarto site on pushes to `main`
-- writes the built site into `_site/`
-- force-updates a deploy branch named `gh-pages` with the contents of `_site/`
+- writes the built site into `docs/_site/`
+- force-updates a deploy branch named `gh-pages` with the contents of `docs/_site/`
 
 The deploy branch name can be changed with the `DEPLOY_BRANCH` CI/CD variable.
 
@@ -157,7 +157,7 @@ On every push to `main`, it:
 - installs Quarto and R
 - installs the site build dependencies
 - renders the site from `docs/`
-- publishes `_site/` to the `gh-pages` branch
+- publishes `docs/_site/` to the `gh-pages` branch
 
 To use it on GitHub, enable GitHub Pages in the repository settings and choose `gh-pages` as the publishing branch.
 

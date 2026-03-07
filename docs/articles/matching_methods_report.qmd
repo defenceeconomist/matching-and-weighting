@@ -11,12 +11,13 @@ format:
     toc-depth: 3
     number-sections: true
     code-links:
-      - text: PDF
-        href: matching_methods_report.pdf
       - text: Full Code
         href: matching_methods_report_full_code.html
       - text: QA Log
         href: matching_methods_report_qa_log.html
+  pdf:
+    toc: true
+    number-sections: true
 execute:
   echo: true
   eval: true

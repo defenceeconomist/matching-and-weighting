@@ -31,7 +31,7 @@ build_site:
     - quarto render
   artifacts:
     paths:
-      - _site
+      - docs/_site
     expire_in: 1 week
 
 deploy_site_branch:
@@ -69,7 +69,7 @@ deploy_site_branch:
       fi
 
       find . -mindepth 1 -maxdepth 1 ! -name ".git" -exec rm -rf {} +
-      cp -R ../_site/. .
+      cp -R ../docs/_site/. .
       touch .nojekyll
 
       git add -A

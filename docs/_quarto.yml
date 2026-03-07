@@ -1,6 +1,6 @@
 project:
   type: website
-  output-dir: ../_site
+  output-dir: _site
   render:
     - index.qmd
     - articles/index.qmd
@@ -24,15 +24,16 @@ website:
       - href: articles/index.qmd
         text: Articles
       - href: labs/index.qmd
-        text: Additional Labs
+        text: Labs
       - href: slides/index.qmd
         text: Slides
   sidebar:
     - id: labs
-      title: "Dataset Expansion Labs"
+      title: "Labs"
       style: "docked"
       contents:
         - labs/index.qmd
+        - labs/lalonde_main_report_lab.qmd
         - labs/black_politicians_lab.qmd
         - labs/hisp_ie_practice_lab.qmd
         - labs/nsw_cps_benchmark_lab.qmd

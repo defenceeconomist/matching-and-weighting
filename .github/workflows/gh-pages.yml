@@ -27,6 +27,9 @@ jobs:
         with:
           r-version: "4.4.1"
 
+      - name: Set up TinyTeX
+        uses: r-lib/actions/setup-tinytex@v2
+
       - name: Set up R package dependencies
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
@@ -56,6 +59,6 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: ./_site
+          publish_dir: ./docs/_site
           force_orphan: true
           enable_jekyll: false

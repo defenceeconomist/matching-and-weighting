@@ -37,7 +37,7 @@ This means the repository should be read as analyst-directed work supported by A
 The site is split into three main areas:
 
 - `Articles`: longer methods write-ups and their supporting audit materials
-- `Additional Labs`: worked examples that extend the core material to other datasets and teaching scenarios
+- `Labs`: one report-based walkthrough plus worked examples that extend the core material to other datasets and teaching scenarios
 - `Slides`: one delivery deck plus standalone facilitator notes for the workshop and lab handoff
 
 If you are new to the site, the recommended sequence is:
@@ -45,7 +45,7 @@ If you are new to the site, the recommended sequence is:
 1. Start with the main report.
 2. Use the full-code and QA pages when you want implementation detail or audit traceability.
 3. Use the workshop deck and speaking notes when you want the delivery-ready teaching version.
-4. Move into the Black Politicians lab first, then the other labs as extensions.
+4. Move into the LaLonde main report lab first, then the other labs as extensions.
 
 ## Articles
 
@@ -60,11 +60,12 @@ The main report bundle is:
 - [Full Code Companion](articles/matching_methods_report_full_code.qmd)
 - [QA Log](articles/matching_methods_report_qa_log.qmd)
 
-## Dataset Expansion Labs
+## Labs
 
-The dataset expansion workstream provides additional labs and teaching aids that apply the same design-first logic to other examples:
+The lab section provides one walkthrough that stays on the main report dataset, followed by additional teaching labs that apply the same design-first logic to other examples:
 
-- [Dataset Expansion Lab Hub](labs/index.qmd)
+- [Lab Hub](labs/index.qmd)
+- [LaLonde Main Report Lab](labs/lalonde_main_report_lab.qmd)
 - [Black Politicians Lab](labs/black_politicians_lab.qmd)
 - [HISP IE in Practice Lab](labs/hisp_ie_practice_lab.qmd)
 - [NSW + CPS Benchmark Lab](labs/nsw_cps_benchmark_lab.qmd)

@@ -12,6 +12,8 @@ format:
         href: ../articles/matching_methods_report.html
       - text: Labs hub
         href: ../labs/index.html
+      - text: LaLonde main report lab
+        href: ../labs/lalonde_main_report_lab.html
       - text: Black Politicians lab
         href: ../labs/black_politicians_lab.html
       - text: NSW + CPS lab
@@ -37,6 +39,7 @@ Open these pages before the session starts:
 - [Workshop deck](matching_workshop.html)
 - [Main report](../articles/matching_methods_report.html)
 - [Labs hub](../labs/index.html)
+- [LaLonde main report lab](../labs/lalonde_main_report_lab.html)
 - [Black Politicians lab](../labs/black_politicians_lab.html)
 - [NSW + CPS benchmark lab](../labs/nsw_cps_benchmark_lab.html)
 
@@ -152,7 +155,7 @@ If you know in advance which exercise follows the talk, also open that lab's eva
 ### Lab Bundle At A Glance
 
 - `Purpose:` Help participants pick the right exercise without opening every file blindly.
-- `Say:` Black Politicians is the default first breakout. NSW + CPS adds a benchmark question. HISP is the escalation lab. Titanic is the shortest recap.
+- `Say:` The LaLonde main report lab is the default first breakout because it turns the report into a worksheet on the same data. Black Politicians is the first dataset extension. NSW + CPS adds a benchmark question. HISP is the escalation lab. Titanic is the shortest recap.
 - `Prompt:` If you are teaching live, tell the room which one you are actually assigning.
 - `Transition:` Move to the hand-back slide so participants know what evidence they need from any lab they choose.
 
@@ -163,7 +166,16 @@ If you know in advance which exercise follows the talk, also open that lab's eva
 - `Emphasis:` This is the slide to use if discussion later drifts into unstructured code-watching.
 - `Transition:` Move into the specific exercises and keep each briefing tight.
 
-### Exercise 1: Black Politicians
+### Exercise 1: LaLonde Main Report Lab
+
+- `Purpose:` Launch the direct worksheet version of the report before moving to new datasets.
+- `Say:` This lab keeps the `lalonde` data fixed and asks participants to reproduce the report's design logic step by step.
+- `Run:` Work from `Step 1` to `Step 8` in order. Keep the main report open alongside the lab so participants can see the written interpretation beside the code.
+- `Capture:` Ask groups to save `pre_match_summary`, `unadjusted_balance`, `exact_retention`, `cem_comparison`, `ebal_weight_diagnostics`, and their final design judgement.
+- `Prompt:` Ask which method they would defend if they had to brief a policy audience on the same `ATT`.
+- `Transition:` Move to Black Politicians by saying the next lab keeps the workflow but changes the dataset and support problem.
+
+### Exercise 2: Black Politicians
 
 - `Purpose:` Launch the first and most direct follow-on lab.
 - `Say:` This is the closest extension of the main report because it compares exact matching, `CEM`, and entropy balancing on a fresh observational problem.
@@ -172,7 +184,7 @@ If you know in advance which exercise follows the talk, also open that lab's eva
 - `Prompt:` Ask which design they would defend to a policy audience and what cost they would have to admit.
 - `Transition:` Move to NSW + CPS by saying the next lab adds an external benchmark rather than just a method comparison.
 
-### Exercise 2: NSW + CPS Benchmark
+### Exercise 3: NSW + CPS Benchmark
 
 - `Purpose:` Brief the benchmark-recovery exercise.
 - `Say:` This lab matters because the design is judged not only on balance but also on how close it gets to the experimental NSW estimate.
@@ -181,7 +193,7 @@ If you know in advance which exercise follows the talk, also open that lab's eva
 - `Prompt:` Ask which method gets closest to the benchmark without making the weighted or matched design too fragile.
 - `Transition:` Move to HISP by saying the next lab changes the teaching question from matching performance to design escalation.
 
-### Exercise 3: HISP IE in Practice
+### Exercise 4: HISP IE in Practice
 
 - `Purpose:` Explain why this notebook is structurally different from the other labs.
 - `Say:` This is not a pure matching notebook. It follows the do-file logic across weaker and stronger designs so participants can see when matching should stop being the default.
@@ -190,7 +202,7 @@ If you know in advance which exercise follows the talk, also open that lab's eva
 - `Prompt:` Ask what this notebook teaches about escalation inside the quasi-experimental toolkit.
 - `Transition:` Move to Titanic as the shortest visual recap.
 
-### Exercise 4: Titanic
+### Exercise 5: Titanic
 
 - `Purpose:` Brief the shortest and most visible support-focused lab.
 - `Say:` Titanic is useful because the support cells are visible, exact matching is feasible, and subclassification can be compared on one page.
@@ -203,6 +215,7 @@ If you know in advance which exercise follows the talk, also open that lab's eva
 
 - `Purpose:` End the talk with a clean transition rather than one more conceptual point.
 - `Say:` Open the main report, the notes page, and the assigned lab before moving into coding or discussion.
+- `Say:` If you want the closest possible continuation of the talk, open the LaLonde main report lab first.
 - `Say:` If you are facilitating, this is the moment to assign groups or name the first notebook explicitly.
 - `Transition:` Use the closing line as the final standard the room should carry into the exercises.
 
@@ -221,7 +234,7 @@ If you lose `10-15` minutes, keep only this sequence:
 3. `Method Map`
 4. `What The Main Report Teaches`
 5. `Decision Rule, Not Winner's Podium`
-6. `Exercise 1: Black Politicians`
+6. `Exercise 1: LaLonde Main Report Lab`
 7. `Handoff`
 
 Cut first:
