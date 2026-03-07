@@ -46,7 +46,7 @@ This hour is about design judgement, not software mimicry.
 
 ::: {.lab-grid}
 ::: {.lab-card}
-### Observational data
+**Observational data**
 
 - rarely give you a ready-made control group
 - can hide major baseline differences behind one coefficient
@@ -54,7 +54,7 @@ This hour is about design judgement, not software mimicry.
 :::
 
 ::: {.lab-card}
-### Adjustment tools
+**Adjustment tools**
 
 - `matching` restricts who compares to whom
 - `weighting` changes how much each control counts
@@ -66,31 +66,31 @@ This hour is about design judgement, not software mimicry.
 
 ::: {.card-grid}
 ::: {.mini-card}
-### 1. Name the target
+**1. Name the target**
 
 State the estimand before any adjustment output.
 :::
 
 ::: {.mini-card}
-### 2. Choose covariates
+**2. Choose covariates**
 
 Keep only defensible pre-treatment variables in the design.
 :::
 
 ::: {.mini-card}
-### 3. Inspect the raw sample
+**3. Inspect the raw sample**
 
 Look at imbalance and overlap before touching a method.
 :::
 
 ::: {.mini-card}
-### 4. Adjust the design
+**4. Adjust the design**
 
 Compare methods on the same target rather than moving the goalposts.
 :::
 
 ::: {.mini-card}
-### 5. Estimate last
+**5. Estimate last**
 
 Only interpret the effect once the design is credible enough to defend.
 :::
@@ -100,25 +100,25 @@ Only interpret the effect once the design is credible enough to defend.
 
 ::: {.metric-grid}
 ::: {.metric-card}
-### Balance
+**Balance**
 
 How much observed covariate imbalance remains?
 :::
 
 ::: {.metric-card}
-### Overlap
+**Overlap**
 
 Do treated and control units still occupy common support?
 :::
 
 ::: {.metric-card}
-### Retention
+**Retention**
 
 How much of the treated sample survives the design?
 :::
 
 ::: {.metric-card}
-### Weight concentration
+**Weight concentration**
 
 If weighting is used, did the effective sample size collapse?
 :::
@@ -159,7 +159,7 @@ If you keep one page open during delivery, keep the main report open.
 
 ::: {.card-grid}
 ::: {.mini-card}
-### Exact matching
+**Exact matching**
 
 - clearest audit trail
 - retains `183 / 185` treated units
@@ -167,7 +167,7 @@ If you keep one page open during delivery, keep the main report open.
 :::
 
 ::: {.mini-card}
-### `CEM`
+**`CEM`**
 
 - best matched-sample compromise
 - worst adjusted abs. SMD about `0.077`
@@ -175,7 +175,7 @@ If you keep one page open during delivery, keep the main report open.
 :::
 
 ::: {.mini-card}
-### Entropy balancing
+**Entropy balancing**
 
 - preserves all `185` treated units
 - drives included mean differences to about `0`
@@ -202,7 +202,7 @@ What changes is the data structure, the support problem, and the kind of design 
 
 ::: {.lab-grid}
 ::: {.lab-card}
-### Always do this
+**Always do this**
 
 - define treatment, outcome, covariates, and estimand first
 - inspect the raw comparison before adjustment
@@ -210,7 +210,7 @@ What changes is the data structure, the support problem, and the kind of design 
 :::
 
 ::: {.lab-card}
-### Always record this
+**Always record this**
 
 - worst pre/post imbalance
 - treated retention or control `ESS`
@@ -240,7 +240,7 @@ What changes is the data structure, the support problem, and the kind of design 
 
 ::: {.lab-grid}
 ::: {.lab-card}
-### Run these sections
+**Run these sections**
 
 - `Step 1: Load The Data`
 - `Step 2: Describe The Raw Comparison`
@@ -250,7 +250,7 @@ What changes is the data structure, the support problem, and the kind of design 
 :::
 
 ::: {.lab-card}
-### Capture these outputs
+**Capture these outputs**
 
 - `raw_summary`
 - pre-adjustment balance benchmark
@@ -268,7 +268,7 @@ Default first breakout: strongest direct continuation of the main report's logic
 
 ::: {.lab-grid}
 ::: {.lab-card}
-### Run these sections
+**Run these sections**
 
 - `Step 1: Load Packages And Build Analysis Datasets`
 - `Step 2: Compute The Experimental Benchmark`
@@ -279,7 +279,7 @@ Default first breakout: strongest direct continuation of the main report's logic
 :::
 
 ::: {.lab-card}
-### Capture these outputs
+**Capture these outputs**
 
 - `benchmark_summary`
 - `overlap_summary`
@@ -297,7 +297,7 @@ Best benchmark question: which design gets closest to the experiment without hid
 
 ::: {.lab-grid}
 ::: {.lab-card}
-### Run this in phases
+**Run this in phases**
 
 - `Step 1`: convert the Stata files and load `evaluation.csv`
 - `Step 2` and `Step 3`: naive contrasts to show weak designs
@@ -307,7 +307,7 @@ Best benchmark question: which design gets closest to the experiment without hid
 :::
 
 ::: {.lab-card}
-### Capture these outputs
+**Capture these outputs**
 
 - effect movement across the do-file sequence
 - baseline-balance checks in the randomized branch
@@ -324,7 +324,7 @@ Use this lab to teach escalation: matching is part of the toolkit, not the autom
 
 ::: {.lab-grid}
 ::: {.lab-card}
-### Run these sections
+**Run these sections**
 
 - `Support Cells Before Matching`
 - `Exact Matching`
@@ -333,7 +333,7 @@ Use this lab to teach escalation: matching is part of the toolkit, not the autom
 :::
 
 ::: {.lab-card}
-### Capture these outputs
+**Capture these outputs**
 
 - the support-cell table
 - the balance-comparison table

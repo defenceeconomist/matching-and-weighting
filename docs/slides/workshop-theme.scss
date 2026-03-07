@@ -85,6 +85,12 @@ $code-color: #112620;
   color: #fff8ef;
 }
 
+.reveal .slides section.section-slide code {
+  background: rgba(255, 248, 239, 0.16);
+  color: #fff8ef;
+  border: 1px solid rgba(255, 248, 239, 0.2);
+}
+
 .reveal h2 {
   font-size: 1.45em;
   margin-bottom: 0.45em;

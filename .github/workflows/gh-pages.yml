@@ -27,9 +27,24 @@ jobs:
         with:
           r-version: "4.4.1"
 
-      - name: Install R package dependencies
-        run: |
-          Rscript -e 'install.packages(c("MatchIt", "WeightIt", "cobalt", "causaldata", "haven", "readr", "broom", "sandwich", "boot", "nlme"), repos = "https://cloud.r-project.org", Ncpus = max(1, parallel::detectCores() - 1L))'
+      - name: Set up R package dependencies
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            any::knitr
+            any::rmarkdown
+            any::MatchIt
+            any::WeightIt
+            any::cobalt
+            any::causaldata
+            any::dplyr
+            any::ggplot2
+            any::haven
+            any::readr
+            any::broom
+            any::sandwich
+            any::boot
+            any::nlme
 
       - name: Render Quarto site
         run: |

@@ -1,6 +1,7 @@
 ---
 title: "Matching and Weighting Learning Resources"
 subtitle: "Quasi Experimental Impact Evaluation Design"
+bibliography: references.bib
 ---
 
 ## What This Website Is For
@@ -23,7 +24,9 @@ The intended audience is evaluators, analysts, and staff who need a practical in
 
 ## How Codex Was Used In This Repository
 
-Codex was used as a coding and drafting assistant within this repository. It helped with implementation tasks, restructuring content, generating draft text, and supporting documentation and QA work across the site.
+For transparency, this repository records the provider, tool, model version, role in the workflow, and the date of this disclosure. Codex is OpenAI's coding agent and software-engineering assistant, while ChatGPT is OpenAI's general-purpose conversational interface [@openai_codex; @openai_chatgpt].
+
+In this repository, those tools were used as coding and drafting assistants rather than as autonomous authors. They helped with implementation tasks, restructuring content, generating draft text, and supporting documentation and QA work across the site. Most AI-assisted work was completed mainly with ChatGPT `GPT-5.4` [@openai_gpt54] and with Codex models `GPT-5.3-Codex` and `GPT-5.2-Codex` [@openai_gpt53codex; @openai_gpt52codex]. This disclosure was updated on 7 March 2026.
 
 The human analyst remained responsible for the substantive direction of the project. The analyst planned the work, delegated bounded tasks to Codex, reviewed outputs, iterated drafts, checked technical and editorial quality, and decided what to keep, revise, or reject.
 
