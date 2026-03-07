@@ -42,6 +42,7 @@ The main report bundle is:
 - [Matching Methods Report](report/matching_methods_report.qmd)
 - [Notes on *The Effect*: Matching](report/effectbook_matching_notes.qmd)
 - [Notes on *The Mixtape*: Matching and Subclassification](report/mixtape_matching_subclassification_notes.qmd)
+- [Notes on Gertler et al.: Matching](report/gertler_matching_notes.qmd)
 - [Full Code Companion](report/matching_methods_report_full_code.qmd)
 - [QA Log](report/matching_methods_report_qa_log.qmd)
 
@@ -51,6 +52,7 @@ The dataset expansion workstream provides additional labs and teaching aids that
 
 - [Dataset Expansion Lab Hub](labs/index.qmd)
 - [Black Politicians Lab](labs/black_politicians_lab.qmd)
+- [HISP IE in Practice Lab](labs/hisp_ie_practice_lab.qmd)
 - [NSW + CPS Benchmark Lab](labs/nsw_cps_benchmark_lab.qmd)
 - [Titanic Teaching Lab](labs/titanic_teaching_lab.qmd)
 
