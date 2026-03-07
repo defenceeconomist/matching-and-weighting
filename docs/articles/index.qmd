@@ -11,6 +11,7 @@ title: "Articles"
 | DAG and Bad Controls Appendix | Compact visual appendix on confounders, colliders, and post-treatment bad controls for design-stage covariate selection. | [Article](dag_bad_controls_appendix.qmd) |
 | Synthesis Report | Comparative synthesis of the main report against *The Mixtape*, *The Effect*, and Gertler chapter 8. | [Article](matching_synthesis_report.qmd) |
 | Propensity-Score Weighting Companion | Short extension explaining where propensity-score weighting fits alongside the main report's design-first workflow. | [Article](propensity_score_weighting_companion.qmd) |
+| Mixtape NSW Benchmark Notes | Compact notes from section `5.3.4` onward of *The Mixtape*, focused on observational versus experimental comparisons with runnable R code. | [Article](mixtape_nsw_benchmark_notes.qmd) |
 | Notes on *The Effect*: Matching | Scaffolded chapter notes for *The Effect*, Chapter 14, organized for later synthesis and repo cross-walk work. | [Article](effectbook_matching_notes.qmd) |
 | Notes on *The Mixtape*: Matching and Subclassification | Scaffolded chapter notes for *The Mixtape*, Chapter 5, organized for later study-note expansion and repo cross-walk work. | [Article](mixtape_matching_subclassification_notes.qmd) |
 | Notes on Gertler et al.: Matching | Scaffolded chapter notes for Chapter 8 of `gertler_impact_evaluation.pdf`, organized for later study-note expansion and repo cross-walk work. | [Article](gertler_matching_notes.qmd) |
@@ -24,6 +25,7 @@ title: "Articles"
 | DAG-based covariate selection and bad-controls mistakes | [DAG and Bad Controls Appendix](dag_bad_controls_appendix.qmd) | [Matching Methods Report](matching_methods_report.qmd) |
 | Compare the main report against *The Mixtape*, *The Effect*, and Gertler chapter 8 | [Synthesis Report](matching_synthesis_report.qmd) | [Articles hub](index.qmd) |
 | Propensity-score weighting as a compact extension to the main report | [Propensity-Score Weighting Companion](propensity_score_weighting_companion.qmd) | [Notes on *The Effect*: Matching](effectbook_matching_notes.qmd) |
+| Mixtape section `5.3.4` onward with runnable NSW benchmark code | [Mixtape NSW Benchmark Notes](mixtape_nsw_benchmark_notes.qmd) | [NSW + CPS Benchmark Lab](../labs/nsw_cps_benchmark_lab.qmd) |
 | Subclassification as the conceptual precursor to matching | [Notes on *The Mixtape*: Matching and Subclassification](mixtape_matching_subclassification_notes.qmd) | [Notes on *The Mixtape*: Matching and Subclassification](mixtape_matching_subclassification_notes.qmd) |
 | NSW benchmark logic for observational adjustment | [Notes on *The Mixtape*: Matching and Subclassification](mixtape_matching_subclassification_notes.qmd) | [NSW + CPS Benchmark Lab](../labs/nsw_cps_benchmark_lab.qmd) |
 | Matching inside an evaluator decision workflow with matched DiD escalation | [Notes on Gertler et al.: Matching](gertler_matching_notes.qmd) | [HISP IE in Practice Lab](../labs/hisp_ie_practice_lab.qmd) |

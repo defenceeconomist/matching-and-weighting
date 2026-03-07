@@ -10,6 +10,7 @@ project:
     - articles/dag_bad_controls_appendix.qmd
     - articles/matching_synthesis_report.qmd
     - articles/propensity_score_weighting_companion.qmd
+    - articles/mixtape_nsw_benchmark_notes.qmd
     - articles/effectbook_matching_notes.qmd
     - articles/mixtape_matching_subclassification_notes.qmd
     - articles/gertler_matching_notes.qmd
