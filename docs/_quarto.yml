@@ -52,6 +52,7 @@ website:
         - slides/index.qmd
         - slides/why_matching.qmd
         - slides/why_matching_notes.qmd
+        - slides/why_matching_script.qmd
 
 format:
   html:
