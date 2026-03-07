@@ -8,6 +8,10 @@ format:
     toc: true
     toc-depth: 3
     number-sections: true
+  pdf:
+    toc: true
+    toc-depth: 3
+    number-sections: true
 ---
 
 ## Purpose
@@ -43,7 +47,7 @@ The goal is not to rank the sources, but to show where the main report is alread
 
 ## Where The Main Report Strongly Aligns
 
-### 1. Design Before Estimation
+### Design Before Estimation
 
 All four sources treat matching as a design problem before it is an estimation problem.
 
@@ -54,7 +58,7 @@ All four sources treat matching as a design problem before it is an estimation p
 
 This is the clearest area of convergence. The main report is fully inside the mainstream of these texts on this point.
 
-### 2. Matching Only Solves Selection on Observables
+### Matching Only Solves Selection on Observables
 
 The main report and all three books are explicit that matching cannot repair omitted confounding.
 
@@ -65,7 +69,7 @@ The main report and all three books are explicit that matching cannot repair omi
 
 There is no substantive disagreement here. If anything, the main report amplifies a caution that is already common to all three texts.
 
-### 3. Overlap, Retention, and Target Population Matter
+### Overlap, Retention, and Target Population Matter
 
 The main report's strongest comparative advantage is that it operationalizes a theme that is present in all three books: better balance is not free.
 
@@ -75,7 +79,7 @@ The main report's strongest comparative advantage is that it operationalizes a t
 
 The main report goes further by making sample retention, pruning, and effective sample size part of the central comparison across methods. This is not a break from the source texts. It is a more auditable implementation of their shared logic.
 
-### 4. Matching Should Sit Inside a Wider QED Toolkit
+### Matching Should Sit Inside a Wider QED Toolkit
 
 The main report argues that matching should not be the default response to observational data. That position is strongly supported by the books.
 
@@ -87,7 +91,7 @@ The main report's section on positioning matching among quasi-experimental desig
 
 ## Where The Main Report Deliberately Departs
 
-### 1. It Replaces Propensity-Score Matching With a More Transparent Core Trio
+### It Replaces Propensity-Score Matching With a More Transparent Core Trio
 
 This is the biggest difference.
 
@@ -105,7 +109,7 @@ That choice has a clear rationale. These methods make the design rule, balance t
 
 But the tradeoff is also clear: the main report underrepresents the specific method family that the books treat as the canonical multivariate workaround. That means a reader who moves from the books into the report may notice an intentional gap rather than a seamless continuation.
 
-### 2. It Is More Diagnostic and Auditable Than Any One Source Chapter
+### It Is More Diagnostic and Auditable Than Any One Source Chapter
 
 The main report is less like a textbook chapter and more like a training document that expects to be inspected.
 
@@ -119,7 +123,7 @@ Compared with the books, it does more of the following in one place:
 
 This is a strength, especially for government and evaluation training, but it also changes the tone. The report is more operational than the books and less interested in surveying the full matching literature.
 
-### 3. It Gives Entropy Balancing More Prominence Than The Books Do
+### It Gives Entropy Balancing More Prominence Than The Books Do
 
 *The Effect* gives entropy balancing meaningful attention, but *The Mixtape* and Gertler chapter 8 do not place it at the center of the chapter-level narrative in the same way the main report does.
 
