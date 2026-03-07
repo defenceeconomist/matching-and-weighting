@@ -1,6 +1,5 @@
 ---
 title: "Matching and Weighting Learning Resources"
-subtitle: "Impact Evaluation Quasi-Experimental Design"
 date: 9 March 2026
 bibliography: references.bib
 ---
