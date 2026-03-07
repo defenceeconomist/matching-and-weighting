@@ -8,3 +8,4 @@ title: "Reports"
 |---|---|---|
 | Matching Methods Report | Main report on exact matching, coarsened exact matching, and entropy balancing for causal inference. | [Article](matching_methods_report.qmd) · [Full code](matching_methods_report_full_code.qmd) · [QA log](matching_methods_report_qa_log.qmd) |
 | Notes on *The Effect*: Matching | Scaffolded chapter notes for *The Effect*, Chapter 14, organized for later synthesis and repo cross-walk work. | [Article](effectbook_matching_notes.qmd) |
+| Notes on *The Mixtape*: Matching and Subclassification | Scaffolded chapter notes for *The Mixtape*, Chapter 5, organized for later study-note expansion and repo cross-walk work. | [Article](mixtape_matching_subclassification_notes.qmd) |

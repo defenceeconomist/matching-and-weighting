@@ -209,6 +209,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#acronyms-and-background" id="toc-acronyms-and-background" class="nav-link" data-scroll-target="#acronyms-and-background"><span class="header-section-number">3.1</span> Acronyms And Background</a></li>
   <li><a href="#dataset-provenance-for-this-lab" id="toc-dataset-provenance-for-this-lab" class="nav-link" data-scroll-target="#dataset-provenance-for-this-lab"><span class="header-section-number">3.2</span> Dataset Provenance For This Lab</a></li>
+  <li><a href="#why-this-example-matters-in-the-mixtape" id="toc-why-this-example-matters-in-the-mixtape" class="nav-link" data-scroll-target="#why-this-example-matters-in-the-mixtape"><span class="header-section-number">3.3</span> Why This Example Matters In The Mixtape</a></li>
   </ul></li>
   <li><a href="#step-1-load-packages-and-build-analysis-datasets" id="toc-step-1-load-packages-and-build-analysis-datasets" class="nav-link" data-scroll-target="#step-1-load-packages-and-build-analysis-datasets"><span class="header-section-number">4</span> Step 1: Load Packages And Build Analysis Datasets</a></li>
   <li><a href="#step-2-compute-the-experimental-benchmark" id="toc-step-2-compute-the-experimental-benchmark" class="nav-link" data-scroll-target="#step-2-compute-the-experimental-benchmark"><span class="header-section-number">5</span> Step 2: Compute The Experimental Benchmark</a></li>
@@ -273,6 +274,7 @@ Note
 <h2 data-number="2" class="anchored" data-anchor-id="training-goal"><span class="header-section-number">2</span> Training Goal</h2>
 <p>This lab focuses on one practical question:</p>
 <p>Can observational adjustment recover the known NSW experimental result when the control pool comes from CPS?</p>
+<p>In <em>Causal Inference: The Mixtape</em>, this example matters because it sits inside a longer debate about whether matching and propensity-score methods can recover credible programme effects from observational data. The NSW experiment gives a randomized benchmark, while the CPS comparison pool creates the harder observational problem. That makes the exercise more than a coding drill: it is a direct test of whether a design built on observed covariates can get back to something close to the experimental answer.</p>
 <p>The workflow mirrors the main report’s design-first sequence:</p>
 <ol type="1">
 <li>define the estimand</li>
@@ -304,6 +306,17 @@ Official background: <a href="https://www.census.gov/programs-surveys/cps.html">
 <li><code>nsw_mixtape</code> documentation and variable definitions: <a href="https://search.r-project.org/CRAN/refmans/causaldata/html/nsw_mixtape.html">CRAN reference</a> (<code>445</code> rows, <code>11</code> variables).</li>
 <li><code>cps_mixtape</code> documentation and variable definitions: <a href="https://search.r-project.org/CRAN/refmans/causaldata/html/cps_mixtape.html">CRAN reference</a> (<code>15,992</code> rows, <code>11</code> variables).</li>
 <li>The benchmark-comparison framing (NSW experiment versus observational controls) is tied to: <a href="https://www.nber.org/papers/w6586">Dehejia and Wahba (1998/1999) NBER working-paper version</a> and its published <em>JASA</em> article listed there.</li>
+</ul>
+</section>
+<section id="why-this-example-matters-in-the-mixtape" class="level3" data-number="3.3">
+<h3 data-number="3.3" class="anchored" data-anchor-id="why-this-example-matters-in-the-mixtape"><span class="header-section-number">3.3</span> Why This Example Matters In The Mixtape</h3>
+<p>The Mixtape uses the NSW setting to illustrate a core matching problem: a randomized study can tell us what the programme did in the experimental sample, but analysts often have to work with non-experimental control groups in practice. LaLonde’s comparison between the experimental NSW estimate and observational alternatives made this dataset a benchmark case because many standard non-experimental estimators performed poorly against the experimental result. Later work, especially Dehejia and Wahba, argued that design choices such as covariate selection and propensity-score-based adjustment could do better.</p>
+<p>For study purposes, the important context is:</p>
+<ul>
+<li>NSW gives the benchmark because treatment and control were randomly assigned inside that sample.</li>
+<li>CPS gives the observational challenge because those controls were not randomized against the NSW treated group.</li>
+<li>The exercise is therefore not “estimate a treatment effect from scratch.” It is “see how close different observational designs get to a reference effect that is already available from the experiment.”</li>
+<li>This is why balance, overlap, retained sample size, and benchmark gap should all be interpreted together.</li>
 </ul>
 <p>Core setup:</p>
 <ul>

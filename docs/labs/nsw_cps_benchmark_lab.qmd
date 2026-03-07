@@ -33,6 +33,8 @@ This lab focuses on one practical question:
 
 Can observational adjustment recover the known NSW experimental result when the control pool comes from CPS?
 
+In *Causal Inference: The Mixtape*, this example matters because it sits inside a longer debate about whether matching and propensity-score methods can recover credible programme effects from observational data. The NSW experiment gives a randomized benchmark, while the CPS comparison pool creates the harder observational problem. That makes the exercise more than a coding drill: it is a direct test of whether a design built on observed covariates can get back to something close to the experimental answer.
+
 The workflow mirrors the main report's design-first sequence:
 
 1. define the estimand
@@ -70,6 +72,17 @@ We use two `causaldata` datasets:
   [CRAN reference](https://search.r-project.org/CRAN/refmans/causaldata/html/cps_mixtape.html) (`15,992` rows, `11` variables).
 - The benchmark-comparison framing (NSW experiment versus observational controls) is tied to:
   [Dehejia and Wahba (1998/1999) NBER working-paper version](https://www.nber.org/papers/w6586) and its published *JASA* article listed there.
+
+### Why This Example Matters In The Mixtape
+
+The Mixtape uses the NSW setting to illustrate a core matching problem: a randomized study can tell us what the programme did in the experimental sample, but analysts often have to work with non-experimental control groups in practice. LaLonde's comparison between the experimental NSW estimate and observational alternatives made this dataset a benchmark case because many standard non-experimental estimators performed poorly against the experimental result. Later work, especially Dehejia and Wahba, argued that design choices such as covariate selection and propensity-score-based adjustment could do better.
+
+For study purposes, the important context is:
+
+- NSW gives the benchmark because treatment and control were randomly assigned inside that sample.
+- CPS gives the observational challenge because those controls were not randomized against the NSW treated group.
+- The exercise is therefore not "estimate a treatment effect from scratch." It is "see how close different observational designs get to a reference effect that is already available from the experiment."
+- This is why balance, overlap, retained sample size, and benchmark gap should all be interpreted together.
 
 Core setup:
 

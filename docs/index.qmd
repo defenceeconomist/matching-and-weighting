@@ -41,6 +41,7 @@ The main report bundle is:
 
 - [Matching Methods Report](report/matching_methods_report.qmd)
 - [Notes on *The Effect*: Matching](report/effectbook_matching_notes.qmd)
+- [Notes on *The Mixtape*: Matching and Subclassification](report/mixtape_matching_subclassification_notes.qmd)
 - [Full Code Companion](report/matching_methods_report_full_code.qmd)
 - [QA Log](report/matching_methods_report_qa_log.qmd)
 

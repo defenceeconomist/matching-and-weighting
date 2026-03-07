@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Luke Heley">
+<meta name="dcterms.date" content="2026-03-07">
+
+<title>Notes on The Mixtape: Matching and Subclassification – Matching and Weighting</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-b337f537912f5ab074b938eebad4c5d7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Matching and Weighting</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../report/index.html"> 
+<span class="menu-text">Reports</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../labs/index.html"> 
+<span class="menu-text">Additional Labs</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../slides/index.html"> 
+<span class="menu-text">Slides</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#purpose" id="toc-purpose" class="nav-link active" data-scroll-target="#purpose"><span class="header-section-number">1</span> Purpose</a></li>
+  <li><a href="#source-baseline" id="toc-source-baseline" class="nav-link" data-scroll-target="#source-baseline"><span class="header-section-number">2</span> Source Baseline</a></li>
+  <li><a href="#executive-summary" id="toc-executive-summary" class="nav-link" data-scroll-target="#executive-summary"><span class="header-section-number">3</span> Executive Summary</a></li>
+  <li><a href="#chapter-structure-and-notes" id="toc-chapter-structure-and-notes" class="nav-link" data-scroll-target="#chapter-structure-and-notes"><span class="header-section-number">4</span> Chapter Structure and Notes</a>
+  <ul class="collapse">
+  <li><a href="#subclassification" id="toc-subclassification" class="nav-link" data-scroll-target="#subclassification"><span class="header-section-number">4.1</span> 5.1 Subclassification</a></li>
+  <li><a href="#exact-matching" id="toc-exact-matching" class="nav-link" data-scroll-target="#exact-matching"><span class="header-section-number">4.2</span> 5.2 Exact Matching</a></li>
+  <li><a href="#approximate-matching" id="toc-approximate-matching" class="nav-link" data-scroll-target="#approximate-matching"><span class="header-section-number">4.3</span> 5.3 Approximate Matching</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">4.4</span> 5.4 Conclusion</a></li>
+  </ul></li>
+  <li><a href="#implications-for-this-repo" id="toc-implications-for-this-repo" class="nav-link" data-scroll-target="#implications-for-this-repo"><span class="header-section-number">5</span> Implications for This Repo</a></li>
+  <li><a href="#high-level-takeaways" id="toc-high-level-takeaways" class="nav-link" data-scroll-target="#high-level-takeaways"><span class="header-section-number">6</span> High-Level Takeaways</a></li>
+  <li><a href="#follow-up-build-plan" id="toc-follow-up-build-plan" class="nav-link" data-scroll-target="#follow-up-build-plan"><span class="header-section-number">7</span> Follow-Up Build Plan</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Notes on The Mixtape: Matching and Subclassification</h1>
+<p class="subtitle lead">Detailed Study Notes for Chapter 5</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Luke Heley </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">March 7, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="purpose" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="purpose"><span class="header-section-number">1</span> Purpose</h2>
+<p>These are study notes on <a href="https://mixtape.scunning.com/05-matching_and_subclassification"><em>Causal Inference: The Mixtape</em>, Chapter 5 (“Matching and Subclassification”)</a>. They are meant to support understanding and recall rather than reproduce the chapter. The structure follows the source chapter so the notes can be read alongside it.</p>
+<p>The aim here is to capture:</p>
+<ul>
+<li>the main idea of each section</li>
+<li>why the section matters for causal inference</li>
+<li>what conceptual traps to watch for</li>
+<li>how the chapter connects to this repo’s teaching materials</li>
+</ul>
+</section>
+<section id="source-baseline" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="source-baseline"><span class="header-section-number">2</span> Source Baseline</h2>
+<ul>
+<li>Source: <a href="https://mixtape.scunning.com/05-matching_and_subclassification">The Mixtape, Chapter 5 - Matching and Subclassification</a></li>
+<li>Author: Scott Cunningham</li>
+<li>Accessed for these notes: 7 March 2026</li>
+<li>Current chapter sections observed in the live rendering:
+<ul>
+<li><code>5.1 Subclassification</code></li>
+<li><code>5.1.1 Some background</code></li>
+<li><code>5.1.2 Identifying assumptions</code></li>
+<li><code>5.1.3 Subclassification exercise: Titanic data set</code></li>
+<li><code>5.1.4 Curse of dimensionality</code></li>
+<li><code>5.2 Exact Matching</code></li>
+<li><code>5.3 Approximate Matching</code></li>
+<li><code>5.3.1 Nearest neighbor covariate matching</code></li>
+<li><code>5.3.2 Bias correction</code></li>
+<li><code>5.3.3 Propensity score methods</code></li>
+<li><code>5.3.4 Example: The NSW job training program</code></li>
+<li><code>5.3.5 Weighting on the propensity score</code></li>
+<li><code>5.3.6 Nearest-neighbor matching</code></li>
+<li><code>5.3.7 Coarsened exact matching</code></li>
+<li><code>5.4 Conclusion</code></li>
+</ul></li>
+</ul>
+</section>
+<section id="executive-summary" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="executive-summary"><span class="header-section-number">3</span> Executive Summary</h2>
+<ul>
+<li>The chapter starts with subclassification because it is the clearest way to see the logic of conditioning on observed covariates.</li>
+<li>It then shows why exact stratification becomes difficult in realistic settings and uses that difficulty to motivate exact matching and then approximate matching methods.</li>
+<li>A recurring theme is that all of these methods are trying to recover credible treated-control comparisons under selection on observables, but they differ in how they define similarity and how much information they discard or reweight.</li>
+<li>The chapter is especially relevant to this repo because it connects directly to the repo’s teaching emphasis on design before estimation, on the curse of dimensionality, and on balance-versus-retention tradeoffs.</li>
+</ul>
+</section>
+<section id="chapter-structure-and-notes" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="chapter-structure-and-notes"><span class="header-section-number">4</span> Chapter Structure and Notes</h2>
+<section id="subclassification" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="subclassification"><span class="header-section-number">4.1</span> 5.1 Subclassification</h3>
+<p>Main idea:</p>
+<ul>
+<li>Subclassification is introduced as the most straightforward way to make treated and control units comparable: divide the sample into groups defined by covariates, compare treated and untreated outcomes within those groups, and then aggregate those within-group comparisons.</li>
+</ul>
+<p>Why this matters:</p>
+<ul>
+<li>This gives the reader the cleanest possible version of the matching idea before algorithms get involved.</li>
+<li>It makes clear that causal adjustment is fundamentally about comparing like with like.</li>
+<li>It also provides the bridge from the backdoor criterion to actual empirical practice.</li>
+</ul>
+<p>Key understanding points:</p>
+<ul>
+<li>The treatment effect is built from within-stratum comparisons rather than a single raw comparison across the whole sample.</li>
+<li>The final estimate is a weighted average of stratum-level effects.</li>
+<li>Subclassification works best when the relevant confounders are discrete or can be made meaningfully discrete.</li>
+</ul>
+<p>What to remember:</p>
+<ul>
+<li>This section is conceptually basic but methodologically important. If subclassification makes sense, the logic of later matching methods makes sense too.</li>
+<li>Matching and weighting methods can often be read as more elaborate ways of doing what subclassification tries to do simply.</li>
+</ul>
+<section id="some-background" class="level4" data-number="4.1.1">
+<h4 data-number="4.1.1" class="anchored" data-anchor-id="some-background"><span class="header-section-number">4.1.1</span> 5.1.1 Some background</h4>
+<p>Main idea:</p>
+<ul>
+<li>The background discussion motivates subclassification by showing how crude mean comparisons can mix treated and untreated units that are not comparable because they differ systematically on pre-treatment variables.</li>
+</ul>
+<p>Why this matters:</p>
+<ul>
+<li>This is where the chapter makes the inferential problem concrete: observed outcome differences may reflect selection into treatment rather than treatment itself.</li>
+<li>Stratifying on a confounder is introduced as a direct fix for that comparability problem.</li>
+</ul>
+<p>What to remember:</p>
+<ul>
+<li>The point of stratification is not elegance. It is to remove misleading comparisons that pool unlike units.</li>
+<li>This section helps anchor the whole chapter in confounding rather than in software procedure.</li>
+</ul>
+</section>
+<section id="identifying-assumptions" class="level4" data-number="4.1.2">
+<h4 data-number="4.1.2" class="anchored" data-anchor-id="identifying-assumptions"><span class="header-section-number">4.1.2</span> 5.1.2 Identifying assumptions</h4>
+<p>Main idea:</p>
+<ul>
+<li>The chapter ties subclassification to the identifying assumptions needed for observational causal inference, especially the idea that conditioning on the right observed covariates can block confounding pathways.</li>
+</ul>
+<p>Why this matters:</p>
+<ul>
+<li>This section is the reminder that subclassification is not mechanically causal. It is causal only if the relevant identifying assumptions hold.</li>
+<li>It frames the whole chapter as an exercise in achieving conditional comparability, not magical de-biasing.</li>
+</ul>
+<p>Key understanding points:</p>
+<ul>
+<li>The central assumption is selection on observables or conditional independence after conditioning.</li>
+<li>Exchangeability is being claimed within strata, not necessarily in the raw sample.</li>
+<li>If important confounders are omitted, subclassification will not solve the problem.</li>
+</ul>
+<p>What to remember:</p>
+<ul>
+<li>This section is the conceptual foundation for everything that follows.</li>
+<li>The later matching methods are all ways of making this identifying logic more workable in high-dimensional settings.</li>
+</ul>
+</section>
+<section id="subclassification-exercise-titanic-data-set" class="level4" data-number="4.1.3">
+<h4 data-number="4.1.3" class="anchored" data-anchor-id="subclassification-exercise-titanic-data-set"><span class="header-section-number">4.1.3</span> 5.1.3 Subclassification exercise: Titanic data set</h4>
+<p>Main idea:</p>
+<ul>
+<li>The Titanic example is used as a simple teaching case to show how subclassification works in practice with discrete support cells.</li>
+</ul>
+<p>Why this matters:</p>
+<ul>
+<li>It gives the reader a hands-on version of the method before the chapter moves into more technical matching procedures.</li>
+<li>It also shows that subclassification is not just theory; it can be implemented transparently with a familiar dataset.</li>
+</ul>
+<p>Key understanding points:</p>
+<ul>
+<li>The example helps visualize support cells and weighted averaging across strata.</li>
+<li>It shows how treatment comparisons can change materially once comparisons are made within more relevant groups.</li>
+<li>It is a pedagogic stepping stone to exact matching because the logic is almost identical once strata become exact covariate profiles.</li>
+</ul>
+<p>What to remember:</p>
+<ul>
+<li>This is a good section to revisit when the later methods start to feel too abstract.</li>
+<li>The repo’s <code>titanic</code> appendix is a natural companion to this part of the chapter.</li>
+</ul>
+</section>
+<section id="curse-of-dimensionality" class="level4" data-number="4.1.4">
+<h4 data-number="4.1.4" class="anchored" data-anchor-id="curse-of-dimensionality"><span class="header-section-number">4.1.4</span> 5.1.4 Curse of dimensionality</h4>
+<p>Main idea:</p>
+<ul>
+<li>The curse of dimensionality explains why simple subclassification becomes hard to use once many covariates matter at once: the sample gets split into too many cells, many cells become sparse or empty, and credible within-cell comparisons disappear.</li>
+</ul>
+<p>Why this matters:</p>
+<ul>
+<li>This is the pivot point of the chapter.</li>
+<li>It explains why the simplest design logic cannot just be scaled up naïvely.</li>
+<li>It motivates the move from exact stratification to exact matching and then to approximate methods.</li>
+</ul>
+<p>Key understanding points:</p>
+<ul>
+<li>Every additional covariate or finer binning choice can multiply the number of required strata.</li>
+<li>A design can become unusable not because the logic is wrong, but because the data do not support the required fine-grained comparisons.</li>
+<li>Approximate matching methods are responses to this sparsity problem.</li>
+</ul>
+<p>What to remember:</p>
+<ul>
+<li>The curse of dimensionality is not just a computational issue. It is a substantive overlap issue.</li>
+<li>Whenever later methods relax exact comparability, this is the reason they do so.</li>
+</ul>
+</section>
+</section>
+<section id="exact-matching" class="level3" data-number="4.2">
+<h3 data-number="4.2" class="anchored" data-anchor-id="exact-matching"><span class="header-section-number">4.2</span> 5.2 Exact Matching</h3>
+<p>Main idea:</p>
+<ul>
+<li>Exact matching takes the subclassification logic to its strict conclusion: treated and control units are compared only when they are identical on the chosen matching covariates.</li>
+</ul>
+<p>Why this matters:</p>
+<ul>
+<li>Exact matching is conceptually clean and easy to explain.</li>
+<li>It makes the design rule explicit and minimizes ambiguity about what counts as a valid comparison.</li>
+</ul>
+<p>Key understanding points:</p>
+<ul>
+<li>Exact matching is strongest when the covariates are discrete, low-dimensional, or already naturally grouped.</li>
+<li>Its main virtue is transparency: the analyst can say exactly which comparisons are allowed.</li>
+<li>Its main weakness is feasibility: once the covariate set expands, many treated units may have no exact control counterpart.</li>
+</ul>
+<p>What to remember:</p>
+<ul>
+<li>Exact matching is the benchmark for interpretability even when it is not feasible.</li>
+<li>If exact matching fails badly, that often reveals something important about overlap in the data rather than a mere inconvenience.</li>
+</ul>
+<p>Useful caution:</p>
+<ul>
+<li>Severe sample loss is not a side issue. It changes the target population and may turn the analysis into a very local statement about a subset with support.</li>
+</ul>
+</section>
+<section id="approximate-matching" class="level3" data-number="4.3">
+<h3 data-number="4.3" class="anchored" data-anchor-id="approximate-matching"><span class="header-section-number">4.3</span> 5.3 Approximate Matching</h3>
+<p>Main idea:</p>
+<ul>
+<li>Approximate matching methods relax the exact-comparison rule so the analyst can still construct usable treated-control comparisons when exact matching is too sparse.</li>
+</ul>
+<p>Why this matters:</p>
+<ul>
+<li>This is where matching becomes practically useful in real observational data.</li>
+<li>The section clarifies that approximation is not abandoning the design goal; it is trying to preserve as much comparability as the data allow.</li>
+</ul>
+<p>Key understanding points:</p>
+<ul>
+<li>Different approximate methods relax the exactness requirement in different ways.</li>
+<li>The central tradeoff is always between closeness of match, retained sample size, and the stability of the resulting design.</li>
+<li>Approximate matching therefore requires more diagnostics and more analyst judgment than exact matching.</li>
+</ul>
+<p>What to remember:</p>
+<ul>
+<li>Approximation is necessary because the data are limited, not because causal standards are lower.</li>
+<li>Every approximate method should be judged by the design it produces, not by the elegance of the algorithm.</li>
+</ul>
+<section id="nearest-neighbor-covariate-matching" class="level4" data-number="4.3.1">
+<h4 data-number="4.3.1" class="anchored" data-anchor-id="nearest-neighbor-covariate-matching"><span class="header-section-number">4.3.1</span> 5.3.1 Nearest neighbor covariate matching</h4>
+<p>Main idea:</p>
+<ul>
+<li>Nearest-neighbor covariate matching defines similarity using a distance metric on the covariates and pairs treated units with the closest available controls.</li>
+</ul>
+<p>Why this matters:</p>
+<ul>
+<li>This is a natural generalization of exact matching when exact equality is impossible.</li>
+<li>It gives a practical rule for choosing among imperfect comparison units.</li>
+</ul>
+<p>Key understanding points:</p>
+<ul>
+<li>The method depends heavily on how distance is measured.</li>
+<li>“Nearest” is a relative statement, not a guarantee of good balance.</li>
+<li>Match quality can vary a lot across treated units, especially where overlap is weak.</li>
+</ul>
+<p>What to remember:</p>
+<ul>
+<li>Distance-based matching is intuitive, but it can hide poor design quality if the nearest available match is still very far away.</li>
+<li>Closeness has to be judged substantively and diagnostically, not assumed.</li>
+</ul>
+</section>
+<section id="bias-correction" class="level4" data-number="4.3.2">
+<h4 data-number="4.3.2" class="anchored" data-anchor-id="bias-correction"><span class="header-section-number">4.3.2</span> 5.3.2 Bias correction</h4>
+<p>Main idea:</p>
+<ul>
+<li>Bias correction is introduced because nearest-neighbor matches are rarely perfect. Even after matching, treated and control units may differ on important covariates.</li>
+</ul>
+<p>Why this matters:</p>
+<ul>
+<li>This section acknowledges that approximate matching can leave residual imbalance.</li>
+<li>It shows one way analysts try to reduce the remaining bias without abandoning the matched design.</li>
+</ul>
+<p>Key understanding points:</p>
+<ul>
+<li>Bias correction is a post-match adjustment layered on top of the design.</li>
+<li>It does not make poor matches good; it only tries to adjust for the remaining mismatch.</li>
+<li>The need for bias correction is itself evidence that approximate matching alone may not fully solve the problem.</li>
+</ul>
+<p>What to remember:</p>
+<ul>
+<li>Bias correction can help, but it should not be confused with a cure for bad overlap.</li>
+<li>The more correction the design seems to need, the weaker the underlying matched comparison may be.</li>
+</ul>
+</section>
+<section id="propensity-score-methods" class="level4" data-number="4.3.3">
+<h4 data-number="4.3.3" class="anchored" data-anchor-id="propensity-score-methods"><span class="header-section-number">4.3.3</span> 5.3.3 Propensity score methods</h4>
+<p>Main idea:</p>
+<ul>
+<li>Propensity score methods are presented as a way to reduce the dimensionality problem by summarizing many covariates into a single balancing score: the probability of treatment given the observed covariates.</li>
+</ul>
+<p>Why this matters:</p>
+<ul>
+<li>This is one of the chapter’s most important responses to the curse of dimensionality.</li>
+<li>It explains why analysts often use propensity scores when direct matching on the full covariate vector is impractical.</li>
+</ul>
+<p>Key understanding points:</p>
+<ul>
+<li>The attraction of the propensity score is dimensional reduction, not guaranteed success.</li>
+<li>Units with similar propensity scores are meant to be similar in their observed treatment-assignment profile.</li>
+<li>The propensity score is useful only if it actually produces acceptable covariate balance after implementation.</li>
+</ul>
+<p>What to remember:</p>
+<ul>
+<li>The propensity score is a design device, not the estimand and not the final causal argument.</li>
+<li>Good propensity score practice still requires overlap checks and balance diagnostics.</li>
+</ul>
+<p>Useful caution:</p>
+<ul>
+<li>It is easy to mistake a well-specified treatment model for a good design. The chapter’s structure implies these are not the same thing.</li>
+</ul>
+</section>
+<section id="example-the-nsw-job-training-program" class="level4" data-number="4.3.4">
+<h4 data-number="4.3.4" class="anchored" data-anchor-id="example-the-nsw-job-training-program"><span class="header-section-number">4.3.4</span> 5.3.4 Example: The NSW job training program</h4>
+<p>Main idea:</p>
+<ul>
+<li>The NSW job training example is used as a benchmark setting for assessing how well observational adjustment methods can recover effects relative to a more credible experimental reference.</li>
+</ul>
+<p>Why this matters:</p>
+<ul>
+<li>This example is central to the matching literature because it provides a way to judge whether a matching or weighting approach is actually getting close to a known benchmark.</li>
+<li>It moves the discussion from abstract method comparison to empirical performance.</li>
+</ul>
+<p>Key understanding points:</p>
+<ul>
+<li>The example is not only about one program; it is about whether observational adjustment can approximate an experimental benchmark.</li>
+<li>It highlights how design choices can materially affect the estimated effect.</li>
+<li>It also reinforces the need to assess methods comparatively rather than doctrinally.</li>
+</ul>
+<p>What to remember:</p>
+<ul>
+<li>This is one of the strongest chapter links to current repo material because the repo already uses the NSW/CPS benchmark logic.</li>
+<li>The value of the example is that it disciplines method evaluation with an external reference point.</li>
+</ul>
+</section>
+<section id="weighting-on-the-propensity-score" class="level4" data-number="4.3.5">
+<h4 data-number="4.3.5" class="anchored" data-anchor-id="weighting-on-the-propensity-score"><span class="header-section-number">4.3.5</span> 5.3.5 Weighting on the propensity score</h4>
+<p>Main idea:</p>
+<ul>
+<li>Propensity scores can be used not only for matching but also for weighting, so the adjusted sample behaves like a pseudo-population in which treatment is less confounded by observed covariates.</li>
+</ul>
+<p>Why this matters:</p>
+<ul>
+<li>This widens the chapter from pairwise or stratum-based comparisons into a broader weighting framework.</li>
+<li>It also makes the link to estimands more explicit because different weights correspond to different target populations.</li>
+</ul>
+<p>Key understanding points:</p>
+<ul>
+<li>Weighting changes the influence of observations rather than necessarily dropping them.</li>
+<li>Weight instability becomes a central issue when estimated treatment probabilities are near zero or one.</li>
+<li>Overlap problems show up here as extreme weights rather than only as failed matches.</li>
+</ul>
+<p>What to remember:</p>
+<ul>
+<li>Weighting can preserve more units than strict matching, but it can still create fragile designs if a few observations carry too much influence.</li>
+<li>Effective sample size matters as much as nominal sample size.</li>
+</ul>
+</section>
+<section id="nearest-neighbor-matching" class="level4" data-number="4.3.6">
+<h4 data-number="4.3.6" class="anchored" data-anchor-id="nearest-neighbor-matching"><span class="header-section-number">4.3.6</span> 5.3.6 Nearest-neighbor matching</h4>
+<p>Main idea:</p>
+<ul>
+<li>The chapter then treats nearest-neighbor matching in its more operational form, where design decisions such as replacement, order, and implementation details affect the resulting matched sample.</li>
+</ul>
+<p>Why this matters:</p>
+<ul>
+<li>This is where a seemingly simple idea becomes a real design workflow with choices that affect both bias and variance.</li>
+<li>It reminds the reader that matching methods are not single fixed procedures.</li>
+</ul>
+<p>Key understanding points:</p>
+<ul>
+<li>Matching with replacement can improve match quality but may concentrate influence on a small number of controls.</li>
+<li>Matching without replacement may spread influence more evenly but can force worse matches later in the procedure.</li>
+<li>Inference depends on the structure created by the design, not only on the eventual regression or mean difference formula.</li>
+</ul>
+<p>What to remember:</p>
+<ul>
+<li>Operational choices in nearest-neighbor matching are not minor implementation details. They define the actual design.</li>
+<li>Good matching is judged by the resulting balance and overlap, not by the label “nearest neighbor” alone.</li>
+</ul>
+</section>
+<section id="coarsened-exact-matching" class="level4" data-number="4.3.7">
+<h4 data-number="4.3.7" class="anchored" data-anchor-id="coarsened-exact-matching"><span class="header-section-number">4.3.7</span> 5.3.7 Coarsened exact matching</h4>
+<p>Main idea:</p>
+<ul>
+<li>Coarsened exact matching is presented as a compromise: exact matching is performed, but on coarsened versions of the covariates rather than on the raw covariates themselves.</li>
+</ul>
+<p>Why this matters:</p>
+<ul>
+<li>This gives the analyst direct control over what counts as meaningfully similar while avoiding the full sparsity problem of raw exact matching.</li>
+<li>It is one of the clearest design-oriented methods in the chapter because its rules are explicit and interpretable.</li>
+</ul>
+<p>Key understanding points:</p>
+<ul>
+<li>Coarsening is not a technical nuisance; it is the main design choice.</li>
+<li>Different cutpoints can materially change both balance and sample retention.</li>
+<li>CEM often makes the balance-retention tradeoff more visible than black-box distance methods.</li>
+</ul>
+<p>What to remember:</p>
+<ul>
+<li>CEM is attractive because it keeps the matching rule understandable.</li>
+<li>But it still requires iterative checking because overly fine coarsening can drop too much sample, while overly coarse binning can weaken comparability.</li>
+</ul>
+</section>
+</section>
+<section id="conclusion" class="level3" data-number="4.4">
+<h3 data-number="4.4" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">4.4</span> 5.4 Conclusion</h3>
+<p>Main idea:</p>
+<ul>
+<li>The conclusion appears to pull together subclassification, exact matching, and approximate matching as related attempts to recover credible counterfactual comparisons from observational data.</li>
+</ul>
+<p>Why this matters:</p>
+<ul>
+<li>The chapter’s ending is important because it clarifies what the methods are for and, equally, what they cannot do.</li>
+</ul>
+<p>What to remember:</p>
+<ul>
+<li>The core lesson is not that one matching method wins universally.</li>
+<li>The deeper lesson is that observational adjustment is a design problem shaped by overlap, dimensionality, and identifying assumptions.</li>
+<li>Matching methods are useful when they make comparisons more credible and more transparent, not when they hide weak support behind technical language.</li>
+</ul>
+</section>
+</section>
+<section id="implications-for-this-repo" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="implications-for-this-repo"><span class="header-section-number">5</span> Implications for This Repo</h2>
+<ul>
+<li>The chapter overlaps strongly with the repo’s existing main report, the <code>titanic</code> teaching appendix, and the NSW/CPS benchmark lab.</li>
+<li>The subclassification and curse-of-dimensionality sections are especially useful because they explain why the repo emphasizes design tradeoffs rather than presenting methods as plug-and-play tools.</li>
+<li>The NSW example provides the clearest direct bridge to current benchmark materials already in the repo.</li>
+<li>A gap relative to the chapter is that the repo does not yet have a compact note page devoted specifically to subclassification as the conceptual precursor to matching.</li>
+</ul>
+</section>
+<section id="high-level-takeaways" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="high-level-takeaways"><span class="header-section-number">6</span> High-Level Takeaways</h2>
+<ul>
+<li>Subclassification is the cleanest entry point for understanding matching because it makes the conditioning logic visible.</li>
+<li>The curse of dimensionality is the main reason exact stratification breaks down in realistic settings.</li>
+<li>Exact matching is transparent but often infeasible once the design involves multiple meaningful covariates.</li>
+<li>Approximate matching methods differ mainly in how they relax exactness and how they manage the balance-retention tradeoff.</li>
+<li>Propensity score methods solve a dimensionality problem only if they actually improve balance and maintain overlap.</li>
+<li>Benchmark examples such as NSW matter because they let analysts evaluate designs against a stronger reference than intuition alone.</li>
+</ul>
+</section>
+<section id="follow-up-build-plan" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="follow-up-build-plan"><span class="header-section-number">7</span> Follow-Up Build Plan</h2>
+<ol type="1">
+<li>Add direct links from subclassification, exact matching, and NSW sections to the relevant repo reports and labs.</li>
+<li>Add a small glossary for recurring terms such as subclassification, balancing score, and common support.</li>
+<li>Optionally add a short “Mixtape versus current repo emphasis” section, especially on diagnostics and retained sample size.</li>
+<li>If needed, add a separate note that isolates the NSW benchmark workflow from the rest of the chapter.</li>
+</ol>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
