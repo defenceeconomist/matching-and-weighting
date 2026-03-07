@@ -14,15 +14,17 @@ Use these pages as extensions of the same design-first workflow:
 
 | Lab | Dataset(s) | Current status | Link |
 |---|---|---|---|
+| Main Report 1-Hour Teaching Aid | `MatchIt::lalonde` plus report outputs | Facilitator guide | [Open](main_report_1hr_lab_teaching_aid.qmd) |
 | Black Politicians Lab | `causaldata::black_politicians` | Training aid | [Open](black_politicians_lab.qmd) · [Full code](black_politicians_lab_full_code.qmd) · [Evaluated code](black_politicians_lab_evaluated_code.qmd) · [QA log](black_politicians_lab_qa_log.qmd) |
 | NSW + CPS Benchmark Lab | `causaldata::nsw_mixtape`, `causaldata::cps_mixtape` | Benchmark lab | [Open](nsw_cps_benchmark_lab.qmd) · [Full code](nsw_cps_benchmark_lab_full_code.qmd) · [Evaluated code](nsw_cps_benchmark_lab_evaluated_code.qmd) · [QA log](nsw_cps_benchmark_lab_qa_log.qmd) |
 | Titanic Teaching Lab | `causaldata::titanic` | Teaching lab | [Open](titanic_teaching_lab.qmd) · [Full code](titanic_teaching_lab_full_code.qmd) |
 
 ## Recommended Sequence
 
-1. Start with the Black Politicians lab for a second design-first matching workflow with richer covariates.
-2. Use the NSW + CPS benchmark lab when you want to compare observational designs against an experimental reference.
-3. Use the Titanic lab for slide-friendly teaching on exact support cells and low-dimensional adjustment.
+1. Start with the Main Report 1-Hour Teaching Aid if you want a facilitator script for delivering the `lalonde` material live.
+2. Move to the Black Politicians lab for a second design-first matching workflow with richer covariates.
+3. Use the NSW + CPS benchmark lab when you want to compare observational designs against an experimental reference.
+4. Use the Titanic lab for slide-friendly teaching on exact support cells and low-dimensional adjustment.
 
 ## Working Rule
 

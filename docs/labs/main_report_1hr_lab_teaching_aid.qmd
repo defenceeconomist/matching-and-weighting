@@ -1,0 +1,270 @@
+---
+title: "Teaching Aid: Delivering the Main Report in a 1-Hour Lab"
+format:
+  html:
+    toc: true
+    code-links:
+      - text: Main Report
+        href: ../matching_methods_report.html
+      - text: 1-Hour Lab Slides
+        href: ../slides/main_report_1hr_lab_slides.html
+      - text: Training Deck
+        href: ../slides/matching_methods_slides.html
+      - text: Pre-Lab Lecture
+        href: ../slides/pre_lab_background_lecture.html
+execute:
+  echo: false
+  eval: false
+---
+
+## How To Use This Page
+
+Use this page as a facilitator script for a `60` minute teaching lab built around the main `lalonde` report.
+
+- It is designed for live delivery, not as a standalone methods article.
+- It assumes participants have the [main report](../matching_methods_report.html) open.
+- It keeps the session focused on the report's main messages rather than on running every line of code.
+
+::: {.callout-note}
+This page is deliberately non-executed. The goal is delivery support: timing, prompts, transitions, and decisions about what to emphasize in the room.
+:::
+
+## Session Goal
+
+By the end of the hour, participants should be able to explain the report's main claim in plain language:
+
+Matching and weighting methods are useful design tools, but they should be judged by the tradeoff they impose between balance, overlap, retention, and weight concentration rather than by any single balance table or treatment estimate.
+
+## Learning Objectives
+
+At the end of the session, participants should be able to:
+
+1. state why the report starts with the estimand rather than the method
+2. explain the difference between matching and weighting as design strategies
+3. interpret exact matching, CEM, and entropy balancing as different solutions to different design problems
+4. describe why acceptable balance alone is not enough
+5. defend a qualified method choice for the `lalonde` example
+
+## Recommended Setup
+
+Keep these pages open during delivery:
+
+- [Main report](../matching_methods_report.html)
+- [Main report full code](../matching_methods_report_full_code.html)
+- [Matching and Weighting training deck](../slides/matching_methods_slides.html)
+- [From Report to Labs lecture deck](../slides/pre_lab_background_lecture.html)
+- [Black Politicians lab](black_politicians_lab.html)
+
+If you are presenting live:
+
+- use the slide deck for opening framing
+- switch to the main report for the worked example sections
+- use this teaching aid as your pacing and prompt sheet
+
+## 60-Minute Run Of Show
+
+| Time | Segment | Delivery aim |
+|---|---|---|
+| `0-5` min | Opening frame | Set the causal-design lens and tell participants what to listen for |
+| `5-15` min | Core report argument | Land the report's three main messages before touching methods |
+| `15-25` min | Design-first workflow | Walk through estimand, covariates, raw imbalance, and overlap |
+| `25-40` min | Method comparison | Contrast exact matching, CEM, and entropy balancing on the same `ATT` target |
+| `40-50` min | Interpreting the worked example | Explain what the `lalonde` results do and do not justify |
+| `50-60` min | Discussion and handoff | Check understanding and transition into the lab sequence |
+
+## Delivery Script By Segment
+
+### 0-5 Minutes: Opening Frame
+
+Main message to deliver:
+
+- This is a lab about design judgement, not software button-pushing.
+- The report compares methods that solve related but not identical problems.
+- The central question is not "which method wins?" but "what design cost are we willing to pay?"
+
+Suggested wording:
+
+> Today’s report matters because it shows that matching and weighting are not magic corrections for observational data. They are design tools that make the comparison problem more visible. Our job in this lab is to learn how to read those design costs clearly.
+
+Ask the room:
+
+- What usually gets reported first in applied matching write-ups: the design or the estimate?
+- Why might that be a problem?
+
+### 5-15 Minutes: Core Report Argument
+
+Point participants to:
+
+- [Executive Summary](../matching_methods_report.html#executive-summary)
+- [Introduction](../matching_methods_report.html#introduction)
+- [Design Principles](../matching_methods_report.html#design-principles)
+
+Main messages to land:
+
+- Start with the causal question and target estimand.
+- Matching and weighting are design-stage tools, not substitutes for assumptions.
+- Balance has to be read together with retained information.
+
+Facilitator prompt:
+
+- Ask one participant to summarize the report's argument in one sentence.
+- If they only mention balance, push them to add retention or effective sample size.
+
+Checkpoint sentence:
+
+> A good design is not the one with the prettiest post-adjustment table. It is the one whose tradeoffs still match the causal question.
+
+### 15-25 Minutes: Design-First Workflow
+
+Point participants to:
+
+- [Define the Estimand Before Adjustment](../matching_methods_report.html#define-the-estimand-before-adjustment)
+- [Data and Study Design](../matching_methods_report.html#data-and-study-design)
+- [Pre-Match Diagnostics](../matching_methods_report.html#pre-match-diagnostics)
+
+Walk through this sequence:
+
+1. identify the target as the `ATT`
+2. define the treated group as programme participants
+3. name the pre-treatment covariates
+4. inspect the raw comparison before any adjustment
+
+Main delivery point:
+
+- Participants should see that the untreated group is not automatically a credible stand-in.
+- The pre-match section matters because it shows the burden the design has to carry.
+
+Ask the room:
+
+- Which covariates look most substantively worrying before adjustment?
+- If overlap is poor on prior earnings, what kinds of costs should we expect later?
+
+### 25-40 Minutes: Method Comparison
+
+Point participants to:
+
+- [Exact Matching](../matching_methods_report.html#exact-matching)
+- [Coarsened Exact Matching](../matching_methods_report.html#coarsened-exact-matching)
+- [Entropy Balancing for Weighting](../matching_methods_report.html#entropy-balancing-for-weighting)
+- [Comparing the Methods](../matching_methods_report.html#comparing-the-methods)
+
+Use this structure:
+
+| Method | What to emphasize | What to warn about |
+|---|---|---|
+| Exact matching | Most transparent and auditable logic | Can force a reduced covariate set and still leave important imbalance |
+| CEM | Keeps matching logic visible while bringing continuous covariates into the design | Coarsening rules change who is retained |
+| Entropy balancing | Preserves treated units and achieves very strong observed mean balance | Balance can be purchased with concentrated weights and lower control ESS |
+
+Teaching line for each method:
+
+- Exact matching: "clear rules, but often too rigid"
+- CEM: "auditable compromise, but dependent on cutpoints"
+- Entropy balancing: "strong balance, but cost moved into the weights"
+
+Facilitator move:
+
+- Keep bringing the comparison back to the same `ATT`.
+- Do not let the discussion drift into treating each method as if it were answering a different question by default.
+
+### 40-50 Minutes: Interpreting The Worked Example
+
+Point participants to:
+
+- [Treatment Effect Summary](../matching_methods_report.html#treatment-effect-summary)
+- [Limitations](../matching_methods_report.html#limitations)
+- [Conclusion](../matching_methods_report.html#conclusion)
+
+Main points to land:
+
+- All three adjusted designs give a positive estimated effect in direction.
+- That directional stability does not remove the design tradeoffs.
+- The represented population changes as pruning or weight concentration increases.
+
+Suggested summary:
+
+> In this report, entropy balancing is the strongest summary design if preserving the original treated population is the priority. CEM is the clearest matched-sample compromise if auditability and explicit sample restriction matter most. Exact matching is the easiest to explain, but it is not the strongest overall design here.
+
+Ask the room:
+
+- Why is it wrong to stop at "all three methods give a positive result"?
+- Which method would you defend to a policy audience, and what cost would you have to admit?
+
+### 50-60 Minutes: Discussion And Handoff
+
+Use the last ten minutes to consolidate rather than add new content.
+
+Ask participants to answer:
+
+1. What is the report's main message in one sentence?
+2. Which design cost worries you most in the `lalonde` example?
+3. What would make you reject matching entirely in a real evaluation?
+
+Then hand off to:
+
+- [Black Politicians lab](black_politicians_lab.html) if you want a second design-first comparison
+- [NSW + CPS benchmark lab](nsw_cps_benchmark_lab.html) if you want an experimental benchmark
+- [Titanic teaching lab](titanic_teaching_lab.html) if you want a compact follow-up
+
+## The Three Messages To Repeat Throughout
+
+If time is short, make sure these three messages are repeated clearly:
+
+1. define the estimand before choosing the adjustment method
+2. read balance together with overlap, retention, and weight concentration
+3. treat adjusted estimates as design-contingent, not mechanically correct
+
+## Common Teaching Risks
+
+### Risk 1: The Session Becomes A Software Demo
+
+Correction:
+
+- Move back to the report prose before returning to code output.
+- Ask what causal question the current diagnostic is answering.
+
+### Risk 2: Participants Assume Better Balance Means Better Inference
+
+Correction:
+
+- Bring in retention and effective sample size immediately.
+- Ask who the adjusted estimate still describes.
+
+### Risk 3: Discussion Gets Stuck On Which Method Is "Best"
+
+Correction:
+
+- Reframe around the causal question.
+- Ask what tradeoff each method imposes and whether that tradeoff is acceptable.
+
+## Quick Facilitation Prompts
+
+Use these when discussion slows down:
+
+- What changed between the raw sample and the adjusted design?
+- Which method keeps the clearest audit trail?
+- Which method hides more of its cost in weights rather than dropped units?
+- If you had to explain this to a non-technical commissioner, what would you say in two sentences?
+- What evidence would you want before trusting the estimate more strongly?
+
+## Minimal Version If Time Runs Short
+
+If you lose `10-15` minutes, keep only this sequence:
+
+1. executive summary and design principles
+2. pre-match diagnostics
+3. comparison of exact matching, CEM, and entropy balancing
+4. treatment-effect summary plus limitations
+5. handoff to Black Politicians lab
+
+Drop:
+
+- detailed code walkthroughs
+- robustness-check details
+- extended discussion of alternative tuning choices
+
+## Suggested Closing
+
+Close with a sentence that keeps the report's tone:
+
+> The value of matching and weighting is not that they manufacture certainty. It is that they force us to say, clearly and publicly, what comparison we are willing to defend and what cost we paid to make it plausible.

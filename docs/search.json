@@ -357,7 +357,7 @@
     "href": "labs/index.html#roadmap-aligned-labs",
     "title": "Dataset Expansion Labs",
     "section": "1 Roadmap-Aligned Labs",
-    "text": "1 Roadmap-Aligned Labs\n\n\n\nLab\nDataset(s)\nCurrent status\nLink\n\n\n\n\nBlack Politicians Lab\ncausaldata::black_politicians\nTraining aid\nOpen · Full code · Evaluated code · QA log\n\n\nNSW + CPS Benchmark Lab\ncausaldata::nsw_mixtape, causaldata::cps_mixtape\nBenchmark lab\nOpen · Full code · Evaluated code · QA log\n\n\nTitanic Teaching Lab\ncausaldata::titanic\nTeaching lab\nOpen · Full code",
+    "text": "1 Roadmap-Aligned Labs\n\n\n\nLab\nDataset(s)\nCurrent status\nLink\n\n\n\n\nMain Report 1-Hour Teaching Aid\nMatchIt::lalonde plus report outputs\nFacilitator guide\nOpen\n\n\nBlack Politicians Lab\ncausaldata::black_politicians\nTraining aid\nOpen · Full code · Evaluated code · QA log\n\n\nNSW + CPS Benchmark Lab\ncausaldata::nsw_mixtape, causaldata::cps_mixtape\nBenchmark lab\nOpen · Full code · Evaluated code · QA log\n\n\nTitanic Teaching Lab\ncausaldata::titanic\nTeaching lab\nOpen · Full code",
     "crumbs": [
       "Additional Labs",
       "Dataset Expansion Labs"
@@ -1151,7 +1151,7 @@
     "href": "slides/index.html#available-decks",
     "title": "Slides",
     "section": "1 Available Decks",
-    "text": "1 Available Decks\n\nMatching and Weighting Training Deck\nFrom Report to Labs: Background Lecture",
+    "text": "1 Available Decks\n\nMatching and Weighting Training Deck\nFrom Report to Labs: Background Lecture\nDelivering the Main Report in a 1-Hour Lab",
     "crumbs": [
       "Slides"
     ]
@@ -1161,7 +1161,7 @@
     "href": "slides/index.html#suggested-slide-pipeline",
     "title": "Slides",
     "section": "2 Suggested Slide Pipeline",
-    "text": "2 Suggested Slide Pipeline\n\nKeep deck narrative aligned with matching_methods_report.qmd.\nUse the main report deck first, then the background lecture deck before opening the labs.\nPair the main report example with one lab extension at a time.\nLink slides back to full-code, evaluated-code, and QA outputs so the deck stays auditable.\nExport speaker-ready slides from Quarto RevealJS.",
+    "text": "2 Suggested Slide Pipeline\n\nKeep deck narrative aligned with matching_methods_report.qmd.\nUse the main report deck first, then the background lecture deck before opening the labs.\nUse the 1-hour lab deck when you want a tighter facilitator-led session built around the teaching aid.\nPair the main report example with one lab extension at a time.\nLink slides back to full-code, evaluated-code, and QA outputs so the deck stays auditable.\nExport speaker-ready slides from Quarto RevealJS.",
     "crumbs": [
       "Slides"
     ]
@@ -1171,7 +1171,7 @@
     "href": "labs/index.html#recommended-sequence",
     "title": "Dataset Expansion Labs",
     "section": "2 Recommended Sequence",
-    "text": "2 Recommended Sequence\n\nStart with the Black Politicians lab for a second design-first matching workflow with richer covariates.\nUse the NSW + CPS benchmark lab when you want to compare observational designs against an experimental reference.\nUse the Titanic lab for slide-friendly teaching on exact support cells and low-dimensional adjustment.",
+    "text": "2 Recommended Sequence\n\nStart with the Main Report 1-Hour Teaching Aid if you want a facilitator script for delivering the lalonde material live.\nMove to the Black Politicians lab for a second design-first matching workflow with richer covariates.\nUse the NSW + CPS benchmark lab when you want to compare observational designs against an experimental reference.\nUse the Titanic lab for slide-friendly teaching on exact support cells and low-dimensional adjustment.",
     "crumbs": [
       "Additional Labs",
       "Dataset Expansion Labs"
@@ -1439,6 +1439,303 @@
     "crumbs": [
       "Slides",
       "From Report to Labs"
+    ]
+  },
+  {
+    "objectID": "labs/main_report_1hr_lab_teaching_aid.html",
+    "href": "labs/main_report_1hr_lab_teaching_aid.html",
+    "title": "Teaching Aid: Delivering the Main Report in a 1-Hour Lab",
+    "section": "",
+    "text": "Use this page as a facilitator script for a 60 minute teaching lab built around the main lalonde report.\n\nIt is designed for live delivery, not as a standalone methods article.\nIt assumes participants have the main report open.\nIt keeps the session focused on the report’s main messages rather than on running every line of code.\n\n\n\n\n\n\n\nNote\n\n\n\nThis page is deliberately non-executed. The goal is delivery support: timing, prompts, transitions, and decisions about what to emphasize in the room.",
+    "crumbs": [
+      "Additional Labs",
+      "Teaching Aid: Delivering the Main Report in a 1-Hour Lab"
+    ]
+  },
+  {
+    "objectID": "labs/main_report_1hr_lab_teaching_aid.html#how-to-use-this-page",
+    "href": "labs/main_report_1hr_lab_teaching_aid.html#how-to-use-this-page",
+    "title": "Teaching Aid: Delivering the Main Report in a 1-Hour Lab",
+    "section": "",
+    "text": "Use this page as a facilitator script for a 60 minute teaching lab built around the main lalonde report.\n\nIt is designed for live delivery, not as a standalone methods article.\nIt assumes participants have the main report open.\nIt keeps the session focused on the report’s main messages rather than on running every line of code.\n\n\n\n\n\n\n\nNote\n\n\n\nThis page is deliberately non-executed. The goal is delivery support: timing, prompts, transitions, and decisions about what to emphasize in the room.",
+    "crumbs": [
+      "Additional Labs",
+      "Teaching Aid: Delivering the Main Report in a 1-Hour Lab"
+    ]
+  },
+  {
+    "objectID": "labs/main_report_1hr_lab_teaching_aid.html#session-goal",
+    "href": "labs/main_report_1hr_lab_teaching_aid.html#session-goal",
+    "title": "Teaching Aid: Delivering the Main Report in a 1-Hour Lab",
+    "section": "2 Session Goal",
+    "text": "2 Session Goal\nBy the end of the hour, participants should be able to explain the report’s main claim in plain language:\nMatching and weighting methods are useful design tools, but they should be judged by the tradeoff they impose between balance, overlap, retention, and weight concentration rather than by any single balance table or treatment estimate.",
+    "crumbs": [
+      "Additional Labs",
+      "Teaching Aid: Delivering the Main Report in a 1-Hour Lab"
+    ]
+  },
+  {
+    "objectID": "labs/main_report_1hr_lab_teaching_aid.html#learning-objectives",
+    "href": "labs/main_report_1hr_lab_teaching_aid.html#learning-objectives",
+    "title": "Teaching Aid: Delivering the Main Report in a 1-Hour Lab",
+    "section": "3 Learning Objectives",
+    "text": "3 Learning Objectives\nAt the end of the session, participants should be able to:\n\nstate why the report starts with the estimand rather than the method\nexplain the difference between matching and weighting as design strategies\ninterpret exact matching, CEM, and entropy balancing as different solutions to different design problems\ndescribe why acceptable balance alone is not enough\ndefend a qualified method choice for the lalonde example",
+    "crumbs": [
+      "Additional Labs",
+      "Teaching Aid: Delivering the Main Report in a 1-Hour Lab"
+    ]
+  },
+  {
+    "objectID": "labs/main_report_1hr_lab_teaching_aid.html#recommended-setup",
+    "href": "labs/main_report_1hr_lab_teaching_aid.html#recommended-setup",
+    "title": "Teaching Aid: Delivering the Main Report in a 1-Hour Lab",
+    "section": "4 Recommended Setup",
+    "text": "4 Recommended Setup\nKeep these pages open during delivery:\n\nMain report\nMain report full code\nMatching and Weighting training deck\nFrom Report to Labs lecture deck\nBlack Politicians lab\n\nIf you are presenting live:\n\nuse the slide deck for opening framing\nswitch to the main report for the worked example sections\nuse this teaching aid as your pacing and prompt sheet",
+    "crumbs": [
+      "Additional Labs",
+      "Teaching Aid: Delivering the Main Report in a 1-Hour Lab"
+    ]
+  },
+  {
+    "objectID": "labs/main_report_1hr_lab_teaching_aid.html#minute-run-of-show",
+    "href": "labs/main_report_1hr_lab_teaching_aid.html#minute-run-of-show",
+    "title": "Teaching Aid: Delivering the Main Report in a 1-Hour Lab",
+    "section": "5 60-Minute Run Of Show",
+    "text": "5 60-Minute Run Of Show\n\n\n\n\n\n\n\n\nTime\nSegment\nDelivery aim\n\n\n\n\n0-5 min\nOpening frame\nSet the causal-design lens and tell participants what to listen for\n\n\n5-15 min\nCore report argument\nLand the report’s three main messages before touching methods\n\n\n15-25 min\nDesign-first workflow\nWalk through estimand, covariates, raw imbalance, and overlap\n\n\n25-40 min\nMethod comparison\nContrast exact matching, CEM, and entropy balancing on the same ATT target\n\n\n40-50 min\nInterpreting the worked example\nExplain what the lalonde results do and do not justify\n\n\n50-60 min\nDiscussion and handoff\nCheck understanding and transition into the lab sequence",
+    "crumbs": [
+      "Additional Labs",
+      "Teaching Aid: Delivering the Main Report in a 1-Hour Lab"
+    ]
+  },
+  {
+    "objectID": "labs/main_report_1hr_lab_teaching_aid.html#delivery-script-by-segment",
+    "href": "labs/main_report_1hr_lab_teaching_aid.html#delivery-script-by-segment",
+    "title": "Teaching Aid: Delivering the Main Report in a 1-Hour Lab",
+    "section": "6 Delivery Script By Segment",
+    "text": "6 Delivery Script By Segment\n\n6.1 0-5 Minutes: Opening Frame\nMain message to deliver:\n\nThis is a lab about design judgement, not software button-pushing.\nThe report compares methods that solve related but not identical problems.\nThe central question is not “which method wins?” but “what design cost are we willing to pay?”\n\nSuggested wording:\n\nToday’s report matters because it shows that matching and weighting are not magic corrections for observational data. They are design tools that make the comparison problem more visible. Our job in this lab is to learn how to read those design costs clearly.\n\nAsk the room:\n\nWhat usually gets reported first in applied matching write-ups: the design or the estimate?\nWhy might that be a problem?\n\n\n\n6.2 5-15 Minutes: Core Report Argument\nPoint participants to:\n\nExecutive Summary\nIntroduction\nDesign Principles\n\nMain messages to land:\n\nStart with the causal question and target estimand.\nMatching and weighting are design-stage tools, not substitutes for assumptions.\nBalance has to be read together with retained information.\n\nFacilitator prompt:\n\nAsk one participant to summarize the report’s argument in one sentence.\nIf they only mention balance, push them to add retention or effective sample size.\n\nCheckpoint sentence:\n\nA good design is not the one with the prettiest post-adjustment table. It is the one whose tradeoffs still match the causal question.\n\n\n\n6.3 15-25 Minutes: Design-First Workflow\nPoint participants to:\n\nDefine the Estimand Before Adjustment\nData and Study Design\nPre-Match Diagnostics\n\nWalk through this sequence:\n\nidentify the target as the ATT\ndefine the treated group as programme participants\nname the pre-treatment covariates\ninspect the raw comparison before any adjustment\n\nMain delivery point:\n\nParticipants should see that the untreated group is not automatically a credible stand-in.\nThe pre-match section matters because it shows the burden the design has to carry.\n\nAsk the room:\n\nWhich covariates look most substantively worrying before adjustment?\nIf overlap is poor on prior earnings, what kinds of costs should we expect later?\n\n\n\n6.4 25-40 Minutes: Method Comparison\nPoint participants to:\n\nExact Matching\nCoarsened Exact Matching\nEntropy Balancing for Weighting\nComparing the Methods\n\nUse this structure:\n\n\n\n\n\n\n\n\nMethod\nWhat to emphasize\nWhat to warn about\n\n\n\n\nExact matching\nMost transparent and auditable logic\nCan force a reduced covariate set and still leave important imbalance\n\n\nCEM\nKeeps matching logic visible while bringing continuous covariates into the design\nCoarsening rules change who is retained\n\n\nEntropy balancing\nPreserves treated units and achieves very strong observed mean balance\nBalance can be purchased with concentrated weights and lower control ESS\n\n\n\nTeaching line for each method:\n\nExact matching: “clear rules, but often too rigid”\nCEM: “auditable compromise, but dependent on cutpoints”\nEntropy balancing: “strong balance, but cost moved into the weights”\n\nFacilitator move:\n\nKeep bringing the comparison back to the same ATT.\nDo not let the discussion drift into treating each method as if it were answering a different question by default.\n\n\n\n6.5 40-50 Minutes: Interpreting The Worked Example\nPoint participants to:\n\nTreatment Effect Summary\nLimitations\nConclusion\n\nMain points to land:\n\nAll three adjusted designs give a positive estimated effect in direction.\nThat directional stability does not remove the design tradeoffs.\nThe represented population changes as pruning or weight concentration increases.\n\nSuggested summary:\n\nIn this report, entropy balancing is the strongest summary design if preserving the original treated population is the priority. CEM is the clearest matched-sample compromise if auditability and explicit sample restriction matter most. Exact matching is the easiest to explain, but it is not the strongest overall design here.\n\nAsk the room:\n\nWhy is it wrong to stop at “all three methods give a positive result”?\nWhich method would you defend to a policy audience, and what cost would you have to admit?\n\n\n\n6.6 50-60 Minutes: Discussion And Handoff\nUse the last ten minutes to consolidate rather than add new content.\nAsk participants to answer:\n\nWhat is the report’s main message in one sentence?\nWhich design cost worries you most in the lalonde example?\nWhat would make you reject matching entirely in a real evaluation?\n\nThen hand off to:\n\nBlack Politicians lab if you want a second design-first comparison\nNSW + CPS benchmark lab if you want an experimental benchmark\nTitanic teaching lab if you want a compact follow-up",
+    "crumbs": [
+      "Additional Labs",
+      "Teaching Aid: Delivering the Main Report in a 1-Hour Lab"
+    ]
+  },
+  {
+    "objectID": "labs/main_report_1hr_lab_teaching_aid.html#the-three-messages-to-repeat-throughout",
+    "href": "labs/main_report_1hr_lab_teaching_aid.html#the-three-messages-to-repeat-throughout",
+    "title": "Teaching Aid: Delivering the Main Report in a 1-Hour Lab",
+    "section": "7 The Three Messages To Repeat Throughout",
+    "text": "7 The Three Messages To Repeat Throughout\nIf time is short, make sure these three messages are repeated clearly:\n\ndefine the estimand before choosing the adjustment method\nread balance together with overlap, retention, and weight concentration\ntreat adjusted estimates as design-contingent, not mechanically correct",
+    "crumbs": [
+      "Additional Labs",
+      "Teaching Aid: Delivering the Main Report in a 1-Hour Lab"
+    ]
+  },
+  {
+    "objectID": "labs/main_report_1hr_lab_teaching_aid.html#common-teaching-risks",
+    "href": "labs/main_report_1hr_lab_teaching_aid.html#common-teaching-risks",
+    "title": "Teaching Aid: Delivering the Main Report in a 1-Hour Lab",
+    "section": "8 Common Teaching Risks",
+    "text": "8 Common Teaching Risks\n\n8.1 Risk 1: The Session Becomes A Software Demo\nCorrection:\n\nMove back to the report prose before returning to code output.\nAsk what causal question the current diagnostic is answering.\n\n\n\n8.2 Risk 2: Participants Assume Better Balance Means Better Inference\nCorrection:\n\nBring in retention and effective sample size immediately.\nAsk who the adjusted estimate still describes.\n\n\n\n8.3 Risk 3: Discussion Gets Stuck On Which Method Is “Best”\nCorrection:\n\nReframe around the causal question.\nAsk what tradeoff each method imposes and whether that tradeoff is acceptable.",
+    "crumbs": [
+      "Additional Labs",
+      "Teaching Aid: Delivering the Main Report in a 1-Hour Lab"
+    ]
+  },
+  {
+    "objectID": "labs/main_report_1hr_lab_teaching_aid.html#quick-facilitation-prompts",
+    "href": "labs/main_report_1hr_lab_teaching_aid.html#quick-facilitation-prompts",
+    "title": "Teaching Aid: Delivering the Main Report in a 1-Hour Lab",
+    "section": "9 Quick Facilitation Prompts",
+    "text": "9 Quick Facilitation Prompts\nUse these when discussion slows down:\n\nWhat changed between the raw sample and the adjusted design?\nWhich method keeps the clearest audit trail?\nWhich method hides more of its cost in weights rather than dropped units?\nIf you had to explain this to a non-technical commissioner, what would you say in two sentences?\nWhat evidence would you want before trusting the estimate more strongly?",
+    "crumbs": [
+      "Additional Labs",
+      "Teaching Aid: Delivering the Main Report in a 1-Hour Lab"
+    ]
+  },
+  {
+    "objectID": "labs/main_report_1hr_lab_teaching_aid.html#minimal-version-if-time-runs-short",
+    "href": "labs/main_report_1hr_lab_teaching_aid.html#minimal-version-if-time-runs-short",
+    "title": "Teaching Aid: Delivering the Main Report in a 1-Hour Lab",
+    "section": "10 Minimal Version If Time Runs Short",
+    "text": "10 Minimal Version If Time Runs Short\nIf you lose 10-15 minutes, keep only this sequence:\n\nexecutive summary and design principles\npre-match diagnostics\ncomparison of exact matching, CEM, and entropy balancing\ntreatment-effect summary plus limitations\nhandoff to Black Politicians lab\n\nDrop:\n\ndetailed code walkthroughs\nrobustness-check details\nextended discussion of alternative tuning choices",
+    "crumbs": [
+      "Additional Labs",
+      "Teaching Aid: Delivering the Main Report in a 1-Hour Lab"
+    ]
+  },
+  {
+    "objectID": "labs/main_report_1hr_lab_teaching_aid.html#suggested-closing",
+    "href": "labs/main_report_1hr_lab_teaching_aid.html#suggested-closing",
+    "title": "Teaching Aid: Delivering the Main Report in a 1-Hour Lab",
+    "section": "11 Suggested Closing",
+    "text": "11 Suggested Closing\nClose with a sentence that keeps the report’s tone:\n\nThe value of matching and weighting is not that they manufacture certainty. It is that they force us to say, clearly and publicly, what comparison we are willing to defend and what cost we paid to make it plausible.",
+    "crumbs": [
+      "Additional Labs",
+      "Teaching Aid: Delivering the Main Report in a 1-Hour Lab"
+    ]
+  },
+  {
+    "objectID": "slides/main_report_1hr_lab_slides.html#session-goal",
+    "href": "slides/main_report_1hr_lab_slides.html#session-goal",
+    "title": "Delivering the Main Report in a 1-Hour Lab",
+    "section": "Session Goal",
+    "text": "Session Goal\nBy the end of the hour, participants should be able to say:\nMatching and weighting are useful design tools, but they have to be judged by the tradeoff they impose between balance, overlap, retention, and weight concentration.\n\nUse this as the anchor sentence for the whole session. If discussion wanders into software details or isolated estimates, return to this line.",
+    "crumbs": [
+      "Slides",
+      "Delivering the Main Report in a 1-Hour Lab"
+    ]
+  },
+  {
+    "objectID": "slides/main_report_1hr_lab_slides.html#what-this-lab-is-for",
+    "href": "slides/main_report_1hr_lab_slides.html#what-this-lab-is-for",
+    "title": "Delivering the Main Report in a 1-Hour Lab",
+    "section": "What This Lab Is For",
+    "text": "What This Lab Is For\n\ndeliver the report’s main messages, not every technical detail\ntrain design judgement rather than software mimicry\nprepare the room for the follow-on labs\n\n\nOpen by lowering the pressure to cover everything. The point is to teach the report’s logic well enough that participants can carry it into later exercises.",
+    "crumbs": [
+      "Slides",
+      "Delivering the Main Report in a 1-Hour Lab"
+    ]
+  },
+  {
+    "objectID": "slides/main_report_1hr_lab_slides.html#minute-flow",
+    "href": "slides/main_report_1hr_lab_slides.html#minute-flow",
+    "title": "Delivering the Main Report in a 1-Hour Lab",
+    "section": "60-Minute Flow",
+    "text": "60-Minute Flow\n\n\n\nTime\nFocus\n\n\n\n\n0-5\nOpening frame\n\n\n5-15\nCore report argument\n\n\n15-25\nDesign-first workflow\n\n\n25-40\nMethod comparison\n\n\n40-50\nInterpreting the worked example\n\n\n50-60\nDiscussion and handoff\n\n\n\n\nSet expectations up front. This slide gives you permission to move the room along rather than turning the lab into a line-by-line report walkthrough.",
+    "crumbs": [
+      "Slides",
+      "Delivering the Main Report in a 1-Hour Lab"
+    ]
+  },
+  {
+    "objectID": "slides/main_report_1hr_lab_slides.html#opening-frame",
+    "href": "slides/main_report_1hr_lab_slides.html#opening-frame",
+    "title": "Delivering the Main Report in a 1-Hour Lab",
+    "section": "Opening Frame",
+    "text": "Opening Frame\n\nThis is a lab about design judgement, not button-pushing.\nThe methods solve related but not identical design problems.\nThe key question is not “which method wins?”\nThe key question is “what design cost are we willing to defend?”\n\n\nAsk what usually gets reported first in matching write-ups: design or estimate. Use that to surface the report’s critique of outcome-first presentation.",
+    "crumbs": [
+      "Slides",
+      "Delivering the Main Report in a 1-Hour Lab"
+    ]
+  },
+  {
+    "objectID": "slides/main_report_1hr_lab_slides.html#three-messages-to-land-early",
+    "href": "slides/main_report_1hr_lab_slides.html#three-messages-to-land-early",
+    "title": "Delivering the Main Report in a 1-Hour Lab",
+    "section": "Three Messages To Land Early",
+    "text": "Three Messages To Land Early\n\nDefine the estimand before choosing the method.\nTreat matching and weighting as design-stage tools.\nRead balance together with retention and effective sample size.\n\n\nIf participants only remember three things, make it these. Repeat them at least twice during the hour.",
+    "crumbs": [
+      "Slides",
+      "Delivering the Main Report in a 1-Hour Lab"
+    ]
+  },
+  {
+    "objectID": "slides/main_report_1hr_lab_slides.html#the-design-first-workflow",
+    "href": "slides/main_report_1hr_lab_slides.html#the-design-first-workflow",
+    "title": "Delivering the Main Report in a 1-Hour Lab",
+    "section": "The Design-First Workflow",
+    "text": "The Design-First Workflow\n\nIdentify the target as the ATT.\nDefine the treated group as programme participants.\nName the defensible pre-treatment covariates.\nInspect raw imbalance before any adjustment.\nCompare exact, CEM, and entropy balancing on the same target.\n\n\nKeep returning to the same ATT target. That prevents the methods discussion from becoming a set of disconnected technique demos.",
+    "crumbs": [
+      "Slides",
+      "Delivering the Main Report in a 1-Hour Lab"
+    ]
+  },
+  {
+    "objectID": "slides/main_report_1hr_lab_slides.html#what-the-pre-match-section-is-doing",
+    "href": "slides/main_report_1hr_lab_slides.html#what-the-pre-match-section-is-doing",
+    "title": "Delivering the Main Report in a 1-Hour Lab",
+    "section": "What The Pre-Match Section Is Doing",
+    "text": "What The Pre-Match Section Is Doing\n\nIt shows the untreated group is not automatically a credible stand-in.\nIt reveals where the design burden is heaviest.\nIt tells you what kinds of costs you should expect later.\n\nAsk:\n\nWhich pre-treatment differences worry you most?\nWhat happens if overlap is weak on prior earnings?\n\n\nUse the report’s pre-match diagnostics to make the comparison problem visible. Do not rush past this slide. It sets up why the methods sections matter.",
+    "crumbs": [
+      "Slides",
+      "Delivering the Main Report in a 1-Hour Lab"
+    ]
+  },
+  {
+    "objectID": "slides/main_report_1hr_lab_slides.html#exact-matching",
+    "href": "slides/main_report_1hr_lab_slides.html#exact-matching",
+    "title": "Delivering the Main Report in a 1-Hour Lab",
+    "section": "Exact Matching",
+    "text": "Exact Matching\n\nstrongest audit trail\neasiest method to explain in plain language\noften too rigid once important continuous covariates matter\n\nTeaching line:\nclear rules, but often too rigid\n\nStress that exact matching is valuable here as a teaching contrast. Its clarity helps, but it cannot carry the full design on its own in the lalonde example.",
+    "crumbs": [
+      "Slides",
+      "Delivering the Main Report in a 1-Hour Lab"
+    ]
+  },
+  {
+    "objectID": "slides/main_report_1hr_lab_slides.html#coarsened-exact-matching",
+    "href": "slides/main_report_1hr_lab_slides.html#coarsened-exact-matching",
+    "title": "Delivering the Main Report in a 1-Hour Lab",
+    "section": "Coarsened Exact Matching",
+    "text": "Coarsened Exact Matching\n\nkeeps matching logic visible\nbrings continuous covariates into the design through bins\ngives the clearest matched-sample compromise in the report\n\nTeaching line:\nauditable compromise, but dependent on cutpoints\n\nExplain that CEM is strong precisely because its compromises stay visible. Then note that those visible cutpoints are real design choices, not neutral defaults.",
+    "crumbs": [
+      "Slides",
+      "Delivering the Main Report in a 1-Hour Lab"
+    ]
+  },
+  {
+    "objectID": "slides/main_report_1hr_lab_slides.html#entropy-balancing",
+    "href": "slides/main_report_1hr_lab_slides.html#entropy-balancing",
+    "title": "Delivering the Main Report in a 1-Hour Lab",
+    "section": "Entropy Balancing",
+    "text": "Entropy Balancing\n\npreserves the original treated group\nachieves very strong observed mean balance\nmoves more of the design cost into the weights\n\nTeaching line:\nstrong balance, but cost moved into the weights\n\nThis is the moment to introduce effective sample size as the weighting analogue of sample loss. Make the cost concrete rather than abstract.",
+    "crumbs": [
+      "Slides",
+      "Delivering the Main Report in a 1-Hour Lab"
+    ]
+  },
+  {
+    "objectID": "slides/main_report_1hr_lab_slides.html#what-the-worked-example-shows",
+    "href": "slides/main_report_1hr_lab_slides.html#what-the-worked-example-shows",
+    "title": "Delivering the Main Report in a 1-Hour Lab",
+    "section": "What The Worked Example Shows",
+    "text": "What The Worked Example Shows\n\nAll three adjusted designs point in the same direction.\nThat directional stability does not remove the design tradeoffs.\nThe represented population shifts as pruning or weight concentration increases.\n\n\nPush back against the lazy conclusion that positive estimates across methods settle the problem. The report’s point is that design costs still determine what the estimate means.",
+    "crumbs": [
+      "Slides",
+      "Delivering the Main Report in a 1-Hour Lab"
+    ]
+  },
+  {
+    "objectID": "slides/main_report_1hr_lab_slides.html#qualified-method-choice",
+    "href": "slides/main_report_1hr_lab_slides.html#qualified-method-choice",
+    "title": "Delivering the Main Report in a 1-Hour Lab",
+    "section": "Qualified Method Choice",
+    "text": "Qualified Method Choice\n\nEntropy balancing is strongest if preserving the original treated population is the priority.\nCEM is strongest if you want an auditable matched-sample compromise.\nExact matching is easiest to teach, but not the strongest overall design here.\n\n\nState this as a qualified judgement, not a universal rule. Tie each choice back to the causal question and the acceptable design cost.",
+    "crumbs": [
+      "Slides",
+      "Delivering the Main Report in a 1-Hour Lab"
+    ]
+  },
+  {
+    "objectID": "slides/main_report_1hr_lab_slides.html#discussion-prompts",
+    "href": "slides/main_report_1hr_lab_slides.html#discussion-prompts",
+    "title": "Delivering the Main Report in a 1-Hour Lab",
+    "section": "Discussion Prompts",
+    "text": "Discussion Prompts\n\nWhat is the report’s main message in one sentence?\nWhich design cost worries you most in lalonde?\nWhat would make you reject matching entirely in a real evaluation?\n\n\nUse these prompts to close the loop. Participants should leave by articulating the report’s argument themselves, not just hearing you state it.",
+    "crumbs": [
+      "Slides",
+      "Delivering the Main Report in a 1-Hour Lab"
+    ]
+  },
+  {
+    "objectID": "slides/main_report_1hr_lab_slides.html#if-time-runs-short",
+    "href": "slides/main_report_1hr_lab_slides.html#if-time-runs-short",
+    "title": "Delivering the Main Report in a 1-Hour Lab",
+    "section": "If Time Runs Short",
+    "text": "If Time Runs Short\nKeep only:\n\ncore report argument\npre-match diagnostics\nexact vs CEM vs entropy balancing\ntreatment-effect summary and limitations\nhandoff to the next lab\n\nDrop:\n\ndetailed code walkthroughs\nrobustness details\nextended tuning discussion\n\n\nThis slide is mainly for you as facilitator. If the session slips, protect the report’s central logic and cut the implementation detail first.",
+    "crumbs": [
+      "Slides",
+      "Delivering the Main Report in a 1-Hour Lab"
+    ]
+  },
+  {
+    "objectID": "slides/main_report_1hr_lab_slides.html#handoff-to-the-next-materials",
+    "href": "slides/main_report_1hr_lab_slides.html#handoff-to-the-next-materials",
+    "title": "Delivering the Main Report in a 1-Hour Lab",
+    "section": "Handoff To The Next Materials",
+    "text": "Handoff To The Next Materials\n\nTeaching aid page\nMain report\nFrom Report to Labs lecture\nBlack Politicians lab\n\n\nEnd with a clear next step. The room should know where to go next and what standard to carry forward: define the target, diagnose the raw comparison, then decide whether the design cost is defensible.",
+    "crumbs": [
+      "Slides",
+      "Delivering the Main Report in a 1-Hour Lab"
     ]
   }
 ]

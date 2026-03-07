@@ -11,6 +11,8 @@ format:
     toc-depth: 3
     number-sections: true
     code-links:
+      - text: PDF
+        href: matching_methods_report.pdf
       - text: Full Code
         href: matching_methods_report_full_code.html
       - text: QA Log

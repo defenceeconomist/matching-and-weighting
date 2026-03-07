@@ -27,6 +27,7 @@ website:
       style: "docked"
       contents:
         - labs/index.qmd
+        - labs/main_report_1hr_lab_teaching_aid.qmd
         - labs/black_politicians_lab.qmd
         - labs/nsw_cps_benchmark_lab.qmd
         - labs/titanic_teaching_lab.qmd
@@ -37,6 +38,7 @@ website:
         - slides/index.qmd
         - slides/matching_methods_slides.qmd
         - slides/pre_lab_background_lecture.qmd
+        - slides/main_report_1hr_lab_slides.qmd
 
 format:
   html:

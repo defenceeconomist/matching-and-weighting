@@ -1,0 +1,201 @@
+---
+title: "Delivering the Main Report in a 1-Hour Lab"
+subtitle: "Facilitator Deck Aligned to the Teaching Aid"
+author: "Luke Heley"
+date: 6 March 2026
+format:
+  revealjs:
+    theme: simple
+    slide-level: 2
+    slide-number: c/t
+    progress: true
+    controls: true
+    overview: true
+    transition: fade
+---
+
+## Session Goal
+
+By the end of the hour, participants should be able to say:
+
+Matching and weighting are useful design tools, but they have to be judged by the tradeoff they impose between balance, overlap, retention, and weight concentration.
+
+<aside class="notes">
+Use this as the anchor sentence for the whole session. If discussion wanders into software details or isolated estimates, return to this line.
+</aside>
+
+## What This Lab Is For
+
+- deliver the report's main messages, not every technical detail
+- train design judgement rather than software mimicry
+- prepare the room for the follow-on labs
+
+<aside class="notes">
+Open by lowering the pressure to cover everything. The point is to teach the report's logic well enough that participants can carry it into later exercises.
+</aside>
+
+## 60-Minute Flow
+
+| Time | Focus |
+|---|---|
+| `0-5` | Opening frame |
+| `5-15` | Core report argument |
+| `15-25` | Design-first workflow |
+| `25-40` | Method comparison |
+| `40-50` | Interpreting the worked example |
+| `50-60` | Discussion and handoff |
+
+<aside class="notes">
+Set expectations up front. This slide gives you permission to move the room along rather than turning the lab into a line-by-line report walkthrough.
+</aside>
+
+## Opening Frame
+
+- This is a lab about design judgement, not button-pushing.
+- The methods solve related but not identical design problems.
+- The key question is not "which method wins?"
+- The key question is "what design cost are we willing to defend?"
+
+<aside class="notes">
+Ask what usually gets reported first in matching write-ups: design or estimate. Use that to surface the report's critique of outcome-first presentation.
+</aside>
+
+## Three Messages To Land Early
+
+1. Define the estimand before choosing the method.
+2. Treat matching and weighting as design-stage tools.
+3. Read balance together with retention and effective sample size.
+
+<aside class="notes">
+If participants only remember three things, make it these. Repeat them at least twice during the hour.
+</aside>
+
+## The Design-First Workflow
+
+1. Identify the target as the `ATT`.
+2. Define the treated group as programme participants.
+3. Name the defensible pre-treatment covariates.
+4. Inspect raw imbalance before any adjustment.
+5. Compare exact, CEM, and entropy balancing on the same target.
+
+<aside class="notes">
+Keep returning to the same ATT target. That prevents the methods discussion from becoming a set of disconnected technique demos.
+</aside>
+
+## What The Pre-Match Section Is Doing
+
+- It shows the untreated group is not automatically a credible stand-in.
+- It reveals where the design burden is heaviest.
+- It tells you what kinds of costs you should expect later.
+
+Ask:
+
+- Which pre-treatment differences worry you most?
+- What happens if overlap is weak on prior earnings?
+
+<aside class="notes">
+Use the report's pre-match diagnostics to make the comparison problem visible. Do not rush past this slide. It sets up why the methods sections matter.
+</aside>
+
+## Exact Matching
+
+- strongest audit trail
+- easiest method to explain in plain language
+- often too rigid once important continuous covariates matter
+
+Teaching line:
+
+`clear rules, but often too rigid`
+
+<aside class="notes">
+Stress that exact matching is valuable here as a teaching contrast. Its clarity helps, but it cannot carry the full design on its own in the lalonde example.
+</aside>
+
+## Coarsened Exact Matching
+
+- keeps matching logic visible
+- brings continuous covariates into the design through bins
+- gives the clearest matched-sample compromise in the report
+
+Teaching line:
+
+`auditable compromise, but dependent on cutpoints`
+
+<aside class="notes">
+Explain that CEM is strong precisely because its compromises stay visible. Then note that those visible cutpoints are real design choices, not neutral defaults.
+</aside>
+
+## Entropy Balancing
+
+- preserves the original treated group
+- achieves very strong observed mean balance
+- moves more of the design cost into the weights
+
+Teaching line:
+
+`strong balance, but cost moved into the weights`
+
+<aside class="notes">
+This is the moment to introduce effective sample size as the weighting analogue of sample loss. Make the cost concrete rather than abstract.
+</aside>
+
+## What The Worked Example Shows
+
+- All three adjusted designs point in the same direction.
+- That directional stability does not remove the design tradeoffs.
+- The represented population shifts as pruning or weight concentration increases.
+
+<aside class="notes">
+Push back against the lazy conclusion that positive estimates across methods settle the problem. The report's point is that design costs still determine what the estimate means.
+</aside>
+
+## Qualified Method Choice
+
+- `Entropy balancing` is strongest if preserving the original treated population is the priority.
+- `CEM` is strongest if you want an auditable matched-sample compromise.
+- `Exact matching` is easiest to teach, but not the strongest overall design here.
+
+<aside class="notes">
+State this as a qualified judgement, not a universal rule. Tie each choice back to the causal question and the acceptable design cost.
+</aside>
+
+## Discussion Prompts
+
+- What is the report's main message in one sentence?
+- Which design cost worries you most in `lalonde`?
+- What would make you reject matching entirely in a real evaluation?
+
+<aside class="notes">
+Use these prompts to close the loop. Participants should leave by articulating the report's argument themselves, not just hearing you state it.
+</aside>
+
+## If Time Runs Short
+
+Keep only:
+
+1. core report argument
+2. pre-match diagnostics
+3. exact vs CEM vs entropy balancing
+4. treatment-effect summary and limitations
+5. handoff to the next lab
+
+Drop:
+
+- detailed code walkthroughs
+- robustness details
+- extended tuning discussion
+
+<aside class="notes">
+This slide is mainly for you as facilitator. If the session slips, protect the report's central logic and cut the implementation detail first.
+</aside>
+
+## Handoff To The Next Materials
+
+- [Teaching aid page](../labs/main_report_1hr_lab_teaching_aid.html)
+- [Main report](../matching_methods_report.html)
+- [From Report to Labs lecture](pre_lab_background_lecture.html)
+- [Black Politicians lab](../labs/black_politicians_lab.html)
+
+<aside class="notes">
+End with a clear next step. The room should know where to go next and what standard to carry forward: define the target, diagnose the raw comparison, then decide whether the design cost is defensible.
+</aside>
