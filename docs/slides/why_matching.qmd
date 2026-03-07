@@ -87,6 +87,17 @@ Build a comparison group that is credible enough to stand in for the missing out
 - matching matters because it is a second-best design repair when stronger design features are unavailable
 - the job is to recover the best comparison the data can still defend [@cunningham2021mixtape; @huntingtonklein_matching]
 
+## Dataset We Use: `lalonde`
+
+- the lab and report use `MatchIt::lalonde`, built from the National Supported Work training study with a non-experimental comparison group
+- this dataset became a benchmark because LaLonde showed that many non-experimental estimators missed the experimental training effect [@lalonde1986evaluating]
+- Dehejia and Wahba made it a matching case study by showing that better design choices could recover more credible estimates [@dehejia1999causal]
+- Abadie and Imbens kept it central in the matching literature because it is a disciplined test of how matching estimators behave when the benchmark is known [@abadie2011biascorrected]
+
+::: {.small-note}
+We use `lalonde` because it is not just convenient. It is a benchmark dataset for asking whether an observational design can get back to something close to the experimental answer.
+:::
+
 ## Why Raw Comparisons Mislead
 
 - in observational data, treatment is usually related to prior characteristics

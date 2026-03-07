@@ -43,7 +43,7 @@ Open these pages before the session starts:
 |---|---|---|
 | `0-3` | Title, Session Promise, 20-Minute Arc | Set the claim and the structure |
 | `3-7` | Fundamental problem, comparison group, `RCT` benchmark | Explain the counterfactual problem and the best-case comparison |
-| `7-12` | Raw comparisons, confounder slides, why match | Show why observational differences are biased |
+| `7-12` | Why matching enters, `lalonde`, raw comparisons, confounder slides | Show why observational differences are biased and why this benchmark dataset is used |
 | `12-17` | Workflow, subclassification, controls, weighting bridge | Explain what matching is trying to do |
 | `17-20` | Assumptions, limits, practical standard | End with disciplined use rather than salesmanship |
 
@@ -94,7 +94,15 @@ Open these pages before the session starts:
 - `Purpose:` Explain why the deck is about matching rather than experiments.
 - `Say:` In many real evaluations, treatment has already happened and the comparison group is not automatically credible.
 - `Say:` Matching is a second-best design repair for those settings, not a substitute for a better design when one exists.
-- `Transition:` Then explain why the raw observational comparison is biased.
+- `Transition:` Move to the `lalonde` slide by saying the deck uses a benchmark dataset where we can compare observational adjustment against an experimental reference point.
+
+### Dataset We Use: `lalonde`
+
+- `Purpose:` Tell the room what empirical case anchors the lab and why it is a teaching benchmark rather than a random dataset choice.
+- `Say:` We use `MatchIt::lalonde`, which packages the National Supported Work training study with a non-experimental comparison setup.
+- `Say:` LaLonde made the case famous by showing how badly many observational estimators could perform against the experimental benchmark.
+- `Say:` Dehejia and Wahba then made it central to matching pedagogy by arguing that better design choices could do much better, and Abadie and Imbens kept it important as a disciplined test bed for matching estimators.
+- `Transition:` Then explain why the raw observational comparison is biased before any adjustment happens.
 
 ### Why Raw Comparisons Mislead
 
