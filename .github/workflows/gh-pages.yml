@@ -12,6 +12,9 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    env:
+      R_VERSION: "4.4.1"
+      R_LIBS_USER: ${{ github.workspace }}/.github-actions/R/library
 
     steps:
       - name: Check out repository
@@ -25,8 +28,19 @@ jobs:
       - name: Set up R
         uses: r-lib/actions/setup-r@v2
         with:
-          r-version: "4.4.1"
+          r-version: ${{ env.R_VERSION }}
           use-public-rspm: true
+
+      - name: Create cached R library directory
+        run: mkdir -p "$R_LIBS_USER"
+
+      - name: Restore R package cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.R_LIBS_USER }}
+          key: ${{ runner.os }}-r-${{ env.R_VERSION }}-${{ hashFiles('.github/workflows/gh-pages.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-r-${{ env.R_VERSION }}-
 
       - name: Set up TinyTeX
         uses: r-lib/actions/setup-tinytex@v2
@@ -59,7 +73,11 @@ jobs:
           )]
 
           if (length(missing_packages) > 0) {
-            install.packages(missing_packages, repos = "https://cloud.r-project.org")
+            install.packages(
+              missing_packages,
+              repos = "https://cloud.r-project.org",
+              Ncpus = max(1L, parallel::detectCores() - 1L)
+            )
           }
 
           installed <- vapply(required_packages, requireNamespace, logical(1), quietly = TRUE)

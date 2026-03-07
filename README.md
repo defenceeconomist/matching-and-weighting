@@ -155,7 +155,7 @@ The repository also includes a GitHub Actions workflow at `.github/workflows/gh-
 On every push to `main`, it:
 
 - installs Quarto and R
-- installs the site build dependencies
+- restores a cached R package library and installs any missing site build dependencies
 - renders the site from `docs/`
 - publishes `docs/_site/` to the `gh-pages` branch
 
