@@ -1,0 +1,364 @@
+---
+title: "Matching and Weighting Workshop"
+subtitle: "Core concepts and lab launch for a 60-minute session"
+author: "Luke Heley"
+date: 7 March 2026
+format:
+  revealjs:
+    theme: [white, workshop-theme.scss]
+    slide-level: 2
+    slide-number: c/t
+    progress: true
+    controls: true
+    overview: true
+    transition: fade
+    center: false
+    width: 1400
+    height: 850
+    footer: "Matching and Weighting"
+    preview-links: auto
+execute:
+  echo: false
+  eval: false
+---
+
+## Session Promise
+
+::: {.kicker}
+This hour is about design judgement, not software mimicry.
+:::
+
+- explain what matching and weighting do before outcome analysis
+- compare exact matching, `CEM`, and entropy balancing on the same `ATT`
+- leave knowing which lab to open next and which sections to run first
+
+## 60-Minute Arc
+
+| Time | Segment | Purpose |
+|---|---|---|
+| `0-10` | Frame the problem | Why observational comparisons need design work |
+| `10-20` | Build the workflow | Estimand, covariates, raw imbalance, overlap |
+| `20-35` | Compare methods | Exact matching, `CEM`, entropy balancing |
+| `35-45` | Revisit the main report | Turn the `lalonde` example into a decision rule |
+| `45-60` | Launch the labs | Tell people exactly what to run and what to record |
+
+## The Comparison Problem
+
+::: {.lab-grid}
+::: {.lab-card}
+### Observational data
+
+- rarely give you a ready-made control group
+- can hide major baseline differences behind one coefficient
+- require design work before effect interpretation
+:::
+
+::: {.lab-card}
+### Adjustment tools
+
+- `matching` restricts who compares to whom
+- `weighting` changes how much each control counts
+- neither method rescues weak covariates or no overlap
+:::
+:::
+
+## The Non-Negotiable Workflow
+
+::: {.card-grid}
+::: {.mini-card}
+### 1. Name the target
+
+State the estimand before any adjustment output.
+:::
+
+::: {.mini-card}
+### 2. Choose covariates
+
+Keep only defensible pre-treatment variables in the design.
+:::
+
+::: {.mini-card}
+### 3. Inspect the raw sample
+
+Look at imbalance and overlap before touching a method.
+:::
+
+::: {.mini-card}
+### 4. Adjust the design
+
+Compare methods on the same target rather than moving the goalposts.
+:::
+
+::: {.mini-card}
+### 5. Estimate last
+
+Only interpret the effect once the design is credible enough to defend.
+:::
+:::
+
+## Read Design Quality On Four Axes
+
+::: {.metric-grid}
+::: {.metric-card}
+### Balance
+
+How much observed covariate imbalance remains?
+:::
+
+::: {.metric-card}
+### Overlap
+
+Do treated and control units still occupy common support?
+:::
+
+::: {.metric-card}
+### Retention
+
+How much of the treated sample survives the design?
+:::
+
+::: {.metric-card}
+### Weight concentration
+
+If weighting is used, did the effective sample size collapse?
+:::
+:::
+
+## Method Map
+
+| Method | Best use | Main risk |
+|---|---|---|
+| Exact matching | Low-dimensional, highly auditable comparisons | Important continuous differences stay outside the exact rules |
+| `CEM` | Inspectable matched-sample compromise across mixed covariates | Cutpoints prune treated units and change who the estimate describes |
+| Entropy balancing | Preserve the treated group while forcing very strong observed balance | A few controls can carry too much weight |
+
+## Worked Example {.section-slide}
+
+The `lalonde` report is not a software tour.
+
+It is a comparison of design costs on one shared `ATT`.
+
+## Main Report Anchor
+
+::: {.signal}
+If you keep one page open during delivery, keep the main report open.
+:::
+
+- Data: `MatchIt::lalonde`
+- Target: `ATT` for programme participants
+- Key walkthrough order:
+  - `Pre-Match Diagnostics`
+  - `Exact Matching`
+  - `Coarsened Exact Matching`
+  - `Entropy Balancing for Weighting`
+  - `Comparing the Methods`
+
+[Open the main report](../articles/matching_methods_report.html)
+
+## What The Main Report Teaches
+
+::: {.card-grid}
+::: {.mini-card}
+### Exact matching
+
+- clearest audit trail
+- retains `183 / 185` treated units
+- still leaves one reported covariate above `0.1`
+:::
+
+::: {.mini-card}
+### `CEM`
+
+- best matched-sample compromise
+- worst adjusted abs. SMD about `0.077`
+- retains only `81` treated units and `68` controls
+:::
+
+::: {.mini-card}
+### Entropy balancing
+
+- preserves all `185` treated units
+- drives included mean differences to about `0`
+- control `ESS` falls to about `98.458`
+:::
+:::
+
+## Decision Rule, Not Winner's Podium
+
+- Choose the strongest design the data can defend.
+- Prefer stronger quasi-experimental designs when assignment, timing, or cutoffs support them.
+- Use exact matching for narrow low-dimensional auditability.
+- Use `CEM` when you want an inspectable matched sample and can defend the coarsening rules.
+- Use entropy balancing when preserving the treated population matters most and the weights stay credible.
+- A defensible answer can still be: the available data do not support this comparison cleanly enough.
+
+## Lab Launch {.section-slide}
+
+The labs reuse the same workflow.
+
+What changes is the data structure, the support problem, and the kind of design judgement you need to defend.
+
+## What Stays Fixed Across Every Lab
+
+::: {.lab-grid}
+::: {.lab-card}
+### Always do this
+
+- define treatment, outcome, covariates, and estimand first
+- inspect the raw comparison before adjustment
+- compare exact matching, `CEM`, and weighting on the same target where relevant
+:::
+
+::: {.lab-card}
+### Always record this
+
+- worst pre/post imbalance
+- treated retention or control `ESS`
+- final estimate or benchmark gap
+- one design choice and one limitation
+:::
+:::
+
+## Lab Bundle At A Glance
+
+| Lab | Best use in teaching | Core run order |
+|---|---|---|
+| Black Politicians | First post-talk matching exercise | `Step 1` to `Step 7` |
+| NSW + CPS | Benchmark recovery against an experiment | `Step 1` to `Step 8` |
+| HISP IE in Practice | When matching should not be the default | `Step 1` to `Step 10` |
+| Titanic | Short support-cells and exact-matching recap | `Support Cells` to `Comparison Of Estimates` |
+
+## What Every Group Should Hand Back
+
+- the estimand they targeted
+- the covariates they treated as design variables
+- the worst raw imbalance and the best adjusted imbalance they achieved
+- the retention or weighting cost they had to admit
+- the design they would defend, plus one claim they still would not make
+
+## Exercise 1: Black Politicians
+
+::: {.lab-grid}
+::: {.lab-card}
+### Run these sections
+
+- `Step 1: Load The Data`
+- `Step 2: Describe The Raw Comparison`
+- `Step 3: Baseline Balance Diagnostics`
+- `Step 4` to `Step 6`: exact, `CEM`, entropy balancing
+- `Step 7: Estimate And Compare`
+:::
+
+::: {.lab-card}
+### Capture these outputs
+
+- `raw_summary`
+- pre-adjustment balance benchmark
+- exact and `CEM` matched counts
+- `ebal_weight_summary`
+- the comparison table you fill in at the end
+:::
+:::
+
+::: {.small-note}
+Default first breakout: strongest direct continuation of the main report's logic.
+:::
+
+## Exercise 2: NSW + CPS Benchmark
+
+::: {.lab-grid}
+::: {.lab-card}
+### Run these sections
+
+- `Step 1: Load Packages And Build Analysis Datasets`
+- `Step 2: Compute The Experimental Benchmark`
+- `Step 3: Raw Observational Estimate`
+- `Step 4: Baseline Balance And Overlap Diagnostics`
+- `Step 5` to `Step 7`: exact, `CEM`, entropy balancing
+- `Step 8: Compare Against The Experimental Benchmark`
+:::
+
+::: {.lab-card}
+### Capture these outputs
+
+- `benchmark_summary`
+- `overlap_summary`
+- exact and `CEM` matched counts
+- `ebal_weight_summary`
+- `estimate_comparison` with benchmark gaps
+:::
+:::
+
+::: {.small-note}
+Best benchmark question: which design gets closest to the experiment without hiding too much cost?
+:::
+
+## Exercise 3: HISP IE in Practice
+
+::: {.lab-grid}
+::: {.lab-card}
+### Run this in phases
+
+- `Step 1`: convert the Stata files and load `evaluation.csv`
+- `Step 2` and `Step 3`: naive contrasts to show weak designs
+- `Step 4` to `Step 7`: randomized assignment, `IV`, `RDD`, and `DiD`
+- `Step 8` and `Step 9`: matching and matched `DiD`
+- `Step 10`: power calculations only if time remains
+:::
+
+::: {.lab-card}
+### Capture these outputs
+
+- effect movement across the do-file sequence
+- baseline-balance checks in the randomized branch
+- matching-branch diagnostics
+- one sentence on whether matching adds anything once stronger designs are available
+:::
+:::
+
+::: {.small-note}
+Use this lab to teach escalation: matching is part of the toolkit, not the automatic endpoint.
+:::
+
+## Exercise 4: Titanic
+
+::: {.lab-grid}
+::: {.lab-card}
+### Run these sections
+
+- `Support Cells Before Matching`
+- `Exact Matching`
+- `Propensity-Score Subclassification`
+- `Comparison Of Estimates`
+:::
+
+::: {.lab-card}
+### Capture these outputs
+
+- the support-cell table
+- the balance-comparison table
+- subclass counts
+- the final estimate table
+:::
+:::
+
+::: {.small-note}
+Shortest follow-on exercise when you want the support logic to stay visible on one page.
+:::
+
+## Handoff
+
+::: {.signal}
+Open the main report, the workshop notes, and the first lab before you start the practical section.
+:::
+
+- [Workshop speaking notes](matching_workshop_notes.html)
+- [Main report](../articles/matching_methods_report.html)
+- [Labs hub](../labs/index.html)
+- [Black Politicians lab](../labs/black_politicians_lab.html)
+
+## Closing Line
+
+::: {.kicker}
+Use the strongest design the data can defend, then report the cost of that design plainly.
+:::

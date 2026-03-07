@@ -1,5 +1,6 @@
 ---
 title: "Matching and Weighting Learning Resources"
+subtitle: "Quasi Experimental Impact Evaluation Design"
 ---
 
 ## What This Website Is For
@@ -20,33 +21,41 @@ The material is organized around a practical evaluator workflow rather than a so
 
 The intended audience is evaluators, analysts, and staff who need a practical introduction to quasi-experimental design choices in programme and policy evaluation. The framing is especially aligned with training and capacity-building use cases, where methods need to be technically sound, explainable, and auditable.
 
+## How Codex Was Used In This Repository
+
+Codex was used as a coding and drafting assistant within this repository. It helped with implementation tasks, restructuring content, generating draft text, and supporting documentation and QA work across the site.
+
+The human analyst remained responsible for the substantive direction of the project. The analyst planned the work, delegated bounded tasks to Codex, reviewed outputs, iterated drafts, checked technical and editorial quality, and decided what to keep, revise, or reject.
+
+This means the repository should be read as analyst-directed work supported by AI assistance, not as an autonomous AI-produced resource.
+
 ## How The Site Is Structured
 
 The site is split into three main areas:
 
-- `Reports`: longer methods write-ups and their supporting audit materials
+- `Articles`: longer methods write-ups and their supporting audit materials
 - `Additional Labs`: worked examples that extend the core material to other datasets and teaching scenarios
-- `Slides`: presentation decks that support training delivery and lab handoff
+- `Slides`: one delivery deck plus standalone facilitator notes for the workshop and lab handoff
 
 If you are new to the site, the recommended sequence is:
 
 1. Start with the main report.
 2. Use the full-code and QA pages when you want implementation detail or audit traceability.
-3. Move into the labs for additional worked examples.
-4. Use the slide decks when you want a delivery-ready teaching version.
+3. Use the workshop deck and speaking notes when you want the delivery-ready teaching version.
+4. Move into the Black Politicians lab first, then the other labs as extensions.
 
-## Reports
+## Articles
 
 The main report bundle is:
 
-- [Matching Methods Report](report/matching_methods_report.qmd)
-- [Synthesis Report: Main Report versus *The Mixtape*, *The Effect*, and Gertler Chapter 8](report/matching_synthesis_report.qmd)
-- [Propensity-Score Weighting Companion](report/propensity_score_weighting_companion.qmd)
-- [Notes on *The Effect*: Matching](report/effectbook_matching_notes.qmd)
-- [Notes on *The Mixtape*: Matching and Subclassification](report/mixtape_matching_subclassification_notes.qmd)
-- [Notes on Gertler et al.: Matching](report/gertler_matching_notes.qmd)
-- [Full Code Companion](report/matching_methods_report_full_code.qmd)
-- [QA Log](report/matching_methods_report_qa_log.qmd)
+- [Matching Methods Report](articles/matching_methods_report.qmd)
+- [Synthesis Report: Main Report versus *The Mixtape*, *The Effect*, and Gertler Chapter 8](articles/matching_synthesis_report.qmd)
+- [Propensity-Score Weighting Companion](articles/propensity_score_weighting_companion.qmd)
+- [Notes on *The Effect*: Matching](articles/effectbook_matching_notes.qmd)
+- [Notes on *The Mixtape*: Matching and Subclassification](articles/mixtape_matching_subclassification_notes.qmd)
+- [Notes on Gertler et al.: Matching](articles/gertler_matching_notes.qmd)
+- [Full Code Companion](articles/matching_methods_report_full_code.qmd)
+- [QA Log](articles/matching_methods_report_qa_log.qmd)
 
 ## Dataset Expansion Labs
 
@@ -60,8 +69,8 @@ The dataset expansion workstream provides additional labs and teaching aids that
 
 ## Slides Space
 
-A dedicated slides section supports training delivery, facilitator-led sessions, and report-to-lab transitions:
+A dedicated slides section now supports the full `60` minute workshop flow with one deck and one standalone notes page:
 
 - [Slides Hub](slides/index.qmd)
-- [Matching and Weighting Training Deck](slides/matching_methods_slides.qmd)
-- [From Report to Labs: Background Lecture](slides/pre_lab_background_lecture.qmd)
+- [Matching and Weighting Workshop Deck](slides/matching_workshop.qmd)
+- [Workshop Speaking Notes](slides/matching_workshop_notes.qmd)

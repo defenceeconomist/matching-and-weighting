@@ -1,17 +1,17 @@
 project:
   type: website
-  output-dir: .
+  output-dir: ../_site
   render:
     - index.qmd
-    - report/index.qmd
-    - report/matching_methods_report.qmd
-    - report/matching_synthesis_report.qmd
-    - report/propensity_score_weighting_companion.qmd
-    - report/effectbook_matching_notes.qmd
-    - report/mixtape_matching_subclassification_notes.qmd
-    - report/gertler_matching_notes.qmd
-    - report/matching_methods_report_full_code.qmd
-    - report/matching_methods_report_qa_log.qmd
+    - articles/index.qmd
+    - articles/matching_methods_report.qmd
+    - articles/matching_synthesis_report.qmd
+    - articles/propensity_score_weighting_companion.qmd
+    - articles/effectbook_matching_notes.qmd
+    - articles/mixtape_matching_subclassification_notes.qmd
+    - articles/gertler_matching_notes.qmd
+    - articles/matching_methods_report_full_code.qmd
+    - articles/matching_methods_report_qa_log.qmd
     - labs/*.qmd
     - slides/*.qmd
 
@@ -21,8 +21,8 @@ website:
     left:
       - href: index.qmd
         text: Home
-      - href: report/index.qmd
-        text: Reports
+      - href: articles/index.qmd
+        text: Articles
       - href: labs/index.qmd
         text: Additional Labs
       - href: slides/index.qmd
@@ -33,8 +33,8 @@ website:
       style: "docked"
       contents:
         - labs/index.qmd
-        - labs/main_report_1hr_lab_teaching_aid.qmd
         - labs/black_politicians_lab.qmd
+        - labs/hisp_ie_practice_lab.qmd
         - labs/nsw_cps_benchmark_lab.qmd
         - labs/titanic_teaching_lab.qmd
     - id: slides
@@ -42,9 +42,8 @@ website:
       style: "docked"
       contents:
         - slides/index.qmd
-        - slides/matching_methods_slides.qmd
-        - slides/pre_lab_background_lecture.qmd
-        - slides/main_report_1hr_lab_slides.qmd
+        - slides/matching_workshop.qmd
+        - slides/matching_workshop_notes.qmd
 
 format:
   html:

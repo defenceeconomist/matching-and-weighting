@@ -98,35 +98,68 @@ This project is configured as a Quarto project in `docs/_quarto.yml`.
 From the repository root, render the full website with:
 
 ```bash
-quarto render docs
+cd docs
+quarto render
 ```
 
 This renders:
 
-- `docs/index.html`
-- `docs/report/matching_methods_report.html` (main article)
-- `docs/labs/index.html` and lab pages
-- `docs/labs/black_politicians_lab.html`
-- `docs/labs/black_politicians_lab_full_code.html`
-- `docs/labs/black_politicians_lab_evaluated_code.html`
-- `docs/labs/black_politicians_lab_qa_log.html`
-- `docs/labs/titanic_teaching_lab.html`
-- `docs/labs/titanic_teaching_lab_full_code.html`
-- `docs/slides/index.html` and slide scaffold pages
-- `docs/report/matching_methods_report_full_code.html`
-- `docs/report/matching_methods_report_qa_log.html`
+- `_site/index.html`
+- `_site/articles/matching_methods_report.html` (main article)
+- `_site/labs/index.html` and lab pages
+- `_site/labs/black_politicians_lab.html`
+- `_site/labs/black_politicians_lab_full_code.html`
+- `_site/labs/black_politicians_lab_evaluated_code.html`
+- `_site/labs/black_politicians_lab_qa_log.html`
+- `_site/labs/titanic_teaching_lab.html`
+- `_site/labs/titanic_teaching_lab_full_code.html`
+- `_site/slides/index.html` and slide pages
+- `_site/articles/matching_methods_report_full_code.html`
+- `_site/articles/matching_methods_report_qa_log.html`
 
 If you only want the main article, run:
 
 ```bash
-quarto render docs/report/matching_methods_report.qmd --to html
+cd docs
+quarto render articles/matching_methods_report.qmd
 ```
 
 If you only want the slide deck, run:
 
 ```bash
-quarto render docs/slides/matching_methods_slides.qmd --to revealjs
+cd docs
+quarto render slides/matching_workshop.qmd
 ```
+
+## GitLab CI Deployment
+
+The repository includes a GitLab CI pipeline in `.gitlab-ci.yml` that:
+
+- renders the Quarto site on pushes to `main`
+- writes the built site into `_site/`
+- force-updates a deploy branch named `gh-pages` with the contents of `_site/`
+
+The deploy branch name can be changed with the `DEPLOY_BRANCH` CI/CD variable.
+
+The deploy job tries to push with `CI_JOB_TOKEN` by default. If your GitLab project does not allow job-token writes to the repository, set these protected CI/CD variables instead:
+
+- `DEPLOY_PUSH_USERNAME`
+- `DEPLOY_PUSH_TOKEN`
+
+After that, every push to `main` will rebuild the site and refresh the deploy branch automatically.
+
+## GitHub Pages Deployment
+
+The repository also includes a GitHub Actions workflow at `.github/workflows/gh-pages.yml`.
+
+On every push to `main`, it:
+
+- installs Quarto and R
+- installs the site build dependencies
+- renders the site from `docs/`
+- publishes `_site/` to the `gh-pages` branch
+
+To use it on GitHub, enable GitHub Pages in the repository settings and choose `gh-pages` as the publishing branch.
 
 ## Extract R Code from QMD
 
@@ -144,8 +177,8 @@ Equivalent explicit usage:
 
 ```bash
 Rscript scripts/extract_qmd_chunks.R \
-  docs/report/matching_methods_report.qmd \
-  docs/report/matching_methods_report_full_code.R
+  docs/articles/matching_methods_report.qmd \
+  docs/articles/matching_methods_report_full_code.R
 ```
 
 Optional third argument customizes the chunk separator format (default: `# ---- chunk %d ----`).

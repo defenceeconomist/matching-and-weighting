@@ -1,0 +1,83 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  GIT_DEPTH: "0"
+  QUARTO_VERSION: "1.8.26"
+  R_LIBS_USER: "$CI_PROJECT_DIR/.ci/R/library"
+  DEPLOY_BRANCH: "gh-pages"
+
+default:
+  image: rocker/verse:4.4.1
+  cache:
+    key: "r-library"
+    paths:
+      - .ci/R/library
+  before_script:
+    - apt-get update
+    - apt-get install -y --no-install-recommends git gdebi-core wget
+    - wget -q "https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VERSION}/quarto-${QUARTO_VERSION}-linux-amd64.deb" -O /tmp/quarto.deb
+    - gdebi -n /tmp/quarto.deb
+    - mkdir -p "$R_LIBS_USER"
+    - Rscript -e 'install.packages(c("MatchIt", "WeightIt", "cobalt", "causaldata", "haven", "readr", "broom", "sandwich", "boot", "nlme"), repos = "https://cloud.r-project.org", Ncpus = max(1, parallel::detectCores() - 1L))'
+
+build_site:
+  stage: build
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+  script:
+    - cd docs
+    - quarto render
+  artifacts:
+    paths:
+      - _site
+    expire_in: 1 week
+
+deploy_site_branch:
+  stage: deploy
+  needs:
+    - job: build_site
+      artifacts: true
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+  script:
+    - |
+      set -euo pipefail
+
+      if [ -n "${DEPLOY_PUSH_TOKEN:-}" ]; then
+        remote_url="https://${DEPLOY_PUSH_USERNAME:-oauth2}:${DEPLOY_PUSH_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git"
+      else
+        remote_url="https://gitlab-ci-token:${CI_JOB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git"
+      fi
+
+      git config --global user.name "${GITLAB_USER_NAME:-GitLab CI}"
+      git config --global user.email "${GITLAB_USER_EMAIL:-gitlab-ci@example.com}"
+
+      rm -rf deploy-branch
+      mkdir deploy-branch
+      cd deploy-branch
+
+      git init
+      git remote add origin "$remote_url"
+
+      if git ls-remote --exit-code --heads origin "$DEPLOY_BRANCH" >/dev/null 2>&1; then
+        git fetch --depth 1 origin "$DEPLOY_BRANCH"
+        git checkout -B "$DEPLOY_BRANCH" FETCH_HEAD
+      else
+        git checkout --orphan "$DEPLOY_BRANCH"
+      fi
+
+      find . -mindepth 1 -maxdepth 1 ! -name ".git" -exec rm -rf {} +
+      cp -R ../_site/. .
+      touch .nojekyll
+
+      git add -A
+
+      if git diff --cached --quiet; then
+        echo "No deploy changes to publish."
+        exit 0
+      fi
+
+      git commit -m "Deploy ${CI_COMMIT_SHA}"
+      git push origin "$DEPLOY_BRANCH" --force

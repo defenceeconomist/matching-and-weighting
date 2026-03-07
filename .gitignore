@@ -53,6 +53,7 @@ ENV/
 !.env.example
 
 # Project outputs that should stay untracked
+_site/
 docs/.quarto/
 docs/**/*.quarto_ipynb
 
