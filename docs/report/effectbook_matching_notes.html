@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Luke Heley">
+<meta name="dcterms.date" content="2026-03-07">
+
+<title>Notes on The Effect: Matching – Matching and Weighting</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-b337f537912f5ab074b938eebad4c5d7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Matching and Weighting</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../report/index.html"> 
+<span class="menu-text">Reports</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../labs/index.html"> 
+<span class="menu-text">Additional Labs</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../slides/index.html"> 
+<span class="menu-text">Slides</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#purpose" id="toc-purpose" class="nav-link active" data-scroll-target="#purpose"><span class="header-section-number">1</span> Purpose</a></li>
+  <li><a href="#source-baseline" id="toc-source-baseline" class="nav-link" data-scroll-target="#source-baseline"><span class="header-section-number">2</span> Source Baseline</a></li>
+  <li><a href="#executive-summary" id="toc-executive-summary" class="nav-link" data-scroll-target="#executive-summary"><span class="header-section-number">3</span> Executive Summary</a></li>
+  <li><a href="#chapter-structure-and-notes" id="toc-chapter-structure-and-notes" class="nav-link" data-scroll-target="#chapter-structure-and-notes"><span class="header-section-number">4</span> Chapter Structure and Notes</a>
+  <ul class="collapse">
+  <li><a href="#another-way-to-close-back-doors" id="toc-another-way-to-close-back-doors" class="nav-link" data-scroll-target="#another-way-to-close-back-doors"><span class="header-section-number">4.1</span> 14.1 Another Way to Close Back Doors</a></li>
+  <li><a href="#weighted-averages" id="toc-weighted-averages" class="nav-link" data-scroll-target="#weighted-averages"><span class="header-section-number">4.2</span> 14.2 Weighted Averages</a></li>
+  <li><a href="#matching-in-concept-a-single-matching-variable" id="toc-matching-in-concept-a-single-matching-variable" class="nav-link" data-scroll-target="#matching-in-concept-a-single-matching-variable"><span class="header-section-number">4.3</span> 14.3 Matching in Concept: A Single Matching Variable</a></li>
+  <li><a href="#multiple-matching-variables" id="toc-multiple-matching-variables" class="nav-link" data-scroll-target="#multiple-matching-variables"><span class="header-section-number">4.4</span> 14.4 Multiple Matching Variables</a></li>
+  <li><a href="#propensity-score-weighting-with-multiple-matching-variables" id="toc-propensity-score-weighting-with-multiple-matching-variables" class="nav-link" data-scroll-target="#propensity-score-weighting-with-multiple-matching-variables"><span class="header-section-number">4.5</span> 14.5 Propensity Score Weighting with Multiple Matching Variables</a></li>
+  <li><a href="#assumptions-for-matching" id="toc-assumptions-for-matching" class="nav-link" data-scroll-target="#assumptions-for-matching"><span class="header-section-number">4.6</span> 14.6 Assumptions for Matching</a></li>
+  <li><a href="#estimation-with-matched-data" id="toc-estimation-with-matched-data" class="nav-link" data-scroll-target="#estimation-with-matched-data"><span class="header-section-number">4.7</span> 14.7 Estimation with Matched Data</a></li>
+  <li><a href="#matching-and-treatment-effects" id="toc-matching-and-treatment-effects" class="nav-link" data-scroll-target="#matching-and-treatment-effects"><span class="header-section-number">4.8</span> 14.8 Matching and Treatment Effects</a></li>
+  </ul></li>
+  <li><a href="#implications-for-this-repo" id="toc-implications-for-this-repo" class="nav-link" data-scroll-target="#implications-for-this-repo"><span class="header-section-number">5</span> Implications for This Repo</a></li>
+  <li><a href="#high-level-takeaways" id="toc-high-level-takeaways" class="nav-link" data-scroll-target="#high-level-takeaways"><span class="header-section-number">6</span> High-Level Takeaways</a></li>
+  <li><a href="#follow-up-build-plan" id="toc-follow-up-build-plan" class="nav-link" data-scroll-target="#follow-up-build-plan"><span class="header-section-number">7</span> Follow-Up Build Plan</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Notes on The Effect: Matching</h1>
+<p class="subtitle lead">Detailed Study Notes for Chapter 14</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Luke Heley </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">March 7, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="purpose" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="purpose"><span class="header-section-number">1</span> Purpose</h2>
+<p>These are study notes on <a href="https://theeffectbook.net/ch-Matching.html"><em>The Effect</em>, Chapter 14 (“Matching”)</a>. They are meant to help with understanding and recall, not to reproduce the chapter. The structure follows the chapter so that each section can be read alongside the source.</p>
+<p>The aim here is to capture:</p>
+<ul>
+<li>the main idea of each section</li>
+<li>why the section matters for causal inference</li>
+<li>what conceptual traps to watch for</li>
+<li>how the chapter connects to this repo’s design-first framing</li>
+</ul>
+</section>
+<section id="source-baseline" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="source-baseline"><span class="header-section-number">2</span> Source Baseline</h2>
+<ul>
+<li>Source: <a href="https://theeffectbook.net/ch-Matching.html">The Effect, Chapter 14 - Matching</a></li>
+<li>Author: Nick Huntington-Klein</li>
+<li>Accessed for these notes: 7 March 2026</li>
+<li>Current chapter sections observed in the live rendering:
+<ul>
+<li><code>14.1 Another Way to Close Back Doors</code></li>
+<li><code>14.2 Weighted Averages</code></li>
+<li><code>14.3 Matching in Concept: A Single Matching Variable</code></li>
+<li><code>14.4 Multiple Matching Variables</code></li>
+<li><code>14.5 Propensity Score Weighting with Multiple Matching Variables</code></li>
+<li><code>14.6 Assumptions for Matching</code></li>
+<li><code>14.7 Estimation with Matched Data</code></li>
+<li><code>14.8 Matching and Treatment Effects</code></li>
+</ul></li>
+</ul>
+</section>
+<section id="executive-summary" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="executive-summary"><span class="header-section-number">3</span> Executive Summary</h2>
+<ul>
+<li>The chapter presents matching as one way to make treated and untreated groups more comparable when treatment was not randomly assigned.</li>
+<li>A core theme is that matching is easier to understand if it is seen as a weighting and design problem rather than as a mysterious algorithm.</li>
+<li>The chapter gradually shifts from intuition to practical implementation: first why matching might help, then how weights arise, then how multivariate matching works, then what assumptions still remain.</li>
+<li>The most important takeaway is that matching does not “create” causal identification by itself. It can make observed groups more comparable, but only under strong assumptions about observed confounding, overlap, and acceptable balance.</li>
+<li>For this repo, the chapter is especially useful because it aligns with the argument that design comes before estimation and that diagnostics must be taken seriously.</li>
+</ul>
+</section>
+<section id="chapter-structure-and-notes" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="chapter-structure-and-notes"><span class="header-section-number">4</span> Chapter Structure and Notes</h2>
+<section id="another-way-to-close-back-doors" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="another-way-to-close-back-doors"><span class="header-section-number">4.1</span> 14.1 Another Way to Close Back Doors</h3>
+<p>Main idea:</p>
+<ul>
+<li>The chapter introduces matching as another strategy for closing back-door paths. Instead of using regression to adjust for confounders parametrically, the analyst tries to compare treated and untreated units that are similar on observed covariates.</li>
+</ul>
+<p>Why this matters:</p>
+<ul>
+<li>This is a useful reframing because it reminds the reader that causal identification is about comparability, not about any one model class.</li>
+<li>It also helps explain why matching often feels more intuitive to applied researchers: “find comparable cases” is easier to picture than “correctly specify a regression surface.”</li>
+</ul>
+<p>Key understanding points:</p>
+<ul>
+<li>Matching is still trying to address confounding, not avoid it.</li>
+<li>The basic promise of matching is design transparency: the comparison is made more explicit.</li>
+<li>The basic risk is that matching can look credible even when key confounders are missing or overlap is weak.</li>
+</ul>
+<p>What to remember:</p>
+<ul>
+<li>Regression and matching are not enemies here; they are different tools for the same underlying causal problem.</li>
+<li>The chapter uses matching to teach causal design logic, not to argue that regression is obsolete.</li>
+</ul>
+<p>Useful caution:</p>
+<ul>
+<li>It is easy to overstate what matching buys you. Matching can improve observed comparability, but if the important back doors are not measured, the core problem remains.</li>
+</ul>
+</section>
+<section id="weighted-averages" class="level3" data-number="4.2">
+<h3 data-number="4.2" class="anchored" data-anchor-id="weighted-averages"><span class="header-section-number">4.2</span> 14.2 Weighted Averages</h3>
+<p>Main idea:</p>
+<ul>
+<li>The chapter emphasizes that many matching procedures can be understood in terms of weighted averages. Some observations get more influence, some get less, and some may effectively drop out.</li>
+</ul>
+<p>Why this matters:</p>
+<ul>
+<li>This is a strong conceptual move because it unifies several methods that otherwise seem unrelated.</li>
+<li>Once matching is understood as a way of constructing weights, later sections on entropy balancing and weighted estimation become much easier to follow.</li>
+</ul>
+<p>Key understanding points:</p>
+<ul>
+<li>A matched analysis is often not just “keep these rows and drop those rows.”</li>
+<li>Even nearest-neighbor or subclassification approaches often imply weights.</li>
+<li>Thinking in weights clarifies what population is being represented after matching.</li>
+</ul>
+<p>What to remember:</p>
+<ul>
+<li>Weighting is not just a separate method family; it is also a language for understanding matching outputs.</li>
+<li>This section helps prevent the common mistake of treating matched data as if the design stage were conceptually disconnected from the estimation stage.</li>
+</ul>
+<p>Useful caution:</p>
+<ul>
+<li>If one small set of units carries very large implied weight, apparent balance may hide fragility. The weighted-average framing makes this easier to see.</li>
+</ul>
+</section>
+<section id="matching-in-concept-a-single-matching-variable" class="level3" data-number="4.3">
+<h3 data-number="4.3" class="anchored" data-anchor-id="matching-in-concept-a-single-matching-variable"><span class="header-section-number">4.3</span> 14.3 Matching in Concept: A Single Matching Variable</h3>
+<p>Main idea:</p>
+<ul>
+<li>The chapter first explains matching in a simple one-variable case. This strips away the multivariate complexity and lets the reader focus on what it means to find “close” controls for treated units.</li>
+</ul>
+<p>Why this matters:</p>
+<ul>
+<li>This is where the intuition for distance, closeness, and tradeoffs becomes concrete.</li>
+<li>A one-variable example helps explain why exact matches are sometimes possible, why approximate matches may be needed, and why bad matches can still bias results.</li>
+</ul>
+<p>Key understanding points:</p>
+<ul>
+<li>Matching requires a notion of similarity.</li>
+<li>Better similarity usually reduces bias, but often at the cost of dropping observations or relying on fewer controls.</li>
+<li>Calipers or match restrictions are really design decisions about how much mismatch is tolerable.</li>
+</ul>
+<p>What to remember:</p>
+<ul>
+<li>Matching is always a compromise between comparability and information retention.</li>
+<li>Even in the simplest case, there is no free lunch: strict matching improves comparability but may leave too little data.</li>
+</ul>
+<p>Useful caution:</p>
+<ul>
+<li>The single-variable example is pedagogically clean, but real applications are harder because relevant confounders are rarely one-dimensional.</li>
+</ul>
+</section>
+<section id="multiple-matching-variables" class="level3" data-number="4.4">
+<h3 data-number="4.4" class="anchored" data-anchor-id="multiple-matching-variables"><span class="header-section-number">4.4</span> 14.4 Multiple Matching Variables</h3>
+<p>Main idea:</p>
+<ul>
+<li>Once several relevant covariates matter at once, matching becomes a multivariate design problem. The chapter moves from intuition to practical methods that define multivariate similarity in different ways.</li>
+</ul>
+<p>Why this matters:</p>
+<ul>
+<li>This is the section where matching becomes a serious applied tool rather than just a toy example.</li>
+<li>It also shows why method choice matters: different matching schemes solve different parts of the multivariate problem and imply different tradeoffs.</li>
+</ul>
+<p>Key methods highlighted in the chapter:</p>
+<ul>
+<li>Mahalanobis-distance matching:
+<ul>
+<li>Uses a distance metric based on the joint covariance structure of the covariates.</li>
+<li>Useful when “closeness” should reflect scale and correlation across variables.</li>
+<li>Important limitation: close distance does not guarantee strong balance on every variable.</li>
+</ul></li>
+<li>Coarsened exact matching:
+<ul>
+<li>Coarsens variables into bins, then performs exact matching on the coarsened version.</li>
+<li>Attractive because it is interpretable and lets the analyst control what counts as meaningfully similar.</li>
+<li>Important limitation: results depend on coarsening choices, and aggressive coarsening or strict variable sets can drop many units.</li>
+</ul></li>
+<li>Entropy balancing:
+<ul>
+<li>Chooses weights to force exact balance on selected covariate moments.</li>
+<li>Attractive because the balance target is explicit rather than left to emerge from a search algorithm.</li>
+<li>Important limitation: exact balance can be achieved by concentrating weight on a small number of control units.</li>
+</ul></li>
+</ul>
+<p>Worked-example note:</p>
+<ul>
+<li>The chapter uses <code>causaldata::black_politicians</code>, which is already familiar from this repo’s lab material.</li>
+</ul>
+<p>What to remember:</p>
+<ul>
+<li>The main question is not “which algorithm is best in general?”</li>
+<li>The real question is “which method gives an acceptable balance-retention-overlap tradeoff for this design?”</li>
+</ul>
+<p>Useful caution:</p>
+<ul>
+<li>Multivariate matching creates more opportunities for hidden design drift. If units are heavily pruned or weights become extreme, the estimate may stop representing the population the analyst thought they were studying.</li>
+</ul>
+</section>
+<section id="propensity-score-weighting-with-multiple-matching-variables" class="level3" data-number="4.5">
+<h3 data-number="4.5" class="anchored" data-anchor-id="propensity-score-weighting-with-multiple-matching-variables"><span class="header-section-number">4.5</span> 14.5 Propensity Score Weighting with Multiple Matching Variables</h3>
+<p>Main idea:</p>
+<ul>
+<li>The chapter then introduces propensity-score weighting as another way to handle many covariates at once. Instead of matching directly on the full covariate vector, the analyst models treatment assignment and uses the resulting score to construct weights.</li>
+</ul>
+<p>Why this matters:</p>
+<ul>
+<li>This section helps connect matching logic to a broader balancing framework.</li>
+<li>It also shows why the propensity score is appealing: it compresses many covariates into a single object that can guide weighting or adjustment.</li>
+</ul>
+<p>Key understanding points:</p>
+<ul>
+<li>The propensity score is not the causal estimand; it is a design device.</li>
+<li>The score is useful only to the extent that it succeeds in creating acceptable covariate balance.</li>
+<li>Modeling treatment assignment does not remove the need for diagnostics.</li>
+</ul>
+<p>What to remember:</p>
+<ul>
+<li>The chapter’s use of propensity scores is practical rather than reverential.</li>
+<li>The point is not that propensity scores are magic; the point is that they are one way of building a better comparison.</li>
+</ul>
+<p>Useful caution:</p>
+<ul>
+<li>Propensity-score methods are easy to treat as a black box. That is dangerous because a well-fitting treatment model can still produce poor balance, poor overlap, or unstable weights.</li>
+</ul>
+</section>
+<section id="assumptions-for-matching" class="level3" data-number="4.6">
+<h3 data-number="4.6" class="anchored" data-anchor-id="assumptions-for-matching"><span class="header-section-number">4.6</span> 14.6 Assumptions for Matching</h3>
+<p>Main idea:</p>
+<ul>
+<li>This is the chapter’s most important corrective section. After building intuition for matching methods, it states clearly that matching still relies on strong assumptions.</li>
+</ul>
+<p>Why this matters:</p>
+<ul>
+<li>Readers often absorb the mechanics of matching more quickly than its assumptions.</li>
+<li>This section pushes back against the common misunderstanding that a matched sample is automatically a credible causal design.</li>
+</ul>
+<p>Key understanding points:</p>
+<ul>
+<li>Matching changes the design, but not the fundamental identification logic.</li>
+<li>A good match on observables is not the same thing as random assignment.</li>
+<li>The chapter’s assumptions section should be read as a warning label for everything before it.</li>
+</ul>
+<section id="conditional-independence-assumption" class="level4" data-number="4.6.1">
+<h4 data-number="4.6.1" class="anchored" data-anchor-id="conditional-independence-assumption"><span class="header-section-number">4.6.1</span> 14.6.1 Conditional Independence Assumption</h4>
+<p>Main idea:</p>
+<ul>
+<li>Conditional independence means that once the observed covariates are controlled for, treatment assignment is as good as independent of the potential outcomes.</li>
+</ul>
+<p>Why this matters:</p>
+<ul>
+<li>This is the core identification assumption behind most observational matching strategies.</li>
+<li>Without it, matching only makes the treated and control groups look similar on the variables you measured, not necessarily on the variables that actually drive selection.</li>
+</ul>
+<p>What to remember:</p>
+<ul>
+<li>This assumption is fundamentally about omitted confounding.</li>
+<li>It cannot be verified just by looking at the matched sample.</li>
+<li>Rich covariates help, but they do not prove the assumption.</li>
+</ul>
+<p>Useful caution:</p>
+<ul>
+<li>Matching can make an analysis look disciplined while still failing on the most important unobserved variables.</li>
+</ul>
+</section>
+<section id="common-support" class="level4" data-number="4.6.2">
+<h4 data-number="4.6.2" class="anchored" data-anchor-id="common-support"><span class="header-section-number">4.6.2</span> 14.6.2 Common Support</h4>
+<p>Main idea:</p>
+<ul>
+<li>Common support means there must be overlap between treated and control units on the relevant covariate patterns or balancing score.</li>
+</ul>
+<p>Why this matters:</p>
+<ul>
+<li>If no comparable controls exist for some treated units, the causal question for those units is not answerable with the available data.</li>
+<li>In practice, poor support often shows up as discarded observations, poor matches, or extreme weights.</li>
+</ul>
+<p>What to remember:</p>
+<ul>
+<li>Lack of overlap is not a technical inconvenience; it is a design failure relative to the target comparison.</li>
+<li>Trimming to improve overlap can be sensible, but it changes the population being studied.</li>
+</ul>
+<p>Useful caution:</p>
+<ul>
+<li>Analysts sometimes talk about trimming as if it only improves quality. It also narrows the estimand unless that shift is made explicit.</li>
+</ul>
+</section>
+<section id="balance" class="level4" data-number="4.6.3">
+<h4 data-number="4.6.3" class="anchored" data-anchor-id="balance"><span class="header-section-number">4.6.3</span> 14.6.3 Balance</h4>
+<p>Main idea:</p>
+<ul>
+<li>Balance is the empirical check that treated and control groups look similar on observed covariates after adjustment.</li>
+</ul>
+<p>Why this matters:</p>
+<ul>
+<li>Balance is the main observable standard by which a matching or weighting design is judged.</li>
+<li>Without good balance, the adjustment has not done the job it was meant to do.</li>
+</ul>
+<p>What to remember:</p>
+<ul>
+<li>Balance is necessary, not sufficient.</li>
+<li>Better balance supports the design, but it does not prove causal identification.</li>
+<li>A balance table should be read alongside overlap, retention, and weight dispersion.</li>
+</ul>
+<p>Useful caution:</p>
+<ul>
+<li>It is easy to focus on a single threshold like absolute standardized mean differences below <code>0.1</code> and treat that as the whole story. The deeper question is whether the adjusted comparison is substantively credible.</li>
+</ul>
+</section>
+</section>
+<section id="estimation-with-matched-data" class="level3" data-number="4.7">
+<h3 data-number="4.7" class="anchored" data-anchor-id="estimation-with-matched-data"><span class="header-section-number">4.7</span> 14.7 Estimation with Matched Data</h3>
+<p>Main idea:</p>
+<ul>
+<li>After the design has been adjusted and checked, the chapter turns to estimation. This ordering matters: estimation should come after acceptable design work, not before.</li>
+</ul>
+<p>Why this matters:</p>
+<ul>
+<li>The section reinforces the principle that matching is preprocessing for causal estimation.</li>
+<li>It also helps distinguish between the role of weights and the role of the outcome model.</li>
+</ul>
+<p>Key understanding points:</p>
+<ul>
+<li>The simplest post-matching estimate is often a weighted difference in means.</li>
+<li>Regression can still be used after matching or weighting to improve precision or account for remaining structure.</li>
+<li>Post-design modeling should not be used to excuse poor design-stage adjustment.</li>
+</ul>
+<section id="estimating-mean-differences" class="level4" data-number="4.7.1">
+<h4 data-number="4.7.1" class="anchored" data-anchor-id="estimating-mean-differences"><span class="header-section-number">4.7.1</span> 14.7.1 Estimating Mean Differences</h4>
+<p>Main idea:</p>
+<ul>
+<li>Once weights or matched samples are in place, the treatment effect can often be estimated with a simple comparison of adjusted group means.</li>
+</ul>
+<p>Why this matters:</p>
+<ul>
+<li>This keeps the causal interpretation tied closely to the design.</li>
+<li>It also shows that complicated outcome models are not always required if the design has done enough of the comparability work.</li>
+</ul>
+<p>What to remember:</p>
+<ul>
+<li>Simple estimators are attractive when the design is strong.</li>
+<li>But inference is still not trivial because the weights or matching structure were estimated rather than fixed in advance.</li>
+</ul>
+<p>Useful caution:</p>
+<ul>
+<li>A simple mean difference after a weak design is still weak. Simplicity in estimation is not a substitute for credibility in design.</li>
+</ul>
+</section>
+<section id="combining-matching-and-regression" class="level4" data-number="4.7.2">
+<h4 data-number="4.7.2" class="anchored" data-anchor-id="combining-matching-and-regression"><span class="header-section-number">4.7.2</span> 14.7.2 Combining Matching and Regression</h4>
+<p>Main idea:</p>
+<ul>
+<li>The chapter explicitly allows matching and regression to work together. Matching can improve design, and regression can then model the outcome within the adjusted sample.</li>
+</ul>
+<p>Why this matters:</p>
+<ul>
+<li>This is often how applied work is actually done.</li>
+<li>It avoids the false dichotomy that one must choose either matching or regression.</li>
+</ul>
+<p>What to remember:</p>
+<ul>
+<li>Matching can reduce model dependence by making treated and control units more comparable before regression.</li>
+<li>Regression after matching is most credible when it is modest cleanup after a reasonable design, not a rescue mission for bad overlap or poor balance.</li>
+</ul>
+<p>Useful caution:</p>
+<ul>
+<li>If the estimate changes dramatically with small changes to the post-match model, that is a warning sign that the design is doing too little on its own.</li>
+</ul>
+</section>
+</section>
+<section id="matching-and-treatment-effects" class="level3" data-number="4.8">
+<h3 data-number="4.8" class="anchored" data-anchor-id="matching-and-treatment-effects"><span class="header-section-number">4.8</span> 14.8 Matching and Treatment Effects</h3>
+<p>Main idea:</p>
+<ul>
+<li>Matching is not just about reducing bias. It also shapes which treatment effect is being estimated.</li>
+</ul>
+<p>Why this matters:</p>
+<ul>
+<li>This is the link between design mechanics and substantive interpretation.</li>
+<li>Two analyses can both be “well matched” and still answer different causal questions if they target different populations.</li>
+</ul>
+<p>Key understanding points:</p>
+<ul>
+<li>Many matching workflows naturally target the <code>ATT</code> because they prioritize finding controls for treated units.</li>
+<li>Other weighting or matching choices can be structured toward the <code>ATE</code> or other estimands.</li>
+<li>Sample pruning and weighting concentration can shift the effective target population even when the nominal estimand label stays the same.</li>
+</ul>
+<p>What to remember:</p>
+<ul>
+<li>Always ask: “effect for whom?”</li>
+<li>Estimand choice should guide the design, not be inferred after the algorithm runs.</li>
+</ul>
+<section id="getting-other-treatment-effects-from-matching" class="level4" data-number="4.8.1">
+<h4 data-number="4.8.1" class="anchored" data-anchor-id="getting-other-treatment-effects-from-matching"><span class="header-section-number">4.8.1</span> 14.8.1 Getting Other Treatment Effects from Matching</h4>
+<p>Main idea:</p>
+<ul>
+<li>The chapter closes by noting that matching can be adapted to different treatment-effect targets, not just the <code>ATT</code>.</li>
+</ul>
+<p>Why this matters:</p>
+<ul>
+<li>This is a reminder that weighting and matching procedures are not neutral preprocessing steps. They encode decisions about the comparison population.</li>
+</ul>
+<p>What to remember:</p>
+<ul>
+<li>Treatment-effect language should be explicit from the start.</li>
+<li>If a design keeps all treated units but heavily reweights controls, it is often telling an <code>ATT</code> story.</li>
+<li>If the design instead tries to build a population-representative pseudo-sample, it is closer to an <code>ATE</code> story.</li>
+</ul>
+<p>Useful caution:</p>
+<ul>
+<li>In practice, the declared estimand and the effective estimand can diverge. Trimming, failed overlap, and extreme weights are common reasons.</li>
+</ul>
+</section>
+</section>
+</section>
+<section id="implications-for-this-repo" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="implications-for-this-repo"><span class="header-section-number">5</span> Implications for This Repo</h2>
+<ul>
+<li>The strongest overlap with current repo material is still the <code>black_politicians</code> example, especially for CEM and entropy balancing.</li>
+<li>The chapter supports the repo’s existing design-first emphasis, especially the idea that balance, overlap, and retained sample size should be evaluated together.</li>
+<li>One gap in the repo relative to the chapter is that propensity-score weighting is not yet given its own compact explainer.</li>
+<li>Another useful extension would be a short note on how the chapter’s conceptual language maps onto <code>MatchIt</code>, <code>WeightIt</code>, and <code>cobalt</code> diagnostics in practice.</li>
+</ul>
+</section>
+<section id="high-level-takeaways" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="high-level-takeaways"><span class="header-section-number">6</span> High-Level Takeaways</h2>
+<ul>
+<li>Matching is best thought of as a way to improve comparability, not a guarantee of causal validity.</li>
+<li>Weighting is a useful unifying language for understanding what many matching procedures actually do.</li>
+<li>Multivariate matching methods differ mainly in how they define acceptable similarity and how they trade off balance against information retention.</li>
+<li>The assumptions section is the intellectual center of the chapter: conditional independence, overlap, and balance are the real constraints on credibility.</li>
+<li>Estimation after matching should be simple when the design is good and treated with caution when the design is fragile.</li>
+<li>Matching methods always imply a target population, whether the analyst states that clearly or not.</li>
+</ul>
+</section>
+<section id="follow-up-build-plan" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="follow-up-build-plan"><span class="header-section-number">7</span> Follow-Up Build Plan</h2>
+<ol type="1">
+<li>Add a short companion section linking each chapter block to relevant repo files or outputs.</li>
+<li>Add a compact glossary for terms the chapter uses repeatedly, especially common support, balance, and estimand.</li>
+<li>Optionally add a “chapter vs repo emphasis” section showing where this repo goes further on diagnostics, retention, and auditability.</li>
+<li>If needed, add a separate replication note for the chapter’s <code>black_politicians</code> workflow using the strict book-default specification.</li>
+</ol>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
