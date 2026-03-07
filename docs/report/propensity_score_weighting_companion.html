@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Luke Heley">
+<meta name="dcterms.date" content="2026-03-07">
 
-<title>Matching and Weighting Learning Resources – Matching and Weighting</title>
+<title>Propensity-Score Weighting Companion – Matching and Weighting</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,24 +25,24 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-b337f537912f5ab074b938eebad4c5d7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-b337f537912f5ab074b938eebad4c5d7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -79,7 +81,7 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Matching and Weighting</span>
     </a>
   </div>
@@ -90,19 +92,19 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="../index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./report/index.html"> 
+    <a class="nav-link" href="../report/index.html"> 
 <span class="menu-text">Reports</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./labs/index.html"> 
+    <a class="nav-link" href="../labs/index.html"> 
 <span class="menu-text">Additional Labs</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./slides/index.html"> 
+    <a class="nav-link" href="../slides/index.html"> 
 <span class="menu-text">Slides</span></a>
   </li>  
 </ul>
@@ -121,11 +123,16 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#what-this-website-is-for" id="toc-what-this-website-is-for" class="nav-link active" data-scroll-target="#what-this-website-is-for"><span class="header-section-number">1</span> What This Website Is For</a></li>
-  <li><a href="#how-the-site-is-structured" id="toc-how-the-site-is-structured" class="nav-link" data-scroll-target="#how-the-site-is-structured"><span class="header-section-number">2</span> How The Site Is Structured</a></li>
-  <li><a href="#reports" id="toc-reports" class="nav-link" data-scroll-target="#reports"><span class="header-section-number">3</span> Reports</a></li>
-  <li><a href="#dataset-expansion-labs" id="toc-dataset-expansion-labs" class="nav-link" data-scroll-target="#dataset-expansion-labs"><span class="header-section-number">4</span> Dataset Expansion Labs</a></li>
-  <li><a href="#slides-space" id="toc-slides-space" class="nav-link" data-scroll-target="#slides-space"><span class="header-section-number">5</span> Slides Space</a></li>
+  <li><a href="#purpose" id="toc-purpose" class="nav-link active" data-scroll-target="#purpose"><span class="header-section-number">1</span> Purpose</a></li>
+  <li><a href="#why-this-sits-beside-the-main-report" id="toc-why-this-sits-beside-the-main-report" class="nav-link" data-scroll-target="#why-this-sits-beside-the-main-report"><span class="header-section-number">2</span> Why This Sits Beside The Main Report</a></li>
+  <li><a href="#what-propensity-score-weighting-does" id="toc-what-propensity-score-weighting-does" class="nav-link" data-scroll-target="#what-propensity-score-weighting-does"><span class="header-section-number">3</span> What Propensity-Score Weighting Does</a></li>
+  <li><a href="#why-the-effect-is-the-right-anchor" id="toc-why-the-effect-is-the-right-anchor" class="nav-link" data-scroll-target="#why-the-effect-is-the-right-anchor"><span class="header-section-number">4</span> Why The Effect Is The Right Anchor</a></li>
+  <li><a href="#when-to-use-it" id="toc-when-to-use-it" class="nav-link" data-scroll-target="#when-to-use-it"><span class="header-section-number">5</span> When To Use It</a></li>
+  <li><a href="#when-not-to-use-it" id="toc-when-not-to-use-it" class="nav-link" data-scroll-target="#when-not-to-use-it"><span class="header-section-number">6</span> When Not To Use It</a></li>
+  <li><a href="#minimum-diagnostic-standard" id="toc-minimum-diagnostic-standard" class="nav-link" data-scroll-target="#minimum-diagnostic-standard"><span class="header-section-number">7</span> Minimum Diagnostic Standard</a></li>
+  <li><a href="#how-it-relates-to-entropy-balancing" id="toc-how-it-relates-to-entropy-balancing" class="nav-link" data-scroll-target="#how-it-relates-to-entropy-balancing"><span class="header-section-number">8</span> How It Relates To Entropy Balancing</a></li>
+  <li><a href="#recommended-repo-sequence" id="toc-recommended-repo-sequence" class="nav-link" data-scroll-target="#recommended-repo-sequence"><span class="header-section-number">9</span> Recommended Repo Sequence</a></li>
+  <li><a href="#bottom-line" id="toc-bottom-line" class="nav-link" data-scroll-target="#bottom-line"><span class="header-section-number">10</span> Bottom Line</a></li>
   </ul>
 </nav>
     </div>
@@ -134,14 +141,27 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Matching and Weighting Learning Resources</h1>
+<h1 class="title">Propensity-Score Weighting Companion</h1>
+<p class="subtitle lead">A compact extension to the main report using The Effect’s weighting-first framing</p>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Luke Heley </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">March 7, 2026</p>
+    </div>
+  </div>
   
     
   </div>
@@ -151,72 +171,113 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="what-this-website-is-for" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="what-this-website-is-for"><span class="header-section-number">1</span> What This Website Is For</h2>
-<p>This website is a training and reference space for design-stage causal inference using matching and weighting methods in observational evaluation.</p>
-<p>Its core goal is to show how to design, diagnose, and estimate observational comparisons responsibly using:</p>
+<section id="purpose" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="purpose"><span class="header-section-number">1</span> Purpose</h2>
+<p>This note is a short companion to the main report, <a href="../report/matching_methods_report.html"><em>Matching and Weighting for Causal Inference</em></a>. It explains where propensity-score weighting fits, why it is not the main teaching route in that report, and how to use it without turning the design into a black box.</p>
+<p>Its conceptual anchor is the repo’s note on <a href="../report/effectbook_matching_notes.html"><em>The Effect</em>: Matching</a>, especially the chapter’s emphasis that many matching procedures are easiest to understand as weighting designs.</p>
+</section>
+<section id="why-this-sits-beside-the-main-report" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="why-this-sits-beside-the-main-report"><span class="header-section-number">2</span> Why This Sits Beside The Main Report</h2>
+<p>The main report deliberately centers:</p>
 <ul>
 <li>exact matching</li>
 <li>coarsened exact matching</li>
-<li>entropy balancing for weighting</li>
+<li>entropy balancing</li>
 </ul>
-<p>The material is organized around a practical evaluator workflow rather than a software-first workflow. The emphasis throughout the site is that:</p>
-<ul>
-<li>matching and weighting are design tools, not substitutes for causal assumptions</li>
-<li>balance must be assessed together with retained sample size and overlap</li>
-<li>entropy balancing should be treated as a weighting method, not as a matching method</li>
-</ul>
-<p>The intended audience is evaluators, analysts, and staff who need a practical introduction to quasi-experimental design choices in programme and policy evaluation. The framing is especially aligned with training and capacity-building use cases, where methods need to be technically sound, explainable, and auditable.</p>
+<p>That choice is useful for evaluator training because those methods make the design rule and the balance-retention tradeoff easier to inspect directly. But propensity-score weighting still matters because it is one of the standard ways to handle many covariates at once when exact or near-exact matching becomes impractical.</p>
+<p>This note therefore fills a specific gap: it does not replace the main report’s design-first logic, but it adds the missing bridge to a method family that both <em>The Effect</em> and <em>The Mixtape</em> treat as important.</p>
 </section>
-<section id="how-the-site-is-structured" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="how-the-site-is-structured"><span class="header-section-number">2</span> How The Site Is Structured</h2>
-<p>The site is split into three main areas:</p>
+<section id="what-propensity-score-weighting-does" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="what-propensity-score-weighting-does"><span class="header-section-number">3</span> What Propensity-Score Weighting Does</h2>
+<p>Propensity-score weighting starts by estimating each unit’s probability of treatment given observed baseline covariates. Those estimated probabilities are then turned into weights so that the weighted treated and untreated groups look more comparable on the observed assignment profile.</p>
+<p>The attraction is dimensional reduction:</p>
 <ul>
-<li><code>Reports</code>: longer methods write-ups and their supporting audit materials</li>
-<li><code>Additional Labs</code>: worked examples that extend the core material to other datasets and teaching scenarios</li>
-<li><code>Slides</code>: presentation decks that support training delivery and lab handoff</li>
+<li>instead of matching directly on every covariate</li>
+<li>the analyst summarizes the observed assignment process in one balancing score</li>
+<li>the resulting design can target <code>ATT</code>, <code>ATE</code>, or another estimand depending on the weighting scheme</li>
 </ul>
-<p>If you are new to the site, the recommended sequence is:</p>
+<p>The risk is also clear:</p>
+<ul>
+<li>a well-fitting treatment model is not the same thing as a good causal design</li>
+<li>extreme estimated probabilities produce extreme weights</li>
+<li>the weighted pseudo-population can drift away from the population the analyst thinks is being studied</li>
+</ul>
+</section>
+<section id="why-the-effect-is-the-right-anchor" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="why-the-effect-is-the-right-anchor"><span class="header-section-number">4</span> Why The Effect Is The Right Anchor</h2>
+<p><em>The Effect</em> is especially useful here because it treats weighting as a unifying language rather than as a separate technical niche.</p>
+<p>That framing helps with three practical points:</p>
 <ol type="1">
-<li>Start with the main report.</li>
-<li>Use the full-code and QA pages when you want implementation detail or audit traceability.</li>
-<li>Move into the labs for additional worked examples.</li>
-<li>Use the slide decks when you want a delivery-ready teaching version.</li>
+<li>Propensity-score weighting is not magic; it is one way of constructing a weighted comparison.</li>
+<li>Diagnostics still matter more than the treatment model itself.</li>
+<li>The estimand question remains central because different weights imply different target populations.</li>
+</ol>
+<p>This is also why the main report’s preference for transparent design rules and <em>The Effect</em>’s weighting-first logic are compatible rather than opposed.</p>
+</section>
+<section id="when-to-use-it" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="when-to-use-it"><span class="header-section-number">5</span> When To Use It</h2>
+<p>Propensity-score weighting is most useful when:</p>
+<ul>
+<li>the adjustment set is too high-dimensional for exact matching to remain feasible</li>
+<li>the evaluator wants to preserve more rows than a tightly pruned matched design would allow</li>
+<li>the design target is clear, especially <code>ATT</code> or <code>ATE</code></li>
+<li>overlap is good enough that the resulting weights do not become extreme</li>
+</ul>
+<p>In practice, it is a reasonable next step after the main report if the analyst finds that:</p>
+<ul>
+<li>exact matching is too sparse</li>
+<li>CEM requires unacceptable pruning</li>
+<li>entropy balancing feels too dependent on hand-chosen balance constraints</li>
+</ul>
+</section>
+<section id="when-not-to-use-it" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="when-not-to-use-it"><span class="header-section-number">6</span> When Not To Use It</h2>
+<p>Propensity-score weighting is a poor fallback when the design problem is actually about weak overlap, missing confounders, or the availability of a stronger quasi-experimental design.</p>
+<p>It should not be used as a rescue move when:</p>
+<ul>
+<li>treated and untreated units barely overlap</li>
+<li>assignment depends heavily on unobserved judgment or motivation</li>
+<li>baseline outcomes exist and matched DiD would be stronger</li>
+<li>the problem is aggregate and better suited to synthetic control</li>
+</ul>
+<p>In those settings, the weights may look mathematical while the underlying design remains weak.</p>
+</section>
+<section id="minimum-diagnostic-standard" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="minimum-diagnostic-standard"><span class="header-section-number">7</span> Minimum Diagnostic Standard</h2>
+<p>Any evaluator-facing use of propensity-score weighting should report at least:</p>
+<ul>
+<li>the estimand and the weighting scheme</li>
+<li>the baseline covariates used in the treatment model</li>
+<li>overlap in the estimated score distribution</li>
+<li>covariate balance after weighting</li>
+<li>the weight distribution, especially any very large weights</li>
+<li>effective sample size after weighting</li>
+<li>whether trimming or stabilization changed the represented population</li>
+</ul>
+<p>This is the point where the companion note reconnects directly to the main report. The report’s repeated emphasis on balance, overlap, retention, and effective sample size still applies here. The only difference is that support problems show up more through unstable weights than through visibly discarded rows.</p>
+</section>
+<section id="how-it-relates-to-entropy-balancing" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="how-it-relates-to-entropy-balancing"><span class="header-section-number">8</span> How It Relates To Entropy Balancing</h2>
+<p>Propensity-score weighting and entropy balancing are both weighting designs, but they solve the balance problem differently.</p>
+<ul>
+<li>Propensity-score weighting first models treatment assignment and then derives weights from the estimated score.</li>
+<li>Entropy balancing chooses weights directly to satisfy balance constraints on selected covariate moments.</li>
+</ul>
+<p>That means propensity-score weighting is usually closer to standard textbook practice, while entropy balancing is often more transparent about the balance target it is imposing. The main report prefers entropy balancing for the core teaching comparison for exactly that reason.</p>
+</section>
+<section id="recommended-repo-sequence" class="level2" data-number="9">
+<h2 data-number="9" class="anchored" data-anchor-id="recommended-repo-sequence"><span class="header-section-number">9</span> Recommended Repo Sequence</h2>
+<p>If you want the shortest practical route through the repo, use this order:</p>
+<ol type="1">
+<li>Read the <a href="../report/matching_methods_report.html">main report</a> for the design-first comparison.</li>
+<li>Read the <a href="../report/effectbook_matching_notes.html"><em>The Effect</em> notes</a> for the weighting-first conceptual frame.</li>
+<li>Use this companion note to connect that frame back to evaluator practice.</li>
+<li>If you want a benchmarked observational case, continue to the <a href="../labs/nsw_cps_benchmark_lab.html">NSW + CPS Benchmark Lab</a>.</li>
 </ol>
 </section>
-<section id="reports" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="reports"><span class="header-section-number">3</span> Reports</h2>
-<p>The main report bundle is:</p>
-<ul>
-<li><a href="./report/matching_methods_report.html">Matching Methods Report</a></li>
-<li><a href="./report/matching_synthesis_report.html">Synthesis Report: Main Report versus <em>The Mixtape</em>, <em>The Effect</em>, and Gertler Chapter 8</a></li>
-<li><a href="./report/propensity_score_weighting_companion.html">Propensity-Score Weighting Companion</a></li>
-<li><a href="./report/effectbook_matching_notes.html">Notes on <em>The Effect</em>: Matching</a></li>
-<li><a href="./report/mixtape_matching_subclassification_notes.html">Notes on <em>The Mixtape</em>: Matching and Subclassification</a></li>
-<li><a href="./report/gertler_matching_notes.html">Notes on Gertler et al.: Matching</a></li>
-<li><a href="./report/matching_methods_report_full_code.html">Full Code Companion</a></li>
-<li><a href="./report/matching_methods_report_qa_log.html">QA Log</a></li>
-</ul>
-</section>
-<section id="dataset-expansion-labs" class="level2" data-number="4">
-<h2 data-number="4" class="anchored" data-anchor-id="dataset-expansion-labs"><span class="header-section-number">4</span> Dataset Expansion Labs</h2>
-<p>The dataset expansion workstream provides additional labs and teaching aids that apply the same design-first logic to other examples:</p>
-<ul>
-<li><a href="./labs/index.html">Dataset Expansion Lab Hub</a></li>
-<li><a href="./labs/black_politicians_lab.html">Black Politicians Lab</a></li>
-<li><a href="./labs/hisp_ie_practice_lab.html">HISP IE in Practice Lab</a></li>
-<li><a href="./labs/nsw_cps_benchmark_lab.html">NSW + CPS Benchmark Lab</a></li>
-<li><a href="./labs/titanic_teaching_lab.html">Titanic Teaching Lab</a></li>
-</ul>
-</section>
-<section id="slides-space" class="level2" data-number="5">
-<h2 data-number="5" class="anchored" data-anchor-id="slides-space"><span class="header-section-number">5</span> Slides Space</h2>
-<p>A dedicated slides section supports training delivery, facilitator-led sessions, and report-to-lab transitions:</p>
-<ul>
-<li><a href="./slides/index.html">Slides Hub</a></li>
-<li><a href="./slides/matching_methods_slides.html">Matching and Weighting Training Deck</a></li>
-<li><a href="./slides/pre_lab_background_lecture.html">From Report to Labs: Background Lecture</a></li>
-</ul>
+<section id="bottom-line" class="level2" data-number="10">
+<h2 data-number="10" class="anchored" data-anchor-id="bottom-line"><span class="header-section-number">10</span> Bottom Line</h2>
+<p>Propensity-score weighting belongs in this repo, but not as the first teaching move. The main report is right to prioritize more inspectable design rules at the start. This companion exists so that readers can add the standard propensity-score extension without losing the repo’s core discipline: design first, diagnostics before claims, and constant attention to what population the estimate actually represents.</p>
 
 
 </section>

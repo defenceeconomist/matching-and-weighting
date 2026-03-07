@@ -27,6 +27,7 @@ The goal is not to rank the sources, but to show where the main report is alread
 - The main report is closest to Gertler chapter 8 in audience and evaluator workflow: both are written with practical policy evaluation in mind and both insist that matching should be judged against stronger quasi-experimental alternatives rather than treated as a default.
 - The main report's biggest deliberate departure from all three sources is its decision to center exact matching, CEM, and entropy balancing while largely bracketing propensity-score matching. That makes the report more auditable and design-transparent, but it also means it leaves out one family of methods that all three source texts discuss directly.
 - Relative to the books, the main report is stronger on auditability and transparent diagnostics, but weaker on two canonical teaching bridges: subclassification as a standalone entry point and propensity-score methods as the standard high-dimensional workaround.
+- After implementation of the first recommendation round, that last gap is narrower than it was when this synthesis was first drafted: the main report now includes a subclassification bridge, explicit signposting to the NSW/CPS benchmark, clearer omission logic for propensity scores, an evaluator escalation rule, and a dedicated propensity-score weighting companion note.
 
 ## Comparison Matrix
 
@@ -221,21 +222,78 @@ The main report intentionally covers a narrower set. That narrower scope makes t
 
 ### High-Priority Additions
 
-1. Add a short subclassification bridge near the start of the main report, drawing directly on the existing *Mixtape* notes and the `titanic` teaching lab.
-2. Add a compact "why propensity scores are omitted here" note, so the main report's method choice reads as deliberate rather than accidental.
-3. Add a one-page appendix or short companion note on propensity-score weighting, using *The Effect* as the conceptual anchor.
-4. Add an evaluator escalation box that states when to prefer matching alone, matched DiD, or synthetic control, drawing on Gertler chapter 8.
+1. Add a short subclassification bridge near the start of the main report, drawing directly on the existing *Mixtape* notes and the `titanic` teaching lab. `Implemented in current worktree.`
+2. Add a compact "why propensity scores are omitted here" note, so the main report's method choice reads as deliberate rather than accidental. `Implemented in current worktree.`
+3. Add a one-page appendix or short companion note on propensity-score weighting, using *The Effect* as the conceptual anchor. `Implemented in current worktree as a dedicated companion page.`
+4. Add an evaluator escalation box that states when to prefer matching alone, matched DiD, or synthetic control, drawing on Gertler chapter 8. `Implemented in current worktree.`
 
 ### Lower-Priority Improvements
 
-1. Add a short paragraph in the main report that links trimming and extreme weights to estimand drift in the language used by *The Effect*.
-2. Add a direct link from the main report to the NSW/CPS benchmark lab so the *Mixtape* bridge is visible from the main article.
-3. Add a short cross-walk table inside the report hub so readers can move from each source chapter to the relevant repo artifact.
+1. Add a short paragraph in the main report that links trimming and extreme weights to estimand drift in the language used by *The Effect*. `Implemented in current worktree.`
+2. Add a direct link from the main report to the NSW/CPS benchmark lab so the *Mixtape* bridge is visible from the main article. `Implemented in current worktree.`
+3. Add a short cross-walk table inside the report hub so readers can move from each source chapter to the relevant repo artifact. `Implemented in current worktree.`
+
+## Implementation Update
+
+The synthesis no longer needs to describe the recommendation list as entirely prospective. A first implementation pass has already changed the repo in ways that materially affect the comparative assessment.
+
+### What Has Changed Since The First Synthesis Draft
+
+- The main report now includes a callout-level subclassification bridge that links the conceptual logic in *The Mixtape* to the repo's [Titanic Teaching Lab](../labs/titanic_teaching_lab.qmd) and [NSW + CPS Benchmark Lab](../labs/nsw_cps_benchmark_lab.qmd).
+- The main report now states more explicitly why propensity scores are not the first teaching move in this repo.
+- The main report now includes stronger language about estimand drift when pruning or weight concentration becomes severe, which brings it closer to *The Effect*'s framing.
+- The main report now includes an evaluator escalation rule that more directly reflects Gertler chapter 8's "stronger design first" logic.
+- The repo now has a separate [Propensity-Score Weighting Companion](propensity_score_weighting_companion.qmd), which reduces one of the clearest gaps identified in the original synthesis.
+- The reports hub now includes a source cross-walk table, which makes the repo's breadth easier to navigate.
+
+### Revised Assessment After Implementation
+
+With those changes in place, the repo is better balanced across the three source traditions:
+
+- It still resembles *The Effect* most closely in overall intellectual style.
+- It now advertises its *Mixtape* bridge more clearly through subclassification and NSW signposting.
+- It now reflects Gertler's evaluator workflow more directly through the escalation rule and stronger matched-DiD/synthetic-control signposting.
+
+The remaining gap is now narrower and more specific. It is no longer mainly about missing conceptual bridges; it is about whether the repo eventually wants a fuller direct treatment of propensity-score design and perhaps an additional standalone subclassification note beyond the current bridge material.
 
 ## Bottom-Line Assessment
 
 The main report is not a generic summary of matching. It is a selective, design-first, evaluator-oriented synthesis that is closest in spirit to *The Effect*, supported conceptually by *The Mixtape*, and disciplined in practical decision rules by Gertler chapter 8.
 
-Its main strengths relative to the books are transparency, diagnostic discipline, and auditability. Its main gap relative to the books is the limited treatment of propensity-score methods and the lack of a stronger subclassification bridge in the main article itself.
+Its main strengths relative to the books are transparency, diagnostic discipline, and auditability. After the implementation pass described above, its main remaining gap relative to the books is no longer the absence of a subclassification bridge inside the main article itself. The remaining gap is a narrower one: the repo still treats propensity-score methods as a companion extension rather than as a co-equal part of the core report narrative.
 
 As a repo-level package, however, the gap is narrower than it first appears. The labs and companion note pages already contain many of the missing bridges. The next improvement is therefore not a major rewrite of the main report, but a better synthesis layer that makes those relationships explicit. This page is intended to provide that layer.
+
+## Appendix: Version Control Update
+
+This appendix records how the synthesis changed once the recommendation set began to be implemented in the repo.
+
+### Baseline Reference Point
+
+- Baseline synthesis commit: `fabfabe`
+- Baseline commit message: `Add matching synthesis report`
+- Meaning of that baseline: the synthesis existed, but the implementation recommendations were still framed as future work.
+
+### Post-Baseline Implementation State Reflected In This Update
+
+As of the current worktree on 7 March 2026, the synthesis has been updated to reflect the following repository changes after `fabfabe`:
+
+- Modified [matching_methods_report.qmd](matching_methods_report.qmd) to add:
+  - a subclassification bridge
+  - a clearer rationale for not leading with propensity scores
+  - estimand-drift language
+  - an evaluator escalation rule
+  - direct links to the NSW/CPS benchmark material
+- Added [propensity_score_weighting_companion.qmd](propensity_score_weighting_companion.qmd) as a dedicated extension page
+- Modified [index.qmd](../index.qmd), [index.qmd](index.qmd), and [_quarto.yml](../_quarto.yml) to register and surface the new companion page and cross-walk structure
+
+### Why The Synthesis Needed Updating
+
+The earlier synthesis accurately described the repo at commit `fabfabe`, but it would now understate the current state of the materials if left unchanged. In particular, it would incorrectly imply that subclassification signposting, the propensity-score companion, the evaluative escalation rule, and the report-hub cross-walk were still only recommendations rather than implemented changes.
+
+### Practical Interpretation
+
+Read the synthesis in two layers:
+
+- `fabfabe` captures the first stable version of the synthesis itself.
+- The current worktree version of this page captures the next stage, where the synthesis is revised to evaluate the repo after a first recommendation-implementation pass.

@@ -156,7 +156,19 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#high-priority-additions" id="toc-high-priority-additions" class="nav-link" data-scroll-target="#high-priority-additions"><span class="header-section-number">8.1</span> High-Priority Additions</a></li>
   <li><a href="#lower-priority-improvements" id="toc-lower-priority-improvements" class="nav-link" data-scroll-target="#lower-priority-improvements"><span class="header-section-number">8.2</span> Lower-Priority Improvements</a></li>
   </ul></li>
-  <li><a href="#bottom-line-assessment" id="toc-bottom-line-assessment" class="nav-link" data-scroll-target="#bottom-line-assessment"><span class="header-section-number">9</span> Bottom-Line Assessment</a></li>
+  <li><a href="#implementation-update" id="toc-implementation-update" class="nav-link" data-scroll-target="#implementation-update"><span class="header-section-number">9</span> Implementation Update</a>
+  <ul class="collapse">
+  <li><a href="#what-has-changed-since-the-first-synthesis-draft" id="toc-what-has-changed-since-the-first-synthesis-draft" class="nav-link" data-scroll-target="#what-has-changed-since-the-first-synthesis-draft"><span class="header-section-number">9.1</span> What Has Changed Since The First Synthesis Draft</a></li>
+  <li><a href="#revised-assessment-after-implementation" id="toc-revised-assessment-after-implementation" class="nav-link" data-scroll-target="#revised-assessment-after-implementation"><span class="header-section-number">9.2</span> Revised Assessment After Implementation</a></li>
+  </ul></li>
+  <li><a href="#bottom-line-assessment" id="toc-bottom-line-assessment" class="nav-link" data-scroll-target="#bottom-line-assessment"><span class="header-section-number">10</span> Bottom-Line Assessment</a></li>
+  <li><a href="#appendix-version-control-update" id="toc-appendix-version-control-update" class="nav-link" data-scroll-target="#appendix-version-control-update"><span class="header-section-number">11</span> Appendix: Version Control Update</a>
+  <ul class="collapse">
+  <li><a href="#baseline-reference-point" id="toc-baseline-reference-point" class="nav-link" data-scroll-target="#baseline-reference-point"><span class="header-section-number">11.1</span> Baseline Reference Point</a></li>
+  <li><a href="#post-baseline-implementation-state-reflected-in-this-update" id="toc-post-baseline-implementation-state-reflected-in-this-update" class="nav-link" data-scroll-target="#post-baseline-implementation-state-reflected-in-this-update"><span class="header-section-number">11.2</span> Post-Baseline Implementation State Reflected In This Update</a></li>
+  <li><a href="#why-the-synthesis-needed-updating" id="toc-why-the-synthesis-needed-updating" class="nav-link" data-scroll-target="#why-the-synthesis-needed-updating"><span class="header-section-number">11.3</span> Why The Synthesis Needed Updating</a></li>
+  <li><a href="#practical-interpretation" id="toc-practical-interpretation" class="nav-link" data-scroll-target="#practical-interpretation"><span class="header-section-number">11.4</span> Practical Interpretation</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -213,6 +225,7 @@ ul.task-list li input[type="checkbox"] {
 <li>The main report is closest to Gertler chapter 8 in audience and evaluator workflow: both are written with practical policy evaluation in mind and both insist that matching should be judged against stronger quasi-experimental alternatives rather than treated as a default.</li>
 <li>The main report’s biggest deliberate departure from all three sources is its decision to center exact matching, CEM, and entropy balancing while largely bracketing propensity-score matching. That makes the report more auditable and design-transparent, but it also means it leaves out one family of methods that all three source texts discuss directly.</li>
 <li>Relative to the books, the main report is stronger on auditability and transparent diagnostics, but weaker on two canonical teaching bridges: subclassification as a standalone entry point and propensity-score methods as the standard high-dimensional workaround.</li>
+<li>After implementation of the first recommendation round, that last gap is narrower than it was when this synthesis was first drafted: the main report now includes a subclassification bridge, explicit signposting to the NSW/CPS benchmark, clearer omission logic for propensity scores, an evaluator escalation rule, and a dedicated propensity-score weighting companion note.</li>
 </ul>
 </section>
 <section id="comparison-matrix" class="level2" data-number="3">
@@ -468,28 +481,93 @@ ul.task-list li input[type="checkbox"] {
 <section id="high-priority-additions" class="level3" data-number="8.1">
 <h3 data-number="8.1" class="anchored" data-anchor-id="high-priority-additions"><span class="header-section-number">8.1</span> High-Priority Additions</h3>
 <ol type="1">
-<li>Add a short subclassification bridge near the start of the main report, drawing directly on the existing <em>Mixtape</em> notes and the <code>titanic</code> teaching lab.</li>
-<li>Add a compact “why propensity scores are omitted here” note, so the main report’s method choice reads as deliberate rather than accidental.</li>
-<li>Add a one-page appendix or short companion note on propensity-score weighting, using <em>The Effect</em> as the conceptual anchor.</li>
-<li>Add an evaluator escalation box that states when to prefer matching alone, matched DiD, or synthetic control, drawing on Gertler chapter 8.</li>
+<li>Add a short subclassification bridge near the start of the main report, drawing directly on the existing <em>Mixtape</em> notes and the <code>titanic</code> teaching lab. <code>Implemented in current worktree.</code></li>
+<li>Add a compact “why propensity scores are omitted here” note, so the main report’s method choice reads as deliberate rather than accidental. <code>Implemented in current worktree.</code></li>
+<li>Add a one-page appendix or short companion note on propensity-score weighting, using <em>The Effect</em> as the conceptual anchor. <code>Implemented in current worktree as a dedicated companion page.</code></li>
+<li>Add an evaluator escalation box that states when to prefer matching alone, matched DiD, or synthetic control, drawing on Gertler chapter 8. <code>Implemented in current worktree.</code></li>
 </ol>
 </section>
 <section id="lower-priority-improvements" class="level3" data-number="8.2">
 <h3 data-number="8.2" class="anchored" data-anchor-id="lower-priority-improvements"><span class="header-section-number">8.2</span> Lower-Priority Improvements</h3>
 <ol type="1">
-<li>Add a short paragraph in the main report that links trimming and extreme weights to estimand drift in the language used by <em>The Effect</em>.</li>
-<li>Add a direct link from the main report to the NSW/CPS benchmark lab so the <em>Mixtape</em> bridge is visible from the main article.</li>
-<li>Add a short cross-walk table inside the report hub so readers can move from each source chapter to the relevant repo artifact.</li>
+<li>Add a short paragraph in the main report that links trimming and extreme weights to estimand drift in the language used by <em>The Effect</em>. <code>Implemented in current worktree.</code></li>
+<li>Add a direct link from the main report to the NSW/CPS benchmark lab so the <em>Mixtape</em> bridge is visible from the main article. <code>Implemented in current worktree.</code></li>
+<li>Add a short cross-walk table inside the report hub so readers can move from each source chapter to the relevant repo artifact. <code>Implemented in current worktree.</code></li>
 </ol>
 </section>
 </section>
-<section id="bottom-line-assessment" class="level2" data-number="9">
-<h2 data-number="9" class="anchored" data-anchor-id="bottom-line-assessment"><span class="header-section-number">9</span> Bottom-Line Assessment</h2>
+<section id="implementation-update" class="level2" data-number="9">
+<h2 data-number="9" class="anchored" data-anchor-id="implementation-update"><span class="header-section-number">9</span> Implementation Update</h2>
+<p>The synthesis no longer needs to describe the recommendation list as entirely prospective. A first implementation pass has already changed the repo in ways that materially affect the comparative assessment.</p>
+<section id="what-has-changed-since-the-first-synthesis-draft" class="level3" data-number="9.1">
+<h3 data-number="9.1" class="anchored" data-anchor-id="what-has-changed-since-the-first-synthesis-draft"><span class="header-section-number">9.1</span> What Has Changed Since The First Synthesis Draft</h3>
+<ul>
+<li>The main report now includes a callout-level subclassification bridge that links the conceptual logic in <em>The Mixtape</em> to the repo’s <a href="../labs/titanic_teaching_lab.html">Titanic Teaching Lab</a> and <a href="../labs/nsw_cps_benchmark_lab.html">NSW + CPS Benchmark Lab</a>.</li>
+<li>The main report now states more explicitly why propensity scores are not the first teaching move in this repo.</li>
+<li>The main report now includes stronger language about estimand drift when pruning or weight concentration becomes severe, which brings it closer to <em>The Effect</em>’s framing.</li>
+<li>The main report now includes an evaluator escalation rule that more directly reflects Gertler chapter 8’s “stronger design first” logic.</li>
+<li>The repo now has a separate <a href="../report/propensity_score_weighting_companion.html">Propensity-Score Weighting Companion</a>, which reduces one of the clearest gaps identified in the original synthesis.</li>
+<li>The reports hub now includes a source cross-walk table, which makes the repo’s breadth easier to navigate.</li>
+</ul>
+</section>
+<section id="revised-assessment-after-implementation" class="level3" data-number="9.2">
+<h3 data-number="9.2" class="anchored" data-anchor-id="revised-assessment-after-implementation"><span class="header-section-number">9.2</span> Revised Assessment After Implementation</h3>
+<p>With those changes in place, the repo is better balanced across the three source traditions:</p>
+<ul>
+<li>It still resembles <em>The Effect</em> most closely in overall intellectual style.</li>
+<li>It now advertises its <em>Mixtape</em> bridge more clearly through subclassification and NSW signposting.</li>
+<li>It now reflects Gertler’s evaluator workflow more directly through the escalation rule and stronger matched-DiD/synthetic-control signposting.</li>
+</ul>
+<p>The remaining gap is now narrower and more specific. It is no longer mainly about missing conceptual bridges; it is about whether the repo eventually wants a fuller direct treatment of propensity-score design and perhaps an additional standalone subclassification note beyond the current bridge material.</p>
+</section>
+</section>
+<section id="bottom-line-assessment" class="level2" data-number="10">
+<h2 data-number="10" class="anchored" data-anchor-id="bottom-line-assessment"><span class="header-section-number">10</span> Bottom-Line Assessment</h2>
 <p>The main report is not a generic summary of matching. It is a selective, design-first, evaluator-oriented synthesis that is closest in spirit to <em>The Effect</em>, supported conceptually by <em>The Mixtape</em>, and disciplined in practical decision rules by Gertler chapter 8.</p>
-<p>Its main strengths relative to the books are transparency, diagnostic discipline, and auditability. Its main gap relative to the books is the limited treatment of propensity-score methods and the lack of a stronger subclassification bridge in the main article itself.</p>
+<p>Its main strengths relative to the books are transparency, diagnostic discipline, and auditability. After the implementation pass described above, its main remaining gap relative to the books is no longer the absence of a subclassification bridge inside the main article itself. The remaining gap is a narrower one: the repo still treats propensity-score methods as a companion extension rather than as a co-equal part of the core report narrative.</p>
 <p>As a repo-level package, however, the gap is narrower than it first appears. The labs and companion note pages already contain many of the missing bridges. The next improvement is therefore not a major rewrite of the main report, but a better synthesis layer that makes those relationships explicit. This page is intended to provide that layer.</p>
+</section>
+<section id="appendix-version-control-update" class="level2" data-number="11">
+<h2 data-number="11" class="anchored" data-anchor-id="appendix-version-control-update"><span class="header-section-number">11</span> Appendix: Version Control Update</h2>
+<p>This appendix records how the synthesis changed once the recommendation set began to be implemented in the repo.</p>
+<section id="baseline-reference-point" class="level3" data-number="11.1">
+<h3 data-number="11.1" class="anchored" data-anchor-id="baseline-reference-point"><span class="header-section-number">11.1</span> Baseline Reference Point</h3>
+<ul>
+<li>Baseline synthesis commit: <code>fabfabe</code></li>
+<li>Baseline commit message: <code>Add matching synthesis report</code></li>
+<li>Meaning of that baseline: the synthesis existed, but the implementation recommendations were still framed as future work.</li>
+</ul>
+</section>
+<section id="post-baseline-implementation-state-reflected-in-this-update" class="level3" data-number="11.2">
+<h3 data-number="11.2" class="anchored" data-anchor-id="post-baseline-implementation-state-reflected-in-this-update"><span class="header-section-number">11.2</span> Post-Baseline Implementation State Reflected In This Update</h3>
+<p>As of the current worktree on 7 March 2026, the synthesis has been updated to reflect the following repository changes after <code>fabfabe</code>:</p>
+<ul>
+<li>Modified <a href="../report/matching_methods_report.html">matching_methods_report.qmd</a> to add:
+<ul>
+<li>a subclassification bridge</li>
+<li>a clearer rationale for not leading with propensity scores</li>
+<li>estimand-drift language</li>
+<li>an evaluator escalation rule</li>
+<li>direct links to the NSW/CPS benchmark material</li>
+</ul></li>
+<li>Added <a href="../report/propensity_score_weighting_companion.html">propensity_score_weighting_companion.qmd</a> as a dedicated extension page</li>
+<li>Modified <a href="../index.html">index.qmd</a>, <a href="../report/index.html">index.qmd</a>, and <a href="../_quarto.yml">_quarto.yml</a> to register and surface the new companion page and cross-walk structure</li>
+</ul>
+</section>
+<section id="why-the-synthesis-needed-updating" class="level3" data-number="11.3">
+<h3 data-number="11.3" class="anchored" data-anchor-id="why-the-synthesis-needed-updating"><span class="header-section-number">11.3</span> Why The Synthesis Needed Updating</h3>
+<p>The earlier synthesis accurately described the repo at commit <code>fabfabe</code>, but it would now understate the current state of the materials if left unchanged. In particular, it would incorrectly imply that subclassification signposting, the propensity-score companion, the evaluative escalation rule, and the report-hub cross-walk were still only recommendations rather than implemented changes.</p>
+</section>
+<section id="practical-interpretation" class="level3" data-number="11.4">
+<h3 data-number="11.4" class="anchored" data-anchor-id="practical-interpretation"><span class="header-section-number">11.4</span> Practical Interpretation</h3>
+<p>Read the synthesis in two layers:</p>
+<ul>
+<li><code>fabfabe</code> captures the first stable version of the synthesis itself.</li>
+<li>The current worktree version of this page captures the next stage, where the synthesis is revised to evaluate the repo after a first recommendation-implementation pass.</li>
+</ul>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
