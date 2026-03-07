@@ -1,0 +1,9 @@
+---
+title: "Reports"
+---
+
+## Available Reports
+
+| Report | Description | Links |
+|---|---|---|
+| Matching Methods Report | Main report on exact matching, coarsened exact matching, and entropy balancing for causal inference. | [Article](matching_methods_report.qmd) · [Full code](matching_methods_report_full_code.qmd) · [QA log](matching_methods_report_qa_log.qmd) |

@@ -12,7 +12,7 @@ execute:
 
 ## Scope
 
-- Report reviewed: `docs/matching_methods_report.qmd`
+- Report reviewed: `docs/report/matching_methods_report.qmd`
 - Documentation baseline:
   - `MatchIt` version `4.7.2` (`matchit`, `method_exact`, `method_cem`, `summary.matchit`)
   - `WeightIt` version `1.5.1` (`weightit`, `method_ebal`, `glm_weightit`)

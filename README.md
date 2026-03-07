@@ -104,7 +104,7 @@ quarto render docs
 This renders:
 
 - `docs/index.html`
-- `docs/matching_methods_report.html` (main article)
+- `docs/report/matching_methods_report.html` (main article)
 - `docs/labs/index.html` and lab pages
 - `docs/labs/black_politicians_lab.html`
 - `docs/labs/black_politicians_lab_full_code.html`
@@ -113,13 +113,13 @@ This renders:
 - `docs/labs/titanic_teaching_lab.html`
 - `docs/labs/titanic_teaching_lab_full_code.html`
 - `docs/slides/index.html` and slide scaffold pages
-- `docs/matching_methods_report_full_code.html`
-- `docs/matching_methods_report_qa_log.html`
+- `docs/report/matching_methods_report_full_code.html`
+- `docs/report/matching_methods_report_qa_log.html`
 
 If you only want the main article, run:
 
 ```bash
-quarto render docs/matching_methods_report.qmd --to html
+quarto render docs/report/matching_methods_report.qmd --to html
 ```
 
 If you only want the slide deck, run:
@@ -144,8 +144,8 @@ Equivalent explicit usage:
 
 ```bash
 Rscript scripts/extract_qmd_chunks.R \
-  docs/matching_methods_report.qmd \
-  docs/matching_methods_report_full_code.R
+  docs/report/matching_methods_report.qmd \
+  docs/report/matching_methods_report_full_code.R
 ```
 
 Optional third argument customizes the chunk separator format (default: `# ---- chunk %d ----`).

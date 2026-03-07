@@ -3,9 +3,10 @@ project:
   output-dir: .
   render:
     - index.qmd
-    - matching_methods_report.qmd
-    - matching_methods_report_full_code.qmd
-    - matching_methods_report_qa_log.qmd
+    - report/index.qmd
+    - report/matching_methods_report.qmd
+    - report/matching_methods_report_full_code.qmd
+    - report/matching_methods_report_qa_log.qmd
     - labs/*.qmd
     - slides/*.qmd
 
@@ -15,8 +16,8 @@ website:
     left:
       - href: index.qmd
         text: Home
-      - href: matching_methods_report.qmd
-        text: Main Article
+      - href: report/index.qmd
+        text: Reports
       - href: labs/index.qmd
         text: Additional Labs
       - href: slides/index.qmd

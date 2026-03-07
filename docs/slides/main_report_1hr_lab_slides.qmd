@@ -192,7 +192,7 @@ This slide is mainly for you as facilitator. If the session slips, protect the r
 ## Handoff To The Next Materials
 
 - [Teaching aid page](../labs/main_report_1hr_lab_teaching_aid.html)
-- [Main report](../matching_methods_report.html)
+- [Main report](../report/matching_methods_report.html)
 - [From Report to Labs lecture](pre_lab_background_lecture.html)
 - [Black Politicians lab](../labs/black_politicians_lab.html)
 

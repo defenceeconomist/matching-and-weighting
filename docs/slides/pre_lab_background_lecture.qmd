@@ -144,7 +144,7 @@ This is the marking guide in slide form. End by reminding participants that a ca
 - Start with the [Black Politicians lab](../labs/black_politicians_lab.html).
 - Move to the [NSW + CPS benchmark lab](../labs/nsw_cps_benchmark_lab.html) when you want an external reference point.
 - Use the [Titanic teaching lab](../labs/titanic_teaching_lab.html) for the shortest support-focused exercise.
-- Keep the [main report](../matching_methods_report.html) open as the design reference.
+- Keep the [main report](../report/matching_methods_report.html) open as the design reference.
 
 <aside class="notes">
 Close with a simple handoff. Tell the audience which page to open first and what standard to keep in mind: define the target, inspect the raw comparison, then decide whether the design cost is acceptable.

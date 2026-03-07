@@ -1,22 +1,51 @@
 ---
-title: "Matching TRG"
-subtitle: "Main Article, Dataset Expansion Labs, and Slides"
+title: "Matching and Weighting Learning Resources"
 ---
 
-## Main Article
+## What This Website Is For
 
-The primary article for this site is:
+This website is a training and reference space for design-stage causal inference using matching and weighting methods in observational evaluation.
 
-- [Matching Methods Report](matching_methods_report.qmd)
+Its core goal is to show how to design, diagnose, and estimate observational comparisons responsibly using:
 
-Supporting pages for implementation and audit:
+- exact matching
+- coarsened exact matching
+- entropy balancing for weighting
 
-- [Full Code Companion](matching_methods_report_full_code.qmd)
-- [QA Log](matching_methods_report_qa_log.qmd)
+The material is organized around a practical evaluator workflow rather than a software-first workflow. The emphasis throughout the site is that:
+
+- matching and weighting are design tools, not substitutes for causal assumptions
+- balance must be assessed together with retained sample size and overlap
+- entropy balancing should be treated as a weighting method, not as a matching method
+
+The intended audience is evaluators, analysts, and staff who need a practical introduction to quasi-experimental design choices in programme and policy evaluation. The framing is especially aligned with training and capacity-building use cases, where methods need to be technically sound, explainable, and auditable.
+
+## How The Site Is Structured
+
+The site is split into three main areas:
+
+- `Reports`: longer methods write-ups and their supporting audit materials
+- `Additional Labs`: worked examples that extend the core material to other datasets and teaching scenarios
+- `Slides`: presentation decks that support training delivery and lab handoff
+
+If you are new to the site, the recommended sequence is:
+
+1. Start with the main report.
+2. Use the full-code and QA pages when you want implementation detail or audit traceability.
+3. Move into the labs for additional worked examples.
+4. Use the slide decks when you want a delivery-ready teaching version.
+
+## Reports
+
+The main report bundle is:
+
+- [Matching Methods Report](report/matching_methods_report.qmd)
+- [Full Code Companion](report/matching_methods_report_full_code.qmd)
+- [QA Log](report/matching_methods_report_qa_log.qmd)
 
 ## Dataset Expansion Labs
 
-The dataset expansion workstream is available as additional labs and training aids:
+The dataset expansion workstream provides additional labs and teaching aids that apply the same design-first logic to other examples:
 
 - [Dataset Expansion Lab Hub](labs/index.qmd)
 - [Black Politicians Lab](labs/black_politicians_lab.qmd)
@@ -25,7 +54,7 @@ The dataset expansion workstream is available as additional labs and training ai
 
 ## Slides Space
 
-A dedicated slides section is included for training delivery:
+A dedicated slides section supports training delivery, facilitator-led sessions, and report-to-lab transitions:
 
 - [Slides Hub](slides/index.qmd)
 - [Matching and Weighting Training Deck](slides/matching_methods_slides.qmd)

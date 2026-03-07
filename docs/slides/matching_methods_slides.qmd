@@ -68,7 +68,7 @@ The main article uses `MatchIt::lalonde` to estimate an `ATT`.
 - Pre-treatment covariates include age, education, race, marital status, degree status, and prior earnings
 - Teaching goal: compare balance gains against information loss
 
-[Main report](../matching_methods_report.html)
+[Main report](../report/matching_methods_report.html)
 
 <aside class="notes">
 Keep this brief. The purpose is not to reteach the whole dataset, but to remind the audience that the report's substantive question is the earnings effect for the treated group.
@@ -182,8 +182,8 @@ Bring the deck back to the report's evaluator framing. Mention that matching sho
 
 ## Read / Run / Audit
 
-- [Main report](../matching_methods_report.html)
-- [Main report full code](../matching_methods_report_full_code.html)
+- [Main report](../report/matching_methods_report.html)
+- [Main report full code](../report/matching_methods_report_full_code.html)
 - [Black Politicians lab](../labs/black_politicians_lab.html)
 - [Black Politicians evaluated code](../labs/black_politicians_lab_evaluated_code.html)
 - [Black Politicians QA log](../labs/black_politicians_lab_qa_log.html)

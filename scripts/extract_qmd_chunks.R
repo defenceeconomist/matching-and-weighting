@@ -2,8 +2,8 @@
 
 args <- commandArgs(trailingOnly = TRUE)
 
-input_qmd <- if (length(args) >= 1) args[[1]] else "docs/matching_methods_report.qmd"
-output_r <- if (length(args) >= 2) args[[2]] else "docs/matching_methods_report_full_code.R"
+input_qmd <- if (length(args) >= 1) args[[1]] else "docs/report/matching_methods_report.qmd"
+output_r <- if (length(args) >= 2) args[[2]] else "docs/report/matching_methods_report_full_code.R"
 separator_template <- if (length(args) >= 3) args[[3]] else "# ---- chunk %d ----"
 
 if (!file.exists(input_qmd)) {

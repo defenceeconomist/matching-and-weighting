@@ -3,7 +3,7 @@ title: "Matching and Weighting for Causal Inference"
 subtitle: "Exact Matching, Coarsened Exact Matching, and Entropy Balancing"
 author: "Luke Heley"
 date: 6 March 2026
-bibliography: references.bib
+bibliography: ../references.bib
 link-citations: true
 format:
   html:

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Matching TRG – Matching and Weighting</title>
+<title>Matching and Weighting Learning Resources – Matching and Weighting</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -94,8 +94,8 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./matching_methods_report.html"> 
-<span class="menu-text">Main Article</span></a>
+    <a class="nav-link" href="./report/index.html"> 
+<span class="menu-text">Reports</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./labs/index.html"> 
@@ -121,9 +121,11 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#main-article" id="toc-main-article" class="nav-link active" data-scroll-target="#main-article"><span class="header-section-number">1</span> Main Article</a></li>
-  <li><a href="#dataset-expansion-labs" id="toc-dataset-expansion-labs" class="nav-link" data-scroll-target="#dataset-expansion-labs"><span class="header-section-number">2</span> Dataset Expansion Labs</a></li>
-  <li><a href="#slides-space" id="toc-slides-space" class="nav-link" data-scroll-target="#slides-space"><span class="header-section-number">3</span> Slides Space</a></li>
+  <li><a href="#what-this-website-is-for" id="toc-what-this-website-is-for" class="nav-link active" data-scroll-target="#what-this-website-is-for"><span class="header-section-number">1</span> What This Website Is For</a></li>
+  <li><a href="#how-the-site-is-structured" id="toc-how-the-site-is-structured" class="nav-link" data-scroll-target="#how-the-site-is-structured"><span class="header-section-number">2</span> How The Site Is Structured</a></li>
+  <li><a href="#reports" id="toc-reports" class="nav-link" data-scroll-target="#reports"><span class="header-section-number">3</span> Reports</a></li>
+  <li><a href="#dataset-expansion-labs" id="toc-dataset-expansion-labs" class="nav-link" data-scroll-target="#dataset-expansion-labs"><span class="header-section-number">4</span> Dataset Expansion Labs</a></li>
+  <li><a href="#slides-space" id="toc-slides-space" class="nav-link" data-scroll-target="#slides-space"><span class="header-section-number">5</span> Slides Space</a></li>
   </ul>
 </nav>
     </div>
@@ -132,8 +134,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Matching TRG</h1>
-<p class="subtitle lead">Main Article, Dataset Expansion Labs, and Slides</p>
+<h1 class="title">Matching and Weighting Learning Resources</h1>
 </div>
 
 
@@ -150,21 +151,51 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="main-article" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="main-article"><span class="header-section-number">1</span> Main Article</h2>
-<p>The primary article for this site is:</p>
+<section id="what-this-website-is-for" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="what-this-website-is-for"><span class="header-section-number">1</span> What This Website Is For</h2>
+<p>This website is a training and reference space for design-stage causal inference using matching and weighting methods in observational evaluation.</p>
+<p>Its core goal is to show how to design, diagnose, and estimate observational comparisons responsibly using:</p>
 <ul>
-<li><a href="./matching_methods_report.html">Matching Methods Report</a></li>
+<li>exact matching</li>
+<li>coarsened exact matching</li>
+<li>entropy balancing for weighting</li>
 </ul>
-<p>Supporting pages for implementation and audit:</p>
+<p>The material is organized around a practical evaluator workflow rather than a software-first workflow. The emphasis throughout the site is that:</p>
 <ul>
-<li><a href="./matching_methods_report_full_code.html">Full Code Companion</a></li>
-<li><a href="./matching_methods_report_qa_log.html">QA Log</a></li>
+<li>matching and weighting are design tools, not substitutes for causal assumptions</li>
+<li>balance must be assessed together with retained sample size and overlap</li>
+<li>entropy balancing should be treated as a weighting method, not as a matching method</li>
+</ul>
+<p>The intended audience is evaluators, analysts, and staff who need a practical introduction to quasi-experimental design choices in programme and policy evaluation. The framing is especially aligned with training and capacity-building use cases, where methods need to be technically sound, explainable, and auditable.</p>
+</section>
+<section id="how-the-site-is-structured" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="how-the-site-is-structured"><span class="header-section-number">2</span> How The Site Is Structured</h2>
+<p>The site is split into three main areas:</p>
+<ul>
+<li><code>Reports</code>: longer methods write-ups and their supporting audit materials</li>
+<li><code>Additional Labs</code>: worked examples that extend the core material to other datasets and teaching scenarios</li>
+<li><code>Slides</code>: presentation decks that support training delivery and lab handoff</li>
+</ul>
+<p>If you are new to the site, the recommended sequence is:</p>
+<ol type="1">
+<li>Start with the main report.</li>
+<li>Use the full-code and QA pages when you want implementation detail or audit traceability.</li>
+<li>Move into the labs for additional worked examples.</li>
+<li>Use the slide decks when you want a delivery-ready teaching version.</li>
+</ol>
+</section>
+<section id="reports" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="reports"><span class="header-section-number">3</span> Reports</h2>
+<p>The main report bundle is:</p>
+<ul>
+<li><a href="./report/matching_methods_report.html">Matching Methods Report</a></li>
+<li><a href="./report/matching_methods_report_full_code.html">Full Code Companion</a></li>
+<li><a href="./report/matching_methods_report_qa_log.html">QA Log</a></li>
 </ul>
 </section>
-<section id="dataset-expansion-labs" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="dataset-expansion-labs"><span class="header-section-number">2</span> Dataset Expansion Labs</h2>
-<p>The dataset expansion workstream is available as additional labs and training aids:</p>
+<section id="dataset-expansion-labs" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="dataset-expansion-labs"><span class="header-section-number">4</span> Dataset Expansion Labs</h2>
+<p>The dataset expansion workstream provides additional labs and teaching aids that apply the same design-first logic to other examples:</p>
 <ul>
 <li><a href="./labs/index.html">Dataset Expansion Lab Hub</a></li>
 <li><a href="./labs/black_politicians_lab.html">Black Politicians Lab</a></li>
@@ -172,9 +203,9 @@ ul.task-list li input[type="checkbox"] {
 <li><a href="./labs/titanic_teaching_lab.html">Titanic Teaching Lab</a></li>
 </ul>
 </section>
-<section id="slides-space" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="slides-space"><span class="header-section-number">3</span> Slides Space</h2>
-<p>A dedicated slides section is included for training delivery:</p>
+<section id="slides-space" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="slides-space"><span class="header-section-number">5</span> Slides Space</h2>
+<p>A dedicated slides section supports training delivery, facilitator-led sessions, and report-to-lab transitions:</p>
 <ul>
 <li><a href="./slides/index.html">Slides Hub</a></li>
 <li><a href="./slides/matching_methods_slides.html">Matching and Weighting Training Deck</a></li>

@@ -5,7 +5,7 @@ format:
     toc: true
     code-links:
       - text: Main Report
-        href: ../matching_methods_report.html
+        href: ../report/matching_methods_report.html
       - text: 1-Hour Lab Slides
         href: ../slides/main_report_1hr_lab_slides.html
       - text: Training Deck
@@ -22,7 +22,7 @@ execute:
 Use this page as a facilitator script for a `60` minute teaching lab built around the main `lalonde` report.
 
 - It is designed for live delivery, not as a standalone methods article.
-- It assumes participants have the [main report](../matching_methods_report.html) open.
+- It assumes participants have the [main report](../report/matching_methods_report.html) open.
 - It keeps the session focused on the report's main messages rather than on running every line of code.
 
 ::: {.callout-note}
@@ -49,8 +49,8 @@ At the end of the session, participants should be able to:
 
 Keep these pages open during delivery:
 
-- [Main report](../matching_methods_report.html)
-- [Main report full code](../matching_methods_report_full_code.html)
+- [Main report](../report/matching_methods_report.html)
+- [Main report full code](../report/matching_methods_report_full_code.html)
 - [Matching and Weighting training deck](../slides/matching_methods_slides.html)
 - [From Report to Labs lecture deck](../slides/pre_lab_background_lecture.html)
 - [Black Politicians lab](black_politicians_lab.html)
@@ -95,9 +95,9 @@ Ask the room:
 
 Point participants to:
 
-- [Executive Summary](../matching_methods_report.html#executive-summary)
-- [Introduction](../matching_methods_report.html#introduction)
-- [Design Principles](../matching_methods_report.html#design-principles)
+- [Executive Summary](../report/matching_methods_report.html#executive-summary)
+- [Introduction](../report/matching_methods_report.html#introduction)
+- [Design Principles](../report/matching_methods_report.html#design-principles)
 
 Main messages to land:
 
@@ -118,9 +118,9 @@ Checkpoint sentence:
 
 Point participants to:
 
-- [Define the Estimand Before Adjustment](../matching_methods_report.html#define-the-estimand-before-adjustment)
-- [Data and Study Design](../matching_methods_report.html#data-and-study-design)
-- [Pre-Match Diagnostics](../matching_methods_report.html#pre-match-diagnostics)
+- [Define the Estimand Before Adjustment](../report/matching_methods_report.html#define-the-estimand-before-adjustment)
+- [Data and Study Design](../report/matching_methods_report.html#data-and-study-design)
+- [Pre-Match Diagnostics](../report/matching_methods_report.html#pre-match-diagnostics)
 
 Walk through this sequence:
 
@@ -143,10 +143,10 @@ Ask the room:
 
 Point participants to:
 
-- [Exact Matching](../matching_methods_report.html#exact-matching)
-- [Coarsened Exact Matching](../matching_methods_report.html#coarsened-exact-matching)
-- [Entropy Balancing for Weighting](../matching_methods_report.html#entropy-balancing-for-weighting)
-- [Comparing the Methods](../matching_methods_report.html#comparing-the-methods)
+- [Exact Matching](../report/matching_methods_report.html#exact-matching)
+- [Coarsened Exact Matching](../report/matching_methods_report.html#coarsened-exact-matching)
+- [Entropy Balancing for Weighting](../report/matching_methods_report.html#entropy-balancing-for-weighting)
+- [Comparing the Methods](../report/matching_methods_report.html#comparing-the-methods)
 
 Use this structure:
 
@@ -171,9 +171,9 @@ Facilitator move:
 
 Point participants to:
 
-- [Treatment Effect Summary](../matching_methods_report.html#treatment-effect-summary)
-- [Limitations](../matching_methods_report.html#limitations)
-- [Conclusion](../matching_methods_report.html#conclusion)
+- [Treatment Effect Summary](../report/matching_methods_report.html#treatment-effect-summary)
+- [Limitations](../report/matching_methods_report.html#limitations)
+- [Conclusion](../report/matching_methods_report.html#conclusion)
 
 Main points to land:
 

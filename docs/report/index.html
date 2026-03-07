@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Dataset Expansion Labs – Matching and Weighting</title>
+<title>Reports – Matching and Weighting</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -72,7 +72,7 @@ ul.task-list li input[type="checkbox"] {
 
 </head>
 
-<body class="nav-sidebar docked nav-fixed quarto-light">
+<body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -94,11 +94,11 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../report/index.html"> 
+    <a class="nav-link active" href="../report/index.html" aria-current="page"> 
 <span class="menu-text">Reports</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../labs/index.html" aria-current="page"> 
+    <a class="nav-link" href="../labs/index.html"> 
 <span class="menu-text">Additional Labs</span></a>
   </li>  
   <li class="nav-item">
@@ -111,66 +111,17 @@ ul.task-list li input[type="checkbox"] {
 </div>
       </div> <!-- /container-fluid -->
     </nav>
-  <nav class="quarto-secondary-nav">
-    <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-        <i class="bi bi-layout-text-sidebar-reverse"></i>
-      </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../labs/index.html">Dataset Expansion Labs</a></li></ol></nav>
-        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-        </a>
-    </div>
-  </nav>
 </header>
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
-    <div class="sidebar-menu-container"> 
-    <ul class="list-unstyled mt-1">
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../labs/index.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Dataset Expansion Labs</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../labs/main_report_1hr_lab_teaching_aid.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Teaching Aid: Delivering the Main Report in a 1-Hour Lab</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../labs/black_politicians_lab.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Lab: Black Politicians Training Aid</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../labs/nsw_cps_benchmark_lab.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Lab: NSW + CPS Benchmark</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../labs/titanic_teaching_lab.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Lab: Titanic Teaching Example</span></a>
-  </div>
-</li>
-    </ul>
-    </div>
-</nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#roadmap-aligned-labs" id="toc-roadmap-aligned-labs" class="nav-link active" data-scroll-target="#roadmap-aligned-labs"><span class="header-section-number">1</span> Roadmap-Aligned Labs</a></li>
-  <li><a href="#recommended-sequence" id="toc-recommended-sequence" class="nav-link" data-scroll-target="#recommended-sequence"><span class="header-section-number">2</span> Recommended Sequence</a></li>
-  <li><a href="#working-rule" id="toc-working-rule" class="nav-link" data-scroll-target="#working-rule"><span class="header-section-number">3</span> Working Rule</a></li>
+  <li><a href="#available-reports" id="toc-available-reports" class="nav-link active" data-scroll-target="#available-reports"><span class="header-section-number">1</span> Available Reports</a></li>
   </ul>
 </nav>
     </div>
@@ -179,7 +130,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Dataset Expansion Labs</h1>
+<h1 class="title">Reports</h1>
 </div>
 
 
@@ -196,64 +147,24 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>This section collects the secondary worked examples that sit alongside the main <code>lalonde</code> report.</p>
-<p>Use these pages as extensions of the same design-first workflow:</p>
-<ul>
-<li>start with the benchmarked policy-style examples if you want the closest match to the main report</li>
-<li>use the Titanic page when you want a compact teaching example for support, exact matching, and subclassification</li>
-<li>treat each lab as a self-contained notebook with its own assumptions, diagnostics, and tradeoffs</li>
-</ul>
-<section id="roadmap-aligned-labs" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="roadmap-aligned-labs"><span class="header-section-number">1</span> Roadmap-Aligned Labs</h2>
+<section id="available-reports" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="available-reports"><span class="header-section-number">1</span> Available Reports</h2>
 <table class="caption-top table">
 <thead>
 <tr class="header">
-<th>Lab</th>
-<th>Dataset(s)</th>
-<th>Current status</th>
-<th>Link</th>
+<th>Report</th>
+<th>Description</th>
+<th>Links</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>Main Report 1-Hour Teaching Aid</td>
-<td><code>MatchIt::lalonde</code> plus report outputs</td>
-<td>Facilitator guide</td>
-<td><a href="../labs/main_report_1hr_lab_teaching_aid.html">Open</a></td>
-</tr>
-<tr class="even">
-<td>Black Politicians Lab</td>
-<td><code>causaldata::black_politicians</code></td>
-<td>Training aid</td>
-<td><a href="../labs/black_politicians_lab.html">Open</a> · <a href="../labs/black_politicians_lab_full_code.html">Full code</a> · <a href="../labs/black_politicians_lab_evaluated_code.html">Evaluated code</a> · <a href="../labs/black_politicians_lab_qa_log.html">QA log</a></td>
-</tr>
-<tr class="odd">
-<td>NSW + CPS Benchmark Lab</td>
-<td><code>causaldata::nsw_mixtape</code>, <code>causaldata::cps_mixtape</code></td>
-<td>Benchmark lab</td>
-<td><a href="../labs/nsw_cps_benchmark_lab.html">Open</a> · <a href="../labs/nsw_cps_benchmark_lab_full_code.html">Full code</a> · <a href="../labs/nsw_cps_benchmark_lab_evaluated_code.html">Evaluated code</a> · <a href="../labs/nsw_cps_benchmark_lab_qa_log.html">QA log</a></td>
-</tr>
-<tr class="even">
-<td>Titanic Teaching Lab</td>
-<td><code>causaldata::titanic</code></td>
-<td>Teaching lab</td>
-<td><a href="../labs/titanic_teaching_lab.html">Open</a> · <a href="../labs/titanic_teaching_lab_full_code.html">Full code</a></td>
+<td>Matching Methods Report</td>
+<td>Main report on exact matching, coarsened exact matching, and entropy balancing for causal inference.</td>
+<td><a href="../report/matching_methods_report.html">Article</a> · <a href="../report/matching_methods_report_full_code.html">Full code</a> · <a href="../report/matching_methods_report_qa_log.html">QA log</a></td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="recommended-sequence" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="recommended-sequence"><span class="header-section-number">2</span> Recommended Sequence</h2>
-<ol type="1">
-<li>Start with the Main Report 1-Hour Teaching Aid if you want a facilitator script for delivering the <code>lalonde</code> material live.</li>
-<li>Move to the Black Politicians lab for a second design-first matching workflow with richer covariates.</li>
-<li>Use the NSW + CPS benchmark lab when you want to compare observational designs against an experimental reference.</li>
-<li>Use the Titanic lab for slide-friendly teaching on exact support cells and low-dimensional adjustment.</li>
-</ol>
-</section>
-<section id="working-rule" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="working-rule"><span class="header-section-number">3</span> Working Rule</h2>
-<p>Keep the same standard across all labs: define the estimand first, inspect imbalance before adjustment, and compare balance against retention after design changes.</p>
 
 
 </section>

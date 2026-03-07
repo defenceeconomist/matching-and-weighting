@@ -12,7 +12,7 @@ Use this section for presentation-ready outputs connected to the report, the lab
 
 ## Suggested Slide Pipeline
 
-1. Keep deck narrative aligned with `matching_methods_report.qmd`.
+1. Keep deck narrative aligned with `report/matching_methods_report.qmd`.
 2. Use the main report deck first, then the background lecture deck before opening the labs.
 3. Use the 1-hour lab deck when you want a tighter facilitator-led session built around the teaching aid.
 4. Pair the main report example with one lab extension at a time.
