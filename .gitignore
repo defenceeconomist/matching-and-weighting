@@ -60,3 +60,8 @@ docs/**/*.quarto_ipynb
 # Do not track project data
 data/
 data/**
+!docs/data/
+!docs/data/hisp_ie_in_practice/
+!docs/data/hisp_ie_in_practice/evaluation.csv
+!docs/data/hisp_ie_in_practice/evaluation.dta
+!docs/data/hisp_ie_in_practice/HISP Book replication.do

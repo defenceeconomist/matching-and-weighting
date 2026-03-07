@@ -55,7 +55,7 @@ get_script_path <- function() {
 script_path <- get_script_path()
 script_dir <- dirname(script_path)
 project_root <- normalizePath(file.path(script_dir, "..", ".."), mustWork = TRUE)
-data_dir <- file.path(project_root, "data", "IE in practice files")
+data_dir <- file.path(project_root, "docs", "data", "hisp_ie_in_practice")
 
 controls <- c(
   "age_hh",
@@ -79,12 +79,18 @@ ensure_csv_exports <- function(dir_path) {
 
   dplyr::bind_rows(lapply(dta_files, function(dta_path) {
     csv_path <- sub("[.]dta$", ".csv", dta_path)
+    csv_exists <- file.exists(csv_path)
     dat <- haven::read_dta(dta_path)
-    readr::write_csv(dat, csv_path)
+
+    # Keep the tracked CSV stable during site builds and only backfill if absent.
+    if (!csv_exists) {
+      readr::write_csv(dat, csv_path)
+    }
 
     data.frame(
       dta_file = basename(dta_path),
       csv_file = basename(csv_path),
+      csv_status = ifelse(csv_exists, "tracked_existing", "exported_from_dta"),
       rows = nrow(dat),
       columns = ncol(dat),
       stringsAsFactors = FALSE

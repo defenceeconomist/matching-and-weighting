@@ -24,18 +24,18 @@ Use this page as a guided replication worksheet for the HISP case-study material
 - Use the evaluated-code page when you want the processed outputs immediately.
 
 ::: {.callout-note}
-Unlike the other labs in this repository, this page is organized to follow the logic of `data/IE in practice files/HISP Book replication.do` as closely as possible. The aim is to translate that Stata workflow into R, not to rewrite it into a different teaching sequence.
+Unlike the other labs in this repository, this page is organized to follow the logic of `docs/data/hisp_ie_in_practice/HISP Book replication.do` as closely as possible. The aim is to translate that Stata workflow into R, not to rewrite it into a different teaching sequence.
 :::
 
 ## Source Baseline
 
-This lab is based on the HISP case-study files in [data/IE in practice files](/Users/lukeheley/Developer/matching-trg/data/IE%20in%20practice%20files):
+This lab uses the tracked build bundle in `docs/data/hisp_ie_in_practice`:
 
-- primary workflow baseline: `HISP Book replication.do`
-- input dataset: `evaluation.dta`
-- converted analysis dataset used here: `evaluation.csv`
+- primary workflow baseline: [HISP Book replication.do](../data/hisp_ie_in_practice/HISP%20Book%20replication.do)
+- Stata input dataset: [evaluation.dta](../data/hisp_ie_in_practice/evaluation.dta)
+- CSV analysis dataset used for rendering: [evaluation.csv](../data/hisp_ie_in_practice/evaluation.csv)
 
-The full R workflow also exports the other Stata files in the folder to CSV so the conversion step is explicit and reproducible.
+The renderable bundle lives under `docs/` so the site can build without depending on ignored raw-data paths in the repository root.
 
 ## Step 1: Convert The Stata Files And Load The HISP Data
 
@@ -65,17 +65,22 @@ if (length(missing_packages) > 0) {
 
 invisible(lapply(required_packages, library, character.only = TRUE))
 
-data_dir <- "../../data/IE in practice files"
+data_dir <- "../data/hisp_ie_in_practice"
 dta_files <- list.files(data_dir, pattern = "[.]dta$", full.names = TRUE)
 
 csv_export_manifest <- dplyr::bind_rows(lapply(dta_files, function(dta_path) {
   csv_path <- sub("[.]dta$", ".csv", dta_path)
+  csv_exists <- file.exists(csv_path)
   dat <- haven::read_dta(dta_path)
-  readr::write_csv(dat, csv_path)
+
+  if (!csv_exists) {
+    readr::write_csv(dat, csv_path)
+  }
 
   data.frame(
     dta_file = basename(dta_path),
     csv_file = basename(csv_path),
+    csv_status = ifelse(csv_exists, "tracked_existing", "exported_from_dta"),
     rows = nrow(dat),
     columns = ncol(dat)
   )
@@ -113,8 +118,8 @@ dat |>
 
 Checkpoint:
 
-- Are the CSV exports now present beside the original `.dta` files?
-- Does `evaluation.csv` keep the same `19,827` rows and `22` columns as the Stata source?
+- Does the tracked `evaluation.csv` keep the same `19,827` rows and `22` columns as the Stata source?
+- If any CSV file was missing, did the export manifest recreate it from the bundled `.dta` file?
 
 ## Step 2: Method 1, Before-After Among Enrolled Households
 
