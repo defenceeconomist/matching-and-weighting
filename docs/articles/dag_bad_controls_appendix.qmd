@@ -92,7 +92,7 @@ What this means:
 ## How To Use This Appendix In The Repo
 
 - Read this page alongside the covariate-selection section in the [Matching Methods Report](matching_methods_report.qmd).
-- Use the [Titanic Teaching Lab](../labs/titanic_teaching_lab.qmd) for visible support cells and the [NSW + CPS Benchmark Lab](../labs/nsw_cps_benchmark_lab.qmd) for a benchmarked observational case.
+- Use the [NSW + CPS Benchmark Lab](../labs/nsw_cps_benchmark_lab.qmd) for a benchmarked observational case that applies the same design-first logic in a fuller observational setting.
 - Use this appendix as the shortest visual explanation for why the repo excludes post-treatment variables and warns against kitchen-sink covariate selection.
 
 ## Bottom Line

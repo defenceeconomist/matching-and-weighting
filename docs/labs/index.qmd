@@ -4,13 +4,12 @@ title: "Labs"
 
 This section starts with a guided `lalonde` walkthrough that mirrors the main report, then collects the follow-on worked examples that extend the same workflow to other datasets.
 
-For the one-hour overview that launches these exercises, start with the [Matching and Weighting Workshop Deck](../slides/matching_workshop.qmd) and the [Workshop Speaking Notes](../slides/matching_workshop_notes.qmd).
+For a short concept-first overview before these exercises, start with [Why We Do Matching](../slides/why_matching.qmd) and [Why Matching Speaking Notes](../slides/why_matching_notes.qmd).
 
 Use these pages as part of the same design-first workflow:
 
 - start with the `lalonde` walkthrough if you want the lab version of the main report itself
 - move next to the benchmarked policy-style examples if you want the closest dataset extensions to the main report
-- use the Titanic page when you want a compact teaching example for support, exact matching, and subclassification
 - treat each lab as a self-contained notebook with its own assumptions, diagnostics, and tradeoffs
 
 ## Available Labs
@@ -21,16 +20,14 @@ Use these pages as part of the same design-first workflow:
 | Black Politicians Lab | `causaldata::black_politicians` | Training aid | [Open](black_politicians_lab.qmd) · [Full code](black_politicians_lab_full_code.qmd) · [Evaluated code](black_politicians_lab_evaluated_code.qmd) · [QA log](black_politicians_lab_qa_log.qmd) |
 | HISP IE in Practice Lab | `evaluation.dta` converted to `evaluation.csv` from the HISP case-study bundle | Stata-to-R replication lab | [Open](hisp_ie_practice_lab.qmd) · [Full code](hisp_ie_practice_lab_full_code.qmd) · [Evaluated code](hisp_ie_practice_lab_evaluated_code.qmd) · [QA log](hisp_ie_practice_lab_qa_log.qmd) |
 | NSW + CPS Benchmark Lab | `causaldata::nsw_mixtape`, `causaldata::cps_mixtape` | Benchmark lab | [Open](nsw_cps_benchmark_lab.qmd) · [Full code](nsw_cps_benchmark_lab_full_code.qmd) · [Evaluated code](nsw_cps_benchmark_lab_evaluated_code.qmd) · [QA log](nsw_cps_benchmark_lab_qa_log.qmd) |
-| Titanic Teaching Lab | `causaldata::titanic` | Teaching lab | [Open](titanic_teaching_lab.qmd) · [Full code](titanic_teaching_lab_full_code.qmd) |
 
 ## Recommended Sequence
 
-1. Use the workshop deck and speaking notes first if you want the `60` minute delivery version of the main report.
+1. Use the concept deck and speaking notes first if you want the shortest delivery version of the matching logic.
 2. Start with the LaLonde main report lab if you want the worksheet version of the core `ATT` comparison.
 3. Move to the Black Politicians lab for the first dataset extension with richer covariates.
 4. Use the NSW + CPS benchmark lab when you want to compare observational designs against an experimental reference.
 5. Use the HISP IE in Practice lab when you want a Stata-to-R replication that walks through weaker and stronger impact-evaluation designs in the order used in the book case study.
-6. Use the Titanic lab for the shortest support-focused follow-up on exact cells and subclassification.
 
 ## Working Rule
 

@@ -1,0 +1,277 @@
+---
+title: "Why Matching Speaking Notes"
+subtitle: "Facilitator notes for the concept deck"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    code-links:
+      - text: Why We Do Matching deck
+        href: why_matching.html
+      - text: DAG appendix
+        href: ../articles/dag_bad_controls_appendix.html
+      - text: Main report
+        href: ../articles/matching_methods_report.html
+execute:
+  echo: false
+  eval: false
+---
+
+## How To Use These Notes
+
+Use this page as the standalone facilitator script for the shorter concept deck.
+
+- Keep it open beside the deck if you do not want presenter view.
+- Use it as a `20-25` minute conceptual opener before the workshop deck or before a lab.
+- Open the DAG appendix separately if you want a longer detour on good and bad controls.
+
+## Recommended Setup
+
+Open these pages before the session starts:
+
+- [Why We Do Matching deck](why_matching.html)
+- [DAG and Bad Controls Appendix](../articles/dag_bad_controls_appendix.html)
+- [Matching Methods Report](../articles/matching_methods_report.html)
+
+## 20-Minute Run Of Show
+
+| Time | Slides | Aim |
+|---|---|---|
+| `0-3` | Title, Session Promise, 20-Minute Arc | Set the claim and the structure |
+| `3-7` | Fundamental problem, comparison group, `RCT` benchmark | Explain the counterfactual problem and the best-case comparison |
+| `7-12` | Raw comparisons, confounder slides, why match | Show why observational differences are biased |
+| `12-17` | Workflow, subclassification, controls, weighting bridge | Explain what matching is trying to do |
+| `17-20` | Assumptions, limits, practical standard | End with disciplined use rather than salesmanship |
+
+## Slide-By-Slide Notes
+
+### Title Slide
+
+- `Purpose:` Open with the claim that matching is a response to a causal-design problem, not a software feature.
+- `Say:` This talk is not about how to run one algorithm. It is about why matching exists at all.
+- `Transition:` Move straight into the session promise so the room knows the deck is conceptual and finite.
+
+### Session Promise
+
+- `Purpose:` Tell the audience what the deck will and will not do.
+- `Say:` We are going to start from the missing counterfactual, move through confounding, and only then discuss matching.
+- `Emphasis:` Keep saying that matching is a design tool, not a magic causal stamp.
+- `Transition:` Use that framing to justify the short run-of-show slide.
+
+### 20-Minute Arc
+
+- `Purpose:` Give the audience a map and keep yourself moving.
+- `Say:` The first segment is the causal problem and the experimental benchmark, the middle segment is confounding plus matching logic, and the last segment is responsible use.
+- `Transition:` Move to the fundamental problem immediately after the timing slide.
+
+### Start With The Fundamental Problem
+
+- `Purpose:` Ground the deck in potential outcomes rather than technique.
+- `Say:` For each unit, one outcome is observed and one is missing. That missing outcome is the counterfactual.
+- `Say:` Matching matters because it tries to build a credible stand-in for that missing outcome.
+- `Transition:` Move to the comparison-group slide by saying that every causal design is really solving this problem one way or another.
+
+### Why We Need A Comparison Group
+
+- `Purpose:` Translate the abstract potential-outcomes idea into a practical design task.
+- `Say:` The analyst is always trying to find or build the best available comparison for what did not happen.
+- `Prompt:` Ask what makes a comparison group credible. You want answers like similarity, pre-treatment comparability, and common support.
+- `Transition:` Move to the `RCT` benchmark slide by saying that the cleanest comparison is one we designed rather than inherited.
+
+### Best Benchmark: Randomization
+
+- `Purpose:` Put the experimental benchmark up front rather than treating it as an afterthought.
+- `Say:` If treatment is randomized, the groups are comparable in expectation. That is why experiments are the benchmark.
+- `Say:` But do not oversell them: attrition, noncompliance, and external-validity problems still remain.
+- `Transition:` Move to the next slide by saying that matching only enters because most policy questions do not begin from this best-case design.
+
+### Why Matching Enters The Story
+
+- `Purpose:` Explain why the deck is about matching rather than experiments.
+- `Say:` In many real evaluations, treatment has already happened and the comparison group is not automatically credible.
+- `Say:` Matching is a second-best design repair for those settings, not a substitute for a better design when one exists.
+- `Transition:` Then explain why the raw observational comparison is biased.
+
+### Why Raw Comparisons Mislead
+
+- `Purpose:` Explain the failure mode in observational work.
+- `Say:` Treatment assignment is often related to need, motivation, eligibility, geography, or timing, and those same features may affect the outcome.
+- `Say:` So the raw difference in outcomes bundles treatment effects together with baseline differences.
+- `Transition:` Move to the confounder slide by naming that bundle explicitly as confounding.
+
+### The Confounder Problem
+
+- `Purpose:` Define confounding cleanly before showing a graph.
+- `Say:` A confounder is a common cause of treatment and outcome. This is why association and causation separate.
+- `Transition:` Move to the backdoor-path slide so the room can see the confounding structure directly.
+
+### Backdoor Path
+
+- `Purpose:` Make the core confounding structure visible.
+- `Say:` This is the problem matching is trying to repair: a common cause points into both treatment and outcome.
+- `Say:` Read the path aloud as `D <- X -> Y`.
+- `Transition:` Move to the next slide by saying that once the bad path is visible, the design task becomes mechanical.
+
+### What This Means For Design
+
+- `Purpose:` Translate the backdoor idea into a design requirement without relying on a visual DAG.
+- `Say:` If treated and untreated units differ on `Prior need`, the raw gap is confounded, but do not overstate the sign of the bias.
+- `Say:` The direction depends on whether `Prior need` pushes the outcome up or down.
+- `Say:` A credible design has to block the backdoor path by conditioning on the right pre-treatment variables.
+- `Say:` This is the link between causal reasoning and matching.
+- `Transition:` Move to the blocked-backdoor slide before defining matching itself.
+
+### Block The Backdoor
+
+- `Purpose:` Show the shared target behind multiple adjustment methods.
+- `Say:` Once we condition on the confounder, the remaining open path is the causal one from treatment to outcome.
+- `Say:` Regression, matching, stratification, and weighting are all trying to achieve this same design condition.
+- `Transition:` Move to the matching-definition slide with the phrase "compare like with like, but only on the variables that matter."
+
+### Matching In One Sentence
+
+- `Purpose:` Give the shortest defensible definition of matching.
+- `Say:` Matching compares treated units to untreated units that are similar on relevant observed pre-treatment covariates.
+- `Warning:` Stress that "observed" is doing a lot of work in that sentence.
+- `Transition:` Then explain why this approach remains attractive in applied work.
+
+### Why Match?
+
+- `Purpose:` Give the sharpest practical reason for matching.
+- `Say:` The problem is not only imbalance. The problem is that imbalance makes the estimate depend too heavily on model choice.
+- `Say:` Use the chain out loud: imbalance to model dependence to researcher discretion to bias.
+- `Say:` Matching helps by removing or down-weighting the least credible comparisons before the model summarizes the data.
+- `Transition:` Move to the next slide by saying that this is why design transparency matters operationally, not just philosophically.
+
+### Why Matching Appeals In Practice
+
+- `Purpose:` Show the operational value without overselling it.
+- `Say:` Matching makes the comparison group more visible, reduces hidden extrapolation, and makes design diagnostics unavoidable.
+- `Prompt:` Ask whether people trust a coefficient table more or less when they cannot see the comparison group.
+- `Transition:` Move to the two-step workflow so the room sees how matching fits into an analysis rather than replacing it.
+
+### Design In Two Steps
+
+- `Purpose:` Separate preprocessing from estimation.
+- `Say:` First redesign the comparison. Then estimate on that redesigned sample or weighting scheme.
+- `Emphasis:` This is the easiest way to stop matching from dissolving into endless specification searching.
+- `Transition:` Move to subclassification as the conceptual starting point for the preprocessing stage.
+
+### From Subclassification To Matching
+
+- `Purpose:` Connect the method back to a simple stratification idea.
+- `Say:` Subclassification is the cleanest version of the logic: compare treated and untreated units within the same cells.
+- `Say:` Exact matching and approximate matching are extensions of that basic idea.
+- `Transition:` Then explain why this simple logic becomes difficult in realistic data.
+
+### The Curse Of Dimensionality
+
+- `Purpose:` Explain why exact comparisons become infeasible.
+- `Say:` Once many covariates matter, the number of cells explodes and support thins out.
+- `Say:` Matching methods exist because the causal goal is simple but the data are not.
+- `Transition:` Move to covariate selection by saying that once you cannot match on everything, choosing the right variables becomes central.
+
+### Good Controls, Not All Controls
+
+- `Purpose:` Stop the audience from adopting kitchen-sink adjustment logic.
+- `Say:` The relevant question is not "what baseline variables do we have?" but "which variables help block confounding?"
+- `Say:` This is why causal reasoning has to precede software.
+- `Say:` Use a pre-treatment common cause, not a collider, and not a variable changed by treatment.
+- `Transition:` Move to the collider slide so the room sees the main bad-control failure mode before returning to the broader payoff.
+
+### Collider Warning
+
+- `Purpose:` Show the most important bad-control trap.
+- `Say:` A collider is not a confounder. Conditioning on it can create a spurious association that was not there before.
+- `Say:` This is why the selection of covariates must come from a causal story, not from a kitchen sink.
+- `Transition:` Move into what matching is buying operationally.
+
+### What Matching Is Buying
+
+- `Purpose:` Summarize the gains from matching as design gains rather than identification gains.
+- `Say:` Matching can reduce observed imbalance, make overlap problems visible, and force the analyst to report design costs plainly.
+- `Warning:` This is a good place to say that transparency and validity are related but not identical.
+- `Transition:` Move to weighting as the closest sibling approach before shifting to assumptions.
+
+### Matching And Weighting Are Siblings
+
+- `Purpose:` Clarify the relationship between the two method families.
+- `Say:` Matching changes who stays in the sample. Weighting changes how much each unit counts.
+- `Say:` Both are trying to repair the same comparison problem, and many matching procedures can be understood as weighted averages.
+- `Transition:` Move to the implementation-logic slide before turning to assumptions.
+
+### One Logic, Several Implementations
+
+- `Purpose:` Tie Cunningham, Huntington-Klein, and the Mixtape Sessions framing together.
+- `Say:` Regression, matching, stratification, and weighting differ in implementation, but all are trying to compare treated and untreated units after blocking backdoor paths with observables.
+- `Say:` This is the shortest bridge from the causal story to the methods menu.
+- `Transition:` Then move to the assumptions slide by saying that no implementation escapes the core identification constraints.
+
+### Matching Is Still About Assumptions
+
+- `Purpose:` Re-anchor the deck in the core assumptions.
+- `Say:` Matching still relies on no important unmeasured confounders, usable overlap, actual observed balance, and a stable estimand.
+- `Prompt:` Ask which of these assumptions is least testable. The answer should be omitted confounding.
+- `Transition:` Move directly to the limitations slide by saying that these assumptions are exactly why matching has hard limits.
+
+### What Matching Cannot Do
+
+- `Purpose:` Prevent methodological overclaiming.
+- `Say:` Matching cannot recover information you never measured, and it cannot rescue units with no support.
+- `Say:` It is also not a substitute for a stronger design when one exists.
+- `Transition:` Move to the "when not to match" slide so the room hears the design ranking explicitly.
+
+### When Not To Match
+
+- `Purpose:` State the method-ranking rule directly.
+- `Say:` Use matching when it is the strongest defensible design available, not when it is merely available in software.
+- `Say:` If overlap is too weak or the estimand drifts badly after pruning, that is information, not an inconvenience.
+- `Transition:` Move to the "why still use it" slide so the deck does not end on prohibition alone.
+
+### Why We Still Do It
+
+- `Purpose:` Give the practical rationale after the warnings.
+- `Say:` We still use matching because many important questions are observational, and matching can make weak designs more transparent and less dependent on pure regression form.
+- `Transition:` End with the practical standard so the room leaves with a procedure, not just a concept.
+
+### Practical Standard
+
+- `Purpose:` Turn the conceptual story into an analyst workflow.
+- `Say:` Define the estimand, choose covariates from the assignment story, inspect raw imbalance and overlap, adjust the design, then estimate.
+- `Say:` After that, check uncertainty and sensitivity rather than treating the adjusted estimate as self-validating.
+- `Emphasis:` This is the slide to reuse when teaching or reviewing applied matching work.
+- `Transition:` Move to the lab-scope slide so the room knows what the follow-on practical session will and will not cover.
+
+### What The Lab Focuses On
+
+- `Purpose:` Narrow the practical methods menu before the lab starts.
+- `Say:` In the core matching lab, we focus on exact matching and coarsened exact matching in `MatchIt`, then compare them with entropy balancing as a weighting benchmark.
+- `Say:` We are not centering nearest-neighbor propensity-score matching or the broader set of advanced `MatchIt` variants on the first pass.
+- `Say:` Point people to the [MatchIt documentation](https://kosukeimai.github.io/MatchIt/) if they want the broader method menu after the session.
+- `Transition:` End on the closing line so the scope note feels like a practical handoff rather than a new conceptual branch.
+
+### Closing Line
+
+- `Purpose:` Leave one sentence in the room.
+- `Say:` We do matching to reduce observed confounding by building a more credible comparison group, while staying honest about what the data still cannot prove.
+- `Optional close:` Ask the room what assumption they would still worry about after a well-executed matching exercise.
+
+## Minimal Version If Time Slips
+
+If you lose `5-7` minutes, keep only this sequence:
+
+1. `Start With The Fundamental Problem`
+2. `Best Benchmark: Randomization`
+3. `Why Raw Comparisons Mislead`
+4. `Matching In One Sentence`
+5. `Why Match?`
+6. `Matching Is Still About Assumptions`
+7. `Practical Standard`
+
+## Final Facilitator Check
+
+Before you leave the notes page, make sure the room can answer all three:
+
+1. Why is the raw treated-control difference biased in observational data?
+2. Which covariates belong in a matching design, and which do not?
+3. What assumption still remains untestable after matching?

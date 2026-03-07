@@ -2,17 +2,16 @@
 title: "Slides"
 ---
 
-Use this section for the single live workshop deck and the standalone speaking notes that go with it.
+Use this section for the short concept deck and its standalone facilitator notes.
 
-## Workshop Materials
+## Slide Materials
 
-- [Matching and Weighting Workshop Deck](matching_workshop.qmd)
-- [Workshop Speaking Notes](matching_workshop_notes.qmd)
+- [Why We Do Matching](why_matching.qmd)
+- [Why Matching Speaking Notes](why_matching_notes.qmd)
 
 ## Suggested Delivery Flow
 
-1. Keep the workshop deck aligned with `articles/matching_methods_report.qmd`.
-2. Keep the main report open during the worked-example segment of the talk.
-3. Use the speaking notes page when you want timing prompts, transitions, and lab instructions outside presenter view.
-4. Hand off first to the LaLonde main report lab, then to Black Politicians, NSW + CPS, HISP, or Titanic depending on the session goal.
-5. Keep the deck tied to the evaluated-code and QA outputs so the workshop stays auditable.
+1. Use the concept deck as the shortest entry point into the repo's matching logic.
+2. Keep the main report open if you want to move from concept to worked example.
+3. Use the speaking notes page when you want timing prompts and transitions outside presenter view.
+4. Hand off first to the LaLonde main report lab, then to Black Politicians, NSW + CPS, or HISP depending on the session goal.

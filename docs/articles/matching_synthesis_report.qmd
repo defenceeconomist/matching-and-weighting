@@ -243,7 +243,7 @@ The synthesis no longer needs to describe the recommendation list as entirely pr
 
 ### What Has Changed Since The First Synthesis Draft
 
-- The main report now includes a callout-level subclassification bridge that links the conceptual logic in *The Mixtape* to the repo's [Titanic Teaching Lab](../labs/titanic_teaching_lab.qmd) and [NSW + CPS Benchmark Lab](../labs/nsw_cps_benchmark_lab.qmd).
+- The main report now includes a callout-level subclassification bridge that links the conceptual logic in *The Mixtape* to the repo's [NSW + CPS Benchmark Lab](../labs/nsw_cps_benchmark_lab.qmd).
 - The main report now states more explicitly why propensity scores are not the first teaching move in this repo.
 - The main report now includes stronger language about estimand drift when pruning or weight concentration becomes severe, which brings it closer to *The Effect*'s framing.
 - The main report now includes an evaluator escalation rule that more directly reflects Gertler chapter 8's "stronger design first" logic.

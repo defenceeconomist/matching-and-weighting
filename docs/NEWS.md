@@ -15,8 +15,8 @@ It brings together the initial public set of training and reference materials fo
 - Main methods report with HTML and PDF output, plus full-code and QA companion pages
 - Comparative synthesis across *The Mixtape*, *The Effect*, and Gertler chapter 8
 - Companion source-note articles for the three core books and a short propensity-score weighting extension
-- Lab section with the LaLonde report walkthrough, Black Politicians, NSW + CPS, HISP, and Titanic examples
-- Workshop deck and facilitator speaking notes for the teaching version of the materials
+- Lab section with the LaLonde report walkthrough, Black Politicians, NSW + CPS, and HISP examples
+- Concept deck and facilitator speaking notes for the teaching version of the materials
 
 ### Scope Of This First Release
 

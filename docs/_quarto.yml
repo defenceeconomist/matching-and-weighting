@@ -45,14 +45,13 @@ website:
         - labs/black_politicians_lab.qmd
         - labs/hisp_ie_practice_lab.qmd
         - labs/nsw_cps_benchmark_lab.qmd
-        - labs/titanic_teaching_lab.qmd
     - id: slides
       title: "Slides"
       style: "docked"
       contents:
         - slides/index.qmd
-        - slides/matching_workshop.qmd
-        - slides/matching_workshop_notes.qmd
+        - slides/why_matching.qmd
+        - slides/why_matching_notes.qmd
 
 format:
   html:

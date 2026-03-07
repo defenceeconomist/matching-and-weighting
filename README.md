@@ -111,8 +111,6 @@ This renders:
 - `docs/_site/labs/black_politicians_lab_full_code.html`
 - `docs/_site/labs/black_politicians_lab_evaluated_code.html`
 - `docs/_site/labs/black_politicians_lab_qa_log.html`
-- `docs/_site/labs/titanic_teaching_lab.html`
-- `docs/_site/labs/titanic_teaching_lab_full_code.html`
 - `docs/_site/slides/index.html` and slide pages
 - `docs/_site/articles/matching_methods_report_full_code.html`
 - `docs/_site/articles/matching_methods_report_qa_log.html`
@@ -124,11 +122,11 @@ cd docs
 quarto render articles/matching_methods_report.qmd
 ```
 
-If you only want the slide deck, run:
+If you only want the concept slide deck, run:
 
 ```bash
 cd docs
-quarto render slides/matching_workshop.qmd
+quarto render slides/why_matching.qmd
 ```
 
 ## GitLab CI Deployment
