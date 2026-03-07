@@ -17,7 +17,7 @@ project:
     - slides/*.qmd
 
 website:
-  title: "Matching and Weighting (QED)"
+  title: "Matching and Weighting"
   navbar:
     left:
       - href: index.qmd
