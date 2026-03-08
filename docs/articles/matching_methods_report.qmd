@@ -1438,7 +1438,7 @@ The worked example also clarifies the tradeoffs among the methods. Exact matchin
 
 For evaluator practice, the practical implication is straightforward. Matching and weighting should be used when they are the strongest defensible option within the wider quasi-experimental toolkit, not as the default response to non-randomized data [@govuk_qed_slides]. When acceptable balance requires severe pruning, unstable weights, or major drift from the original estimand, the right conclusion may be that the available data do not support the policy question cleanly enough. That is not a failure of the workflow; it is one of its main virtues. Used well, these methods improve evaluation not by manufacturing certainty, but by making the limits of the available comparison explicit.
 
-## Appendix
+## Appendix {.appendix}
 
 ### Appendix A: DAG and Bad Controls Companion
 
