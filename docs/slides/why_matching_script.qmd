@@ -8,8 +8,6 @@ format:
     code-links:
       - text: Why We Do Matching deck
         href: why_matching.html
-      - text: Why Matching Speaking Notes
-        href: why_matching_notes.html
       - text: Main report
         href: ../articles/matching_methods_report.html
 execute:
@@ -23,7 +21,6 @@ Use this page when you want a fuller spoken version of the deck rather than cue 
 
 - Read it once or twice to get the flow into your ear.
 - Trim examples or transitions if you need to get under `20` minutes.
-- Keep the shorter speaking notes open instead if you want prompts rather than a near-verbatim script.
 
 ## Slide-By-Slide Script
 

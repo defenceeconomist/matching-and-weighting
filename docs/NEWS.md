@@ -4,7 +4,7 @@ title: "News"
 
 ## Version 1.0.0
 
-Released: 7 March 2026
+Released: 9 March 2026
 
 This is the first release of the Matching and Weighting site.
 
@@ -16,7 +16,7 @@ It brings together the initial public set of training and reference materials fo
 - Comparative synthesis across *The Mixtape*, *The Effect*, and Gertler chapter 8
 - Companion source-note articles for the three core books and a short propensity-score weighting extension
 - Lab section with the LaLonde report walkthrough, Black Politicians, NSW + CPS, and HISP examples
-- Concept deck and facilitator speaking notes for the teaching version of the materials
+- Concept deck and presenter script for the teaching version of the materials
 
 ### Scope Of This First Release
 

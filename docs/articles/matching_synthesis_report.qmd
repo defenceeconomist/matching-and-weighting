@@ -2,7 +2,7 @@
 title: "Synthesis Report: Main Matching Report Versus The Mixtape, The Effect, and Gertler Chapter 8"
 subtitle: "A comparative cross-walk across framing, methods, diagnostics, and evaluator guidance"
 author: "Luke Heley"
-date: 7 March 2026
+date: 9 March 2026
 format:
   html:
     toc: true
@@ -280,7 +280,7 @@ This appendix records how the synthesis changed once the recommendation set bega
 
 ### Post-Baseline Implementation State Reflected In This Update
 
-As of the current worktree on 7 March 2026, the synthesis has been updated to reflect the following repository changes after `fabfabe`:
+As of the current worktree on 9 March 2026, the synthesis has been updated to reflect the following repository changes after `fabfabe`:
 
 - Modified [matching_methods_report.qmd](matching_methods_report.qmd) to add:
   - a subclassification bridge

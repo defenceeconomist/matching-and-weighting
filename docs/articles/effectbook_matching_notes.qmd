@@ -2,7 +2,7 @@
 title: "Notes on The Effect: Matching"
 subtitle: "Detailed Study Notes for Chapter 14"
 author: "Luke Heley"
-date: 7 March 2026
+date: 9 March 2026
 format:
   html:
     toc: true
@@ -29,7 +29,7 @@ The aim here is to capture:
 
 - Source: [The Effect, Chapter 14 - Matching](https://theeffectbook.net/ch-Matching.html)
 - Author: Nick Huntington-Klein
-- Accessed for these notes: 7 March 2026
+- Accessed for these notes: 9 March 2026
 - Current chapter sections observed in the live rendering:
   - `14.1 Another Way to Close Back Doors`
   - `14.2 Weighted Averages`

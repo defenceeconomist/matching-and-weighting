@@ -26,7 +26,7 @@ The intended audience is evaluators, analysts, and staff who need a practical in
 
 For transparency, this repository records the provider, tool, model version, role in the workflow, and the date of this disclosure. Codex is OpenAI's coding agent and software-engineering assistant, while ChatGPT is OpenAI's general-purpose conversational interface [@openai_codex; @openai_chatgpt].
 
-In this repository, those tools were used as coding and drafting assistants rather than as autonomous authors. They helped with implementation tasks, restructuring content, generating draft text, and supporting documentation and QA work across the site. Most AI-assisted work was completed mainly with ChatGPT `GPT-5.4` [@openai_gpt54] and with Codex models `GPT-5.3-Codex` and `GPT-5.2-Codex` [@openai_gpt53codex; @openai_gpt52codex]. This disclosure was updated on 7 March 2026.
+In this repository, those tools were used as coding and drafting assistants rather than as autonomous authors. They helped with implementation tasks, restructuring content, generating draft text, and supporting documentation and QA work across the site. Most AI-assisted work was completed mainly with ChatGPT `GPT-5.4` [@openai_gpt54] and with Codex models `GPT-5.3-Codex` and `GPT-5.2-Codex` [@openai_gpt53codex; @openai_gpt52codex]. This disclosure was updated on 9 March 2026.
 
 The human analyst remained responsible for the substantive direction of the project. The analyst planned the work, delegated bounded tasks to Codex, reviewed outputs, iterated drafts, checked technical and editorial quality, and decided what to keep, revise, or reject.
 
@@ -38,13 +38,13 @@ The site is split into three main areas:
 
 - `Articles`: longer methods write-ups and their supporting audit materials
 - `Labs`: one report-based walkthrough plus worked examples that extend the core material to other datasets and teaching scenarios
-- `Slides`: one delivery deck plus standalone facilitator notes for the workshop and lab handoff
+- `Slides`: one delivery deck plus standalone presenter script for the workshop and lab handoff
 
 If you are new to the site, the recommended sequence is:
 
 1. Start with the main report.
 2. Use the full-code and QA pages when you want implementation detail or audit traceability.
-3. Use the workshop deck and speaking notes when you want the delivery-ready teaching version.
+3. Use the workshop deck and presenter script when you want the delivery-ready teaching version.
 4. Move into the LaLonde main report lab first, then the other labs as extensions.
 
 ## Articles
@@ -75,4 +75,4 @@ A dedicated slides section now supports a short concept-first introduction to ma
 
 - [Slides Hub](slides/index.qmd)
 - [Why We Do Matching](slides/why_matching.qmd)
-- [Why Matching Speaking Notes](slides/why_matching_notes.qmd)
+- [Why Matching Presenter Script](slides/why_matching_script.qmd)

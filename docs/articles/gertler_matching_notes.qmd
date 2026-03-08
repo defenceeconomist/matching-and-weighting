@@ -2,7 +2,7 @@
 title: "Notes on Gertler et al.: Matching"
 subtitle: "Detailed Study Notes for Chapter 8"
 author: "Luke Heley"
-date: 7 March 2026
+date: 9 March 2026
 format:
   html:
     toc: true
@@ -34,7 +34,7 @@ The aim here is to capture:
   - Gertler, Martinez, Premand, Rawlings, and Vermeersch
   - World Bank, 2010
   - DOI: `10.1596/978-0-8213-8541-8`
-- Accessed for these notes: 7 March 2026
+- Accessed for these notes: 9 March 2026
 - Main extracted sections used here:
   - `Constructing an Artificial Comparison Group`
   - `Key Concept`

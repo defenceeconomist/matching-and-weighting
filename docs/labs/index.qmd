@@ -4,7 +4,7 @@ title: "Labs"
 
 This section starts with a guided `lalonde` walkthrough that mirrors the main report, then collects the follow-on worked examples that extend the same workflow to other datasets.
 
-For a short concept-first overview before these exercises, start with [Why We Do Matching](../slides/why_matching.qmd) and [Why Matching Speaking Notes](../slides/why_matching_notes.qmd).
+For a short concept-first overview before these exercises, start with [Why We Do Matching](../slides/why_matching.qmd) and [Why Matching Presenter Script](../slides/why_matching_script.qmd).
 
 Use these pages as part of the same design-first workflow:
 
@@ -16,14 +16,14 @@ Use these pages as part of the same design-first workflow:
 
 | Lab | Dataset(s) | Current status | Link |
 |---|---|---|---|
-| LaLonde Main Report Lab | `MatchIt::lalonde` | Guided worksheet aligned to the main report | [Open](lalonde_main_report_lab.qmd) · [Main report](../articles/matching_methods_report.qmd) · [Full code](../articles/matching_methods_report_full_code.qmd) · [QA log](../articles/matching_methods_report_qa_log.qmd) |
+| LaLonde Main Report Lab | `MatchIt::lalonde` | Guided worksheet aligned to the main report | [Open](lalonde_main_report_lab.qmd) · [Main report](../articles/matching_methods_report.qmd) · [Full code](../articles/matching_methods_report_full_code.qmd) · [Evaluated code](lalonde_main_report_lab_evaluated_code.qmd) · [QA log](../articles/matching_methods_report_qa_log.qmd) |
 | Black Politicians Lab | `causaldata::black_politicians` | Training aid | [Open](black_politicians_lab.qmd) · [Full code](black_politicians_lab_full_code.qmd) · [Evaluated code](black_politicians_lab_evaluated_code.qmd) · [QA log](black_politicians_lab_qa_log.qmd) |
 | HISP IE in Practice Lab | `evaluation.dta` converted to `evaluation.csv` from the HISP case-study bundle | Stata-to-R replication lab | [Open](hisp_ie_practice_lab.qmd) · [Full code](hisp_ie_practice_lab_full_code.qmd) · [Evaluated code](hisp_ie_practice_lab_evaluated_code.qmd) · [QA log](hisp_ie_practice_lab_qa_log.qmd) |
 | NSW + CPS Benchmark Lab | `causaldata::nsw_mixtape`, `causaldata::cps_mixtape` | Benchmark lab | [Open](nsw_cps_benchmark_lab.qmd) · [Full code](nsw_cps_benchmark_lab_full_code.qmd) · [Evaluated code](nsw_cps_benchmark_lab_evaluated_code.qmd) · [QA log](nsw_cps_benchmark_lab_qa_log.qmd) |
 
 ## Recommended Sequence
 
-1. Use the concept deck and speaking notes first if you want the shortest delivery version of the matching logic.
+1. Use the concept deck and presenter script first if you want the shortest delivery version of the matching logic.
 2. Start with the LaLonde main report lab if you want the worksheet version of the core `ATT` comparison.
 3. Move to the Black Politicians lab for the first dataset extension with richer covariates.
 4. Use the NSW + CPS benchmark lab when you want to compare observational designs against an experimental reference.

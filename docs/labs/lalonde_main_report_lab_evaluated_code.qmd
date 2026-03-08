@@ -1,0 +1,88 @@
+---
+title: "LaLonde Main Report Lab: Evaluated Code"
+format:
+  html:
+    toc: true
+    code-links:
+      - text: Lab
+        href: lalonde_main_report_lab.html
+      - text: Main Report
+        href: ../articles/matching_methods_report.html
+      - text: Full Code
+        href: ../articles/matching_methods_report_full_code.html
+      - text: QA Log
+        href: ../articles/matching_methods_report_qa_log.html
+      - text: Evaluated Script
+        href: lalonde_main_report_lab_evaluated_code.R
+execute:
+  echo: false
+  eval: true
+  warning: false
+  message: false
+---
+
+This page runs the evaluated LaLonde main-lab script and shows the key processed outputs used in the guided worksheet.
+
+```{r}
+#| include: false
+source("lalonde_main_report_lab_evaluated_code.R", local = knitr::knit_global())
+```
+
+## Evaluated Script
+
+```{r}
+#| results: asis
+cat("```r\n")
+cat(readLines("lalonde_main_report_lab_evaluated_code.R"), sep = "\n")
+cat("\n```")
+```
+
+## Processed Data Preview
+
+```{r}
+dat |>
+  dplyr::select(treat, outcome, dplyr::all_of(design_covariates)) |>
+  head(10)
+```
+
+## Raw Comparison Summary
+
+```{r}
+pre_match_summary
+```
+
+## Baseline Balance Benchmark
+
+```{r}
+unadjusted_balance
+```
+
+## Exact Matching Outputs
+
+```{r}
+exact_retention
+exact_effect
+```
+
+## CEM Outputs
+
+```{r}
+cem_comparison
+cem_effect
+```
+
+## Entropy-Balancing Outputs
+
+```{r}
+ebal_tuning_comparison
+ebal_weight_diagnostics
+ebal_effect
+```
+
+## Side-By-Side Comparison Tables
+
+```{r}
+comparison_balance
+comparison_information
+treatment_effect_summary
+```

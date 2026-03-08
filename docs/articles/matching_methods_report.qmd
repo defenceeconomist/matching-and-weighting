@@ -2,7 +2,7 @@
 title: "Matching and Weighting for Causal Inference"
 subtitle: "Exact Matching, Coarsened Exact Matching, and Entropy Balancing"
 author: "Luke Heley"
-date: 7 March 2026
+date: 9 March 2026
 bibliography: ../references.bib
 link-citations: true
 format:
@@ -54,7 +54,7 @@ But the practical value of these methods depends on using them skeptically. They
 
 ### Why Match: Reduce Model Dependence
 
-One of the clearest practical arguments for matching is that it can reduce model dependence^[Model dependence means the estimated effect changes materially when the analyst changes the specification of the outcome model.] rather than merely improve a balance table. If treated and untreated units are badly mismatched in the raw data, the estimated treatment effect can depend heavily on functional-form choices, extrapolation across regions with weak support, and analyst discretion about interactions, nonlinearities, and trimming rules. In that setting, a regression may still return a coefficient, but the comparison underneath it is weak [@ho2007matching]. Matching is useful because it can remove or down-weight the most implausible treated-control comparisons before the outcome model is fit, which makes the remaining estimate less hostage to arbitrary specification choices. This "reduce model dependence" argument is a particularly effective teaching bridge because it turns the motivation for matching into a problem of design quality rather than software preference [@heiss2026_randomization_matching_slides].
+One of the clearest practical arguments for matching is that it can reduce model dependence^[Model dependence means the estimated effect changes materially when the analyst changes the specification of the outcome model.] rather than merely improve a balance table. If treated and untreated units are badly mismatched in the raw data, the estimated treatment effect can depend heavily on functional-form choices, extrapolation across regions with weak support, and analyst discretion about interactions, nonlinearities, and trimming rules. In that setting, a regression may still return a coefficient, but the comparison underneath it is weak [@ho2007matching]. Matching is useful because it can remove or down-weight the most implausible treated-control comparisons before the outcome model is fit, which makes the remaining estimate less hostage to arbitrary specification choices. This "reduce model dependence" argument is a particularly effective teaching bridge because it turns the motivation for matching into a problem of design quality rather than software preference [@heiss2026_randomization_matching_content].
 
 ::: {.callout-note}
 ## Conceptual Bridge: Start With Subclassification
@@ -86,7 +86,7 @@ That said, design-stage adjustment should not be oversold. These methods can onl
 
 ### Preprocess First, Estimate Second
 
-A useful shorthand for evaluator training is to separate the workflow into two stages: preprocessing and estimation [@heiss2026_randomization_matching_slides; @heiss2026_randomization_matching_content]. In preprocessing, the analyst defines the estimand, chooses defensible pre-treatment covariates, inspects raw imbalance and overlap, and then uses matching or weighting to redesign the comparison. In estimation, the analyst takes that redesigned sample or set of weights as given and estimates the treatment effect with methods that respect the design. This split matters because it discourages a common failure mode in observational work: adjusting the design repeatedly until the estimated effect looks appealing. It also clarifies that matching is not itself the estimand or the final model. It is the step that decides which comparisons the later model is allowed to summarize.
+A useful shorthand for evaluator training is to separate the workflow into two stages: preprocessing and estimation [@heiss2026_randomization_matching_content]. In preprocessing, the analyst defines the estimand, chooses defensible pre-treatment covariates, inspects raw imbalance and overlap, and then uses matching or weighting to redesign the comparison. In estimation, the analyst takes that redesigned sample or set of weights as given and estimates the treatment effect with methods that respect the design. This split matters because it discourages a common failure mode in observational work: adjusting the design repeatedly until the estimated effect looks appealing. It also clarifies that matching is not itself the estimand or the final model. It is the step that decides which comparisons the later model is allowed to summarize.
 
 ### Post-Adjustment Inference Is Part of the Design
 
@@ -183,7 +183,7 @@ The same caution applies when treatment is poorly defined, interference is likel
 
 ### Randomized Controlled Trials (RCTs) as a Benchmark, Not a Mythic Standard
 
-Randomized trials are still the most useful benchmark for thinking about comparability, but they should be treated as a rubric rather than as a magical "gold standard" that resolves every validity problem [@heiss2026_randomization_matching_slides]. A randomized controlled trial (RCT) helps break the link between treatment assignment and many pre-treatment confounders, which is why it remains the clearest baseline for what observational adjustment is trying to approximate. But randomized studies can still face attrition, noncompliance, weak measurement, and external-validity limits. This is a helpful corrective in matching pedagogy: the goal is not to imitate a mythologized experiment, but to ask which design gets us closest to a credible causal comparison under the actual constraints of the evaluation. Framed that way, matching becomes a second-best design repair tool relative to randomization, not an all-purpose substitute for it.
+Randomized trials are still the most useful benchmark for thinking about comparability, but they should be treated as a rubric rather than as a magical "gold standard" that resolves every validity problem [@heiss2026_randomization_matching_content]. A randomized controlled trial (RCT) helps break the link between treatment assignment and many pre-treatment confounders, which is why it remains the clearest baseline for what observational adjustment is trying to approximate. But randomized studies can still face attrition, noncompliance, weak measurement, and external-validity limits. This is a helpful corrective in matching pedagogy: the goal is not to imitate a mythologized experiment, but to ask which design gets us closest to a credible causal comparison under the actual constraints of the evaluation. Framed that way, matching becomes a second-best design repair tool relative to randomization, not an all-purpose substitute for it.
 
 ## Data and Study Design
 

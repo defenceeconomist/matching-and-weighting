@@ -2,7 +2,7 @@
 title: "Why We Do Matching"
 subtitle: "A causal-inference deck on confounding, comparability, and design"
 author: "Luke Heley"
-date: 7 March 2026
+date: 9 March 2026
 bibliography: ../references.bib
 format:
   revealjs:
@@ -78,7 +78,7 @@ Build a comparison group that is credible enough to stand in for the missing out
 
 - if treatment is randomized, the treated and untreated groups are comparable in expectation
 - that is why `RCT`s are the clearest benchmark for causal comparison quality
-- but `RCT`s are a benchmark, not magic: attrition, noncompliance, and external validity still matter [@heiss2026_randomization_matching_slides]
+- but `RCT`s are a benchmark, not magic: attrition, noncompliance, and external validity still matter [@heiss2026_randomization_matching_content]
 
 ## Why Matching Enters The Story
 
@@ -317,7 +317,7 @@ Matching is useful because imbalance creates model dependence.
 - raw mismatch forces the outcome model to extrapolate
 - extrapolation creates analyst discretion about specification
 - analyst discretion can move the estimate even when the causal story is unchanged
-- matching trims or down-weights the least credible comparisons first [@heiss2026_randomization_matching_slides; @ho2007matching]
+- matching trims or down-weights the least credible comparisons first [@heiss2026_randomization_matching_content; @ho2007matching]
 
 ## Why Matching Appeals In Practice
 

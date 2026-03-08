@@ -2,7 +2,7 @@
 title: "LaLonde Background Appendix"
 subtitle: "Notes on what the LaLonde benchmark still teaches matching four decades later"
 author: "Luke Heley"
-date: 7 March 2026
+date: 9 March 2026
 bibliography: ../references.bib
 format:
   html:

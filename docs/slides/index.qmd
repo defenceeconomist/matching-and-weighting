@@ -2,18 +2,16 @@
 title: "Slides"
 ---
 
-Use this section for the short concept deck and its standalone facilitator notes.
+Use this section for the short concept deck and its standalone presenter script.
 
 ## Slide Materials
 
 - [Why We Do Matching](why_matching.qmd)
-- [Why Matching Speaking Notes](why_matching_notes.qmd)
 - [Why Matching Presenter Script](why_matching_script.qmd)
 
 ## Suggested Delivery Flow
 
 1. Use the concept deck as the shortest entry point into the repo's matching logic.
 2. Keep the main report open if you want to move from concept to worked example.
-3. Use the speaking notes page when you want timing prompts and transitions outside presenter view.
-4. Use the presenter script when you want a fuller talk track for first delivery or rehearsal.
-5. Hand off first to the LaLonde main report lab, then to Black Politicians, NSW + CPS, or HISP depending on the session goal.
+3. Use the presenter script when you want a fuller talk track for first delivery or rehearsal.
+4. Hand off first to the LaLonde main report lab, then to Black Politicians, NSW + CPS, or HISP depending on the session goal.

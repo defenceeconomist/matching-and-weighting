@@ -2,7 +2,7 @@
 title: "Notes on The Mixtape: Matching and Subclassification"
 subtitle: "Detailed Study Notes for Chapter 5"
 author: "Luke Heley"
-date: 7 March 2026
+date: 9 March 2026
 format:
   html:
     toc: true
@@ -29,7 +29,7 @@ The aim here is to capture:
 
 - Source: [The Mixtape, Chapter 5 - Matching and Subclassification](https://mixtape.scunning.com/05-matching_and_subclassification)
 - Author: Scott Cunningham
-- Accessed for these notes: 7 March 2026
+- Accessed for these notes: 9 March 2026
 - Current chapter sections observed in the live rendering:
   - `5.1 Subclassification`
   - `5.1.1 Some background`

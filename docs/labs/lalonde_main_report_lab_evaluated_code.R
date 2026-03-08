@@ -1,69 +1,3 @@
----
-title: "Lab: LaLonde Main Report Walkthrough"
-format:
-  html:
-    code-links:
-      - text: Main Report
-        href: ../articles/matching_methods_report.html
-      - text: Full Code
-        href: ../articles/matching_methods_report_full_code.html
-      - text: Evaluated Code
-        href: lalonde_main_report_lab_evaluated_code.html
-      - text: QA Log
-        href: ../articles/matching_methods_report_qa_log.html
-execute:
-  echo: true
-  eval: false
----
-
-## How To Use This Page
-
-Use this page as the guided lab version of the main report.
-
-- Keep the [main report](../articles/matching_methods_report.qmd) open in another tab.
-- Run each step in order rather than skipping to the estimates.
-- Record balance, retention, and weighting cost as you go.
-- End with a design judgement, not just a preferred coefficient.
-
-::: {.callout-note}
-The code is shown but not executed when the site is rendered. That keeps the page readable while preserving the main-report workflow for live teaching and self-study.
-:::
-
-## Training Goal
-
-Turn the report's `lalonde` comparison into a repeatable lab exercise:
-
-1. define the `ATT` before any adjustment choice
-2. inspect the raw treated-versus-control comparison
-3. compare exact matching, `CEM`, and entropy balancing on the same covariate set
-4. judge each method on balance, overlap, retention, and weight concentration
-5. decide which design you would defend for programme participants
-
-## Dataset At A Glance
-
-This lab uses `MatchIt::lalonde`, the same dataset used in the main report.
-
-- Treated group: National Supported Work programme participants
-- Comparison group: observational controls
-- Outcome: `re78`
-- Design covariates: `age`, `educ`, `race`, `married`, `nodegree`, `re74`, `re75`
-- Target estimand: `ATT`
-
-This is the cleanest place to practice the repo's design-first workflow because the data are already familiar from the report and the tradeoffs are visible quickly.
-
-## What To Hand Back
-
-By the end of the lab, you should be able to report:
-
-- the worst raw imbalance before adjustment
-- the strongest exact-matching result you can defend
-- the `CEM` retention-versus-balance tradeoff
-- the entropy-balancing control `ESS` and maximum control weight
-- the design you would defend, plus one limitation you would still state clearly
-
-## Step 1: Load Packages And Prepare The Data
-
-```{r}
 required_packages <- c(
   "MatchIt",
   "WeightIt",
@@ -102,16 +36,7 @@ design_covariates <- c(
 dat |>
   select(treat, outcome, all_of(design_covariates)) |>
   glimpse()
-```
 
-Checkpoint:
-
-- Is the estimand clear before any method is chosen?
-- Are all design covariates measured before the outcome?
-
-## Step 2: Describe The Raw Comparison
-
-```{r}
 pre_match_summary <- dat |>
   group_by(treat) |>
   summarise(
@@ -133,17 +58,7 @@ pre_match_summary <- dat |>
   mutate(across(-c(group, n), ~ round(.x, 3)))
 
 pre_match_summary
-```
 
-What to look for:
-
-- lower prior earnings in the treated group
-- lower marriage rates in the treated group
-- whether the untreated group looks remotely usable without design work
-
-## Step 3: Build The Baseline Balance Benchmark
-
-```{r}
 m_out0 <- matchit(
   treat ~ age + educ + race + married + nodegree + re74 + re75,
   data = dat,
@@ -162,9 +77,7 @@ unadjusted_balance <- bal.tab(
 )
 
 unadjusted_balance
-```
 
-```{r fig.height=5.5}
 love.plot(
   m_out0,
   stats = "mean.diffs",
@@ -173,16 +86,7 @@ love.plot(
   thresholds = c(m = 0.1),
   var.order = "unadjusted"
 )
-```
 
-Checkpoint:
-
-- Which covariates are most imbalanced before adjustment?
-- Does the raw sample fail on one variable or on most of the design?
-
-## Step 4: Exact Matching On A Reduced Discrete Set
-
-```{r}
 m_exact <- matchit(
   treat ~ race + married + nodegree + educ,
   data = dat,
@@ -210,9 +114,7 @@ exact_retention <- tibble(
 )
 
 exact_retention
-```
 
-```{r}
 summary(m_exact, un = TRUE)
 
 exact_balance <- bal.tab(
@@ -226,9 +128,7 @@ exact_balance <- bal.tab(
 )
 
 exact_balance
-```
 
-```{r}
 fit_exact <- lm(outcome ~ treat, data = matched_exact, weights = weights)
 
 exact_effect <- {
@@ -243,17 +143,7 @@ exact_effect <- {
   mutate(across(c(estimate, std_error, p_value), ~ round(.x, 3)))
 
 exact_effect
-```
 
-What to discuss:
-
-- Exact matching is transparent because the rules are visible.
-- The price is that important continuous variables still sit outside the exact constraints.
-- If `re74` remains above `0.1`, exact matching has not fully solved the design problem.
-
-## Step 5: Compare Two CEM Specifications
-
-```{r}
 m_cem_default <- matchit(
   treat ~ age + educ + race + married + nodegree + re74 + re75,
   data = dat,
@@ -318,9 +208,7 @@ cem_comparison <- tibble(
   mutate(across(where(is.numeric), ~ round(.x, 3)))
 
 cem_comparison
-```
 
-```{r}
 fit_cem <- lm(outcome ~ treat, data = matched_cem, weights = weights)
 
 cem_effect <- {
@@ -335,16 +223,7 @@ cem_effect <- {
   mutate(across(c(estimate, std_error, p_value), ~ round(.x, 3)))
 
 cem_effect
-```
 
-Checkpoint:
-
-- Which `CEM` version would you defend?
-- How much treated retention are you willing to lose for stronger balance?
-
-## Step 6: Compare Entropy-Balancing Specifications
-
-```{r}
 w_ebal_default <- weightit(
   treat ~ age + educ + race + married + nodegree + re74 + re75,
   data = dat,
@@ -404,9 +283,7 @@ ebal_tuning_comparison <- tibble(
   mutate(across(where(is.numeric), ~ round(.x, 3)))
 
 ebal_tuning_comparison
-```
 
-```{r}
 w_ebal <- w_ebal_default
 ebal_summary <- ebal_default_summary
 
@@ -444,9 +321,7 @@ ebal_balance <- bal.tab(
 )
 
 ebal_balance
-```
 
-```{r}
 fit_ebal <- lm_weightit(
   outcome ~ treat,
   data = dat,
@@ -465,16 +340,7 @@ ebal_effect <- {
   mutate(across(c(estimate, std_error, p_value), ~ round(.x, 3)))
 
 ebal_effect
-```
 
-What to discuss:
-
-- Entropy balancing can preserve the treated population while shrinking the control information.
-- The weighting design is only defensible if the balance gain is worth the `ESS` loss and weight concentration.
-
-## Step 7: Compare The Methods Side By Side
-
-```{r}
 comparison_balance <- tibble(
   method = c("Raw sample", "Exact matching", "CEM", "Entropy balancing"),
   max_abs_smd = c(
@@ -493,9 +359,7 @@ comparison_balance <- tibble(
   mutate(across(where(is.numeric), ~ round(.x, 3)))
 
 comparison_balance
-```
 
-```{r}
 comparison_information <- tibble(
   method = c("Exact matching", "CEM", "Entropy balancing"),
   treated_units_used = c(
@@ -517,9 +381,7 @@ comparison_information <- tibble(
   mutate(across(where(is.numeric), ~ round(.x, 3)))
 
 comparison_information
-```
 
-```{r}
 treatment_effect_summary <- bind_rows(
   exact_effect,
   cem_effect,
@@ -527,23 +389,4 @@ treatment_effect_summary <- bind_rows(
 )
 
 treatment_effect_summary
-```
 
-## Step 8: Write The Design Judgement
-
-Use your outputs to answer all five:
-
-1. Which method gave the strongest observed balance?
-2. Which method stayed closest to the original treated population?
-3. Which method paid the highest information cost?
-4. Which design would you defend for an evaluator-facing `ATT`?
-5. What limitation would you still state even after adjustment?
-
-## Suggested Close
-
-If you want to go deeper after this page:
-
-- read the [main report](../articles/matching_methods_report.qmd) for the full written argument
-- use the [full code companion](../articles/matching_methods_report_full_code.qmd) if you want the executed end-to-end script
-- use the [evaluated code page](lalonde_main_report_lab_evaluated_code.qmd) to see processed outputs from the lab workflow
-- move next to the [Black Politicians Lab](black_politicians_lab.qmd) for the first dataset extension
