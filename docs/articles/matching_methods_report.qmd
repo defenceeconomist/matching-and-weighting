@@ -13,7 +13,7 @@ format:
     code-links:
       - text: Full Code
         href: matching_methods_report_full_code.html
-      - text: QA Log
+      - text: Quality Assurance (QA) Log
         href: matching_methods_report_qa_log.html
   pdf:
     toc: true
@@ -27,8 +27,8 @@ execute:
 
 ## Executive Summary
 
-- This report compares exact matching, coarsened exact matching (CEM), and entropy balancing as design-stage tools for estimating an `ATT` from observational data.
-- The report anchors the observational estimates to the NSW experimental benchmark from `causaldata::nsw_mixtape` while estimating the adjustment methods on `MatchIt::lalonde`, which replaces the NSW controls with a PSID comparison sample.
+- This report compares exact matching, coarsened exact matching (CEM), and entropy balancing as design-stage tools for estimating an average treatment effect on the treated (`ATT`) from observational data.
+- The report anchors the observational estimates to the National Supported Work (NSW) experimental benchmark from `causaldata::nsw_mixtape` while estimating the adjustment methods on `MatchIt::lalonde`, which replaces the NSW controls with a Panel Study of Income Dynamics (PSID) comparison sample.
 - In the `lalonde` worked example, all three adjusted designs produce a positive programme-effect estimate, but they do so with different tradeoffs in transparency, covariate balance, retained information, and agreement with the experimental benchmark.
 - Exact matching is the most transparent design, but it remains a partial solution here because feasible exact constraints leave residual imbalance on prior earnings.
 - The report's tuned CEM specification is the strongest matched-sample compromise: it brings all reported covariates below the conventional absolute standardized-difference threshold of `0.1`, but it does so by pruning the treated sample from `185` units to `81`.
@@ -44,7 +44,7 @@ The methods should also be assessed critically rather than taught as a menu of e
 
 The report does not use propensity score matching as the main teaching example. That omission is deliberate. Propensity scores remain widely used, but in an introductory evaluation setting they can compress the design problem into a single modeled quantity^[A propensity score is the estimated probability of receiving treatment given the observed background variables. In plain English, it turns many characteristics into one score, which can make the design easier to run but harder to inspect.] and can distract attention from whether specific covariates are actually balanced. For evaluator training, the selected methods better expose the relationship between covariate balance, sample retention, and the target population [@ho2011matchit; @govuk_qed_slides]. A short extension on where propensity-score weighting fits is included in [Appendix B: Propensity-Score Weighting Companion](#appendix-b-propensity-score-weighting-companion).
 
-The report is written for an evaluation training context, with particular relevance for programme and policy evaluation in government. That framing matters. The Evaluation Task Force presents matching as one option within a wider quasi-experimental toolkit^[A quasi-experimental design estimates causal effects without random assignment, usually by exploiting timing, thresholds, policy rules, or carefully constructed comparison groups.] that also includes difference-in-differences, regression discontinuity, synthetic control, and interrupted time-series analysis^[In plain English: difference-in-differences compares changes over time, regression discontinuity uses an eligibility cutoff, synthetic control builds a weighted comparison case, and interrupted time-series tracks outcomes before and after a change.] [@govuk_evaluation_academy_resources; @govuk_qed_slides]. A good methods report should therefore do more than explain how matching works; it should also explain when matching is the strongest available design, when it is a second-best compromise, and when it should be rejected in favour of a more credible alternative.
+The report is written for an evaluation training context, with particular relevance for programme and policy evaluation in government. That framing matters. The Evaluation Task Force presents matching as one option within a wider quasi-experimental toolkit^[A quasi-experimental design estimates causal effects without random assignment, usually by exploiting timing, thresholds, policy rules, or carefully constructed comparison groups.] that also includes difference-in-differences, regression discontinuity, synthetic control, and pre-post design^[New versions of the evaluation academy (unpublished) replace pre-post design with interrupted time series analysis] ^[In plain English: difference-in-differences compares changes over time, regression discontinuity uses an eligibility cutoff, synthetic control builds a weighted comparison case, and pre-post design tracks outcomes before and after a change.] [@govuk_evaluation_academy_resources; @govuk_qed_slides]. A good methods report should therefore do more than explain how matching works; it should also explain when matching is the strongest available design, when it is a second-best compromise, and when it should be rejected in favour of a more credible alternative.
 
 ### Relevance for Evaluation Practice
 
@@ -65,7 +65,7 @@ Before thinking about algorithms, it helps to think in support cells. The simple
 - Exact matching applies that same logic to the raw covariate values.
 - CEM applies the same logic after replacing some raw values with broader, policy-legible bins.
 
-For a benchmarked observational design closer to the NSW discussion in *The Mixtape*, see the [NSW + CPS Benchmark Lab](../labs/nsw_cps_benchmark_lab.qmd).
+For a benchmarked observational design closer to the NSW discussion in *The Mixtape*, see the [NSW + Current Population Survey (CPS) Benchmark Lab](../labs/nsw_cps_benchmark_lab.qmd).
 :::
 
 ## Design Principles
@@ -179,9 +179,9 @@ Matching should not be presented as the default response to observational data. 
 
 The same caution applies when treatment is poorly defined, interference is likely, selection depends heavily on unobserved judgement or motivation, or overlap is so weak that adjustment requires aggressive pruning or extreme weights. In those circumstances, producing a matched sample can create a false sense of design quality without solving the underlying identification problem. A good evaluator workflow therefore treats matching as one option in a broader quasi-experimental toolkit: useful when rich pre-treatment covariates are available and stronger designs are not, but secondary when the data support a more internally valid strategy [@govuk_qed_slides].
 
-### RCTs as a Benchmark, Not a Mythic Standard
+### Randomized Controlled Trials (RCTs) as a Benchmark, Not a Mythic Standard
 
-Randomized trials are still the most useful benchmark for thinking about comparability, but they should be treated as a rubric rather than as a magical "gold standard" that resolves every validity problem [@heiss2026_randomization_matching_slides]. Randomization helps break the link between treatment assignment and many pre-treatment confounders, which is why it remains the clearest baseline for what observational adjustment is trying to approximate. But randomized studies can still face attrition, noncompliance, weak measurement, and external-validity limits. This is a helpful corrective in matching pedagogy: the goal is not to imitate a mythologized experiment, but to ask which design gets us closest to a credible causal comparison under the actual constraints of the evaluation. Framed that way, matching becomes a second-best design repair tool relative to randomization, not an all-purpose substitute for it.
+Randomized trials are still the most useful benchmark for thinking about comparability, but they should be treated as a rubric rather than as a magical "gold standard" that resolves every validity problem [@heiss2026_randomization_matching_slides]. A randomized controlled trial (RCT) helps break the link between treatment assignment and many pre-treatment confounders, which is why it remains the clearest baseline for what observational adjustment is trying to approximate. But randomized studies can still face attrition, noncompliance, weak measurement, and external-validity limits. This is a helpful corrective in matching pedagogy: the goal is not to imitate a mythologized experiment, but to ask which design gets us closest to a credible causal comparison under the actual constraints of the evaluation. Framed that way, matching becomes a second-best design repair tool relative to randomization, not an all-purpose substitute for it.
 
 ## Data and Study Design
 
@@ -797,7 +797,7 @@ w_ebal_moments <- weightit(
   moments = c(age = 2, re74 = 2, re75 = 2)
 )
 
-# Cache model summaries used for ESS and weight diagnostics.
+# Cache model summaries used for effective sample size and weight diagnostics.
 ebal_default_summary <- summary(w_ebal_default)
 ebal_moments_summary <- summary(w_ebal_moments)
 
@@ -861,7 +861,7 @@ ebal_summary <- ebal_default_summary
 dat_ebal <- dat |>
   mutate(ebal_weight = w_ebal$weights)
 
-# Report retained sample sizes, ESS, and weight dispersion indicators.
+# Report retained sample sizes, effective sample size, and weight dispersion indicators.
 ebal_weight_diagnostics <- tibble(
   metric = c(
     "Treated units",
@@ -1028,7 +1028,7 @@ ggplot(
   geom_text(nudge_y = 0.01, check_overlap = TRUE, size = 3) +
   labs(
     x = "Retained treated share",
-    y = "Maximum absolute adjusted SMD"
+    y = "Maximum absolute adjusted standardized mean difference"
   ) +
   coord_cartesian(ylim = c(0, max(cem_robustness$max_abs_adjusted_smd) + 0.03))
 ```
@@ -1328,7 +1328,7 @@ Within that narrower choice set, exact matching is best when interpretability is
 
 This report does not use propensity score matching as the main teaching route for a reason. In evaluator training, propensity scores can encourage analysts to focus on the estimated score rather than on the covariates, overlap, and retained population that actually determine design quality. The more transparent path is to teach exact matching and CEM as explicit design tools and entropy balancing as a weighting method with direct balance constraints [@govuk_qed_slides; @ho2011matchit]. Propensity score methods still exist within the broader toolkit, but they should not be treated as the automatic entry point for applied evaluation.
 
-For readers who do need that extension, the shortest bridge from this report is [Appendix B: Propensity-Score Weighting Companion](#appendix-b-propensity-score-weighting-companion). For a benchmark application that maps more directly onto *The Mixtape*'s NSW discussion, the next repo stop is the [NSW + CPS Benchmark Lab](../labs/nsw_cps_benchmark_lab.qmd).
+For readers who do need that extension, the shortest bridge from this report is [Appendix B: Propensity-Score Weighting Companion](#appendix-b-propensity-score-weighting-companion). For a benchmark application that maps more directly onto *The Mixtape*'s NSW discussion, the next repo stop is the [NSW + Current Population Survey (CPS) Benchmark Lab](../labs/nsw_cps_benchmark_lab.qmd).
 
 ## Treatment Effect Summary
 
@@ -1380,7 +1380,7 @@ treatment_effect_summary <- bind_rows(
       paste(sum(matched_cem$treat == 0), "matched controls"),
       paste(
         sum(dat$treat == 0),
-        "controls; ESS",
+        "controls; effective sample size",
         round(ebal_summary$effective.sample.size["Weighted", "Control"], 3)
       )
     ),
@@ -1397,8 +1397,8 @@ treatment_effect_summary <- bind_rows(
 treatment_effect_summary |>
   rename(
     `Std. error` = std_error,
-    `95% CI low` = conf_low,
-    `95% CI high` = conf_high,
+    `95% confidence interval low` = conf_low,
+    `95% confidence interval high` = conf_high,
     `P-value` = p_value,
     `Treated units used` = treated_units_used,
     `Control basis` = control_basis,
@@ -1523,7 +1523,7 @@ What this means:
 #### How To Use This Appendix In The Repo
 
 - Use this appendix alongside the covariate-selection sections above when specifying design covariates.
-- Use the [NSW + CPS Benchmark Lab](../labs/nsw_cps_benchmark_lab.qmd) for a benchmarked observational case that applies the same design-first logic in a fuller observational setting.
+- Use the [NSW + Current Population Survey (CPS) Benchmark Lab](../labs/nsw_cps_benchmark_lab.qmd) for a benchmarked observational case that applies the same design-first logic in a fuller observational setting.
 - Use this appendix as a compact visual explanation for why the repo excludes post-treatment variables and warns against kitchen-sink covariate selection.
 
 #### Bottom Line
@@ -1636,7 +1636,7 @@ If you want the shortest practical route through the repo, use this order:
 1. Read the main sections of this report for the design-first comparison.
 2. Read the [*The Effect* notes](effectbook_matching_notes.qmd) for the weighting-first conceptual frame.
 3. Use this appendix to connect that frame back to evaluator practice.
-4. If you want a benchmarked observational case, continue to the [NSW + CPS Benchmark Lab](../labs/nsw_cps_benchmark_lab.qmd).
+4. If you want a benchmarked observational case, continue to the [NSW + Current Population Survey (CPS) Benchmark Lab](../labs/nsw_cps_benchmark_lab.qmd).
 
 #### Bottom Line
 
