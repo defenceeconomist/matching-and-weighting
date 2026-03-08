@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Luke Heley">
+<meta name="dcterms.date" content="2026-03-07">
+
+<title>Mixtape Notes: NSW Benchmark From Section 5.3.4 Onward – Matching and Weighting</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-b337f537912f5ab074b938eebad4c5d7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Matching and Weighting</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../NEWS.html"> 
+<span class="menu-text">News</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../articles/index.html"> 
+<span class="menu-text">Articles</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../labs/index.html"> 
+<span class="menu-text">Labs</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../slides/index.html"> 
+<span class="menu-text">Slides</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/defenceeconomist/matching-and-weighting/"> <i class="bi bi-github" role="img" aria-label="GitHub repository">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#purpose" id="toc-purpose" class="nav-link active" data-scroll-target="#purpose">Purpose</a></li>
+  <li><a href="#what-section-5.3.4-onward-is-doing" id="toc-what-section-5.3.4-onward-is-doing" class="nav-link" data-scroll-target="#what-section-5.3.4-onward-is-doing">What Section 5.3.4 Onward Is Doing</a></li>
+  <li><a href="#core-design-logic" id="toc-core-design-logic" class="nav-link" data-scroll-target="#core-design-logic">Core Design Logic</a></li>
+  <li><a href="#step-1-load-packages-and-build-the-two-samples" id="toc-step-1-load-packages-and-build-the-two-samples" class="nav-link" data-scroll-target="#step-1-load-packages-and-build-the-two-samples">Step 1: Load Packages And Build The Two Samples</a></li>
+  <li><a href="#step-2-estimate-the-experimental-benchmark" id="toc-step-2-estimate-the-experimental-benchmark" class="nav-link" data-scroll-target="#step-2-estimate-the-experimental-benchmark">Step 2: Estimate The Experimental Benchmark</a></li>
+  <li><a href="#step-3-show-why-raw-observational-data-are-problematic" id="toc-step-3-show-why-raw-observational-data-are-problematic" class="nav-link" data-scroll-target="#step-3-show-why-raw-observational-data-are-problematic">Step 3: Show Why Raw Observational Data Are Problematic</a></li>
+  <li><a href="#step-4-diagnose-imbalance-and-overlap-before-any-adjustment" id="toc-step-4-diagnose-imbalance-and-overlap-before-any-adjustment" class="nav-link" data-scroll-target="#step-4-diagnose-imbalance-and-overlap-before-any-adjustment">Step 4: Diagnose Imbalance And Overlap Before Any Adjustment</a></li>
+  <li><a href="#step-5-weighting-on-the-propensity-score" id="toc-step-5-weighting-on-the-propensity-score" class="nav-link" data-scroll-target="#step-5-weighting-on-the-propensity-score">Step 5: Weighting On The Propensity Score</a></li>
+  <li><a href="#step-6-nearest-neighbor-matching" id="toc-step-6-nearest-neighbor-matching" class="nav-link" data-scroll-target="#step-6-nearest-neighbor-matching">Step 6: Nearest-Neighbor Matching</a></li>
+  <li><a href="#step-7-coarsened-exact-matching" id="toc-step-7-coarsened-exact-matching" class="nav-link" data-scroll-target="#step-7-coarsened-exact-matching">Step 7: Coarsened Exact Matching</a></li>
+  <li><a href="#step-8-compare-every-observational-design-back-to-the-experiment" id="toc-step-8-compare-every-observational-design-back-to-the-experiment" class="nav-link" data-scroll-target="#step-8-compare-every-observational-design-back-to-the-experiment">Step 8: Compare Every Observational Design Back To The Experiment</a></li>
+  <li><a href="#the-main-lesson-about-observational-versus-experimental-data" id="toc-the-main-lesson-about-observational-versus-experimental-data" class="nav-link" data-scroll-target="#the-main-lesson-about-observational-versus-experimental-data">The Main Lesson About Observational Versus Experimental Data</a></li>
+  <li><a href="#short-takeaways-for-teaching" id="toc-short-takeaways-for-teaching" class="nav-link" data-scroll-target="#short-takeaways-for-teaching">Short Takeaways For Teaching</a></li>
+  <li><a href="#next-step-in-this-repo" id="toc-next-step-in-this-repo" class="nav-link" data-scroll-target="#next-step-in-this-repo">Next Step In This Repo</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Mixtape Notes: NSW Benchmark From Section 5.3.4 Onward</h1>
+<p class="subtitle lead">Observational versus experimental evidence, with R code</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Luke Heley </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">March 7, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="purpose" class="level2">
+<h2 class="anchored" data-anchor-id="purpose">Purpose</h2>
+<p>These notes condense section <code>5.3.4</code> onward of Cunningham’s <em>Matching and Subclassification</em> chapter into a teaching sequence that is easy to run in R.</p>
+<p>The goal is narrow:</p>
+<ul>
+<li>show why the NSW experimental estimate is the benchmark</li>
+<li>show why the observational NSW-treated-versus-CPS-controls comparison is biased</li>
+<li>show how propensity-score weighting, nearest-neighbor matching, and coarsened exact matching perform against that benchmark</li>
+</ul>
+<p>This page is intentionally shorter and more didactic than the full <a href="../labs/nsw_cps_benchmark_lab.html">NSW + CPS Benchmark Lab</a>.</p>
+</section>
+<section id="what-section-5.3.4-onward-is-doing" class="level2">
+<h2 class="anchored" data-anchor-id="what-section-5.3.4-onward-is-doing">What Section 5.3.4 Onward Is Doing</h2>
+<p>From <code>5.3.4</code> onward, the chapter stops talking about matching in the abstract and asks a harder question:</p>
+<p>Can an observational design recover an effect that we already know from an experiment?</p>
+<p>That is why the NSW example matters so much <span class="citation" data-cites="lalonde1986evaluating dehejia1999causal cunningham2021subclassification">(<a href="#ref-lalonde1986evaluating" role="doc-biblioref">LaLonde 1986</a>; <a href="#ref-dehejia1999causal" role="doc-biblioref">Dehejia and Wahba 1999</a>; <a href="#ref-cunningham2021subclassification" role="doc-biblioref">Cunningham 2021</a>)</span>:</p>
+<ul>
+<li>the NSW sample contains a randomized treatment-control comparison</li>
+<li>the CPS sample gives a non-experimental control pool</li>
+<li>the analyst can therefore compare observational estimates against an experimental reference rather than against intuition alone</li>
+</ul>
+<p>This is the key teaching lesson:</p>
+<ul>
+<li>experimental data solve the comparison problem by design</li>
+<li>observational data do not</li>
+<li>matching and weighting are attempts to repair that problem using observed covariates only</li>
+<li>the repair should be judged by balance, overlap, retention, and closeness to the experimental benchmark</li>
+</ul>
+</section>
+<section id="core-design-logic" class="level2">
+<h2 class="anchored" data-anchor-id="core-design-logic">Core Design Logic</h2>
+<p>The NSW benchmark exercise should be read as a sequence of four comparisons:</p>
+<ol type="1">
+<li>Experimental benchmark: NSW treated versus NSW controls.</li>
+<li>Raw observational estimate: NSW treated versus CPS controls with no adjustment.</li>
+<li>Adjusted observational estimates: weighting or matching on observed covariates.</li>
+<li>Benchmark gap: how far each observational estimate remains from the randomized NSW result.</li>
+</ol>
+<p>If the raw observational estimate is far away from the benchmark, that is evidence that the treated and untreated groups were not initially comparable.</p>
+<p>If an adjusted observational estimate moves closer, that suggests the design repair helped.</p>
+<p>If it still misses badly, that is a reminder that conditioning on observables is not the same thing as randomization.</p>
+</section>
+<section id="step-1-load-packages-and-build-the-two-samples" class="level2">
+<h2 class="anchored" data-anchor-id="step-1-load-packages-and-build-the-two-samples">Step 1: Load Packages And Build The Two Samples</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>required_packages <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"causaldata"</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"MatchIt"</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"WeightIt"</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"cobalt"</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"dplyr"</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"ggplot2"</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>missing_packages <span class="ot">&lt;-</span> required_packages[<span class="sc">!</span><span class="fu">vapply</span>(</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  required_packages,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  requireNamespace,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">logical</span>(<span class="dv">1</span>),</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">quietly =</span> <span class="cn">TRUE</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>)]</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">length</span>(missing_packages) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">install.packages</span>(missing_packages, <span class="at">repos =</span> <span class="st">"https://cloud.r-project.org"</span>)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="fu">invisible</span>(<span class="fu">lapply</span>(required_packages, library, <span class="at">character.only =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>nsw <span class="ot">&lt;-</span> causaldata<span class="sc">::</span>nsw_mixtape <span class="sc">|&gt;</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">treat =</span> <span class="fu">as.integer</span>(treat),</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">outcome =</span> re78</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>cps <span class="ot">&lt;-</span> causaldata<span class="sc">::</span>cps_mixtape <span class="sc">|&gt;</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">treat =</span> <span class="fu">as.integer</span>(treat),</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">outcome =</span> re78</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>design_covariates <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>  <span class="st">"age"</span>, <span class="st">"educ"</span>, <span class="st">"black"</span>, <span class="st">"hisp"</span>, <span class="st">"marr"</span>, <span class="st">"nodegree"</span>, <span class="st">"re74"</span>, <span class="st">"re75"</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>benchmark_dat <span class="ot">&lt;-</span> nsw</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>obs_dat <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>  nsw <span class="sc">|&gt;</span> <span class="fu">filter</span>(treat <span class="sc">==</span> <span class="dv">1</span>L) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">source =</span> <span class="st">"NSW treated"</span>),</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>  cps <span class="sc">|&gt;</span> <span class="fu">filter</span>(treat <span class="sc">==</span> <span class="dv">0</span>L) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">source =</span> <span class="st">"CPS controls"</span>)</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>obs_dat <span class="sc">|&gt;</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(source, treat)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Interpretation:</p>
+<ul>
+<li><code>benchmark_dat</code> is the experimental comparison</li>
+<li><code>obs_dat</code> is the observational comparison that creates the identification problem</li>
+</ul>
+</section>
+<section id="step-2-estimate-the-experimental-benchmark" class="level2">
+<h2 class="anchored" data-anchor-id="step-2-estimate-the-experimental-benchmark">Step 2: Estimate The Experimental Benchmark</h2>
+<p>This is the reference effect. It uses only the randomized NSW sample.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>benchmark_summary <span class="ot">&lt;-</span> benchmark_dat <span class="sc">|&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(treat) <span class="sc">|&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_re78 =</span> <span class="fu">mean</span>(outcome, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_re74 =</span> <span class="fu">mean</span>(re74, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_re75 =</span> <span class="fu">mean</span>(re75, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">group =</span> <span class="fu">if_else</span>(treat <span class="sc">==</span> <span class="dv">1</span>L, <span class="st">"NSW treated"</span>, <span class="st">"NSW controls"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(group, n, mean_re78, mean_re74, mean_re75)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>benchmark_fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(outcome <span class="sc">~</span> treat, <span class="at">data =</span> benchmark_dat)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>benchmark_est <span class="ot">&lt;-</span> <span class="fu">unname</span>(<span class="fu">coef</span>(benchmark_fit)[<span class="st">"treat"</span>])</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>benchmark_summary</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(benchmark_fit)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>benchmark_est</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>What this means:</p>
+<ul>
+<li>the <code>treat</code> coefficient is the benchmark <code>ATT</code></li>
+<li>every later observational estimate should be compared back to this value</li>
+</ul>
+</section>
+<section id="step-3-show-why-raw-observational-data-are-problematic" class="level2">
+<h2 class="anchored" data-anchor-id="step-3-show-why-raw-observational-data-are-problematic">Step 3: Show Why Raw Observational Data Are Problematic</h2>
+<p>Now switch to the harder comparison: NSW treated units against CPS controls.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>raw_summary <span class="ot">&lt;-</span> obs_dat <span class="sc">|&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(treat) <span class="sc">|&gt;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_re78 =</span> <span class="fu">mean</span>(outcome, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_age =</span> <span class="fu">mean</span>(age, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_educ =</span> <span class="fu">mean</span>(educ, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">prop_black =</span> <span class="fu">mean</span>(black <span class="sc">==</span> <span class="dv">1</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">prop_married =</span> <span class="fu">mean</span>(marr <span class="sc">==</span> <span class="dv">1</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_re74 =</span> <span class="fu">mean</span>(re74, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_re75 =</span> <span class="fu">mean</span>(re75, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">group =</span> <span class="fu">if_else</span>(treat <span class="sc">==</span> <span class="dv">1</span>L, <span class="st">"NSW treated"</span>, <span class="st">"CPS controls"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(group, n, mean_re78, mean_age, mean_educ, prop_black, prop_married, mean_re74, mean_re75)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>raw_fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(outcome <span class="sc">~</span> treat, <span class="at">data =</span> obs_dat)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>raw_est <span class="ot">&lt;-</span> <span class="fu">unname</span>(<span class="fu">coef</span>(raw_fit)[<span class="st">"treat"</span>])</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>raw_summary</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(raw_fit)</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>raw_est</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Why this estimate is not credible on its own:</p>
+<ul>
+<li>CPS controls were not randomized against NSW treated units</li>
+<li>the groups differ on pre-treatment covariates</li>
+<li>they also differ on prior earnings, which are strong proxies for labor-market position before treatment</li>
+<li>the raw treated-control gap therefore mixes treatment effects with selection effects</li>
+</ul>
+</section>
+<section id="step-4-diagnose-imbalance-and-overlap-before-any-adjustment" class="level2">
+<h2 class="anchored" data-anchor-id="step-4-diagnose-imbalance-and-overlap-before-any-adjustment">Step 4: Diagnose Imbalance And Overlap Before Any Adjustment</h2>
+<p>The most important design check is whether treated and control units look even remotely comparable.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>m_raw <span class="ot">&lt;-</span> <span class="fu">matchit</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  treat <span class="sc">~</span> age <span class="sc">+</span> educ <span class="sc">+</span> black <span class="sc">+</span> hisp <span class="sc">+</span> marr <span class="sc">+</span> nodegree <span class="sc">+</span> re74 <span class="sc">+</span> re75,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> obs_dat,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="cn">NULL</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimand =</span> <span class="st">"ATT"</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m_raw, <span class="at">un =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>cobalt<span class="sc">::</span><span class="fu">bal.tab</span>(</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  m_raw,</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">un =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">binary =</span> <span class="st">"std"</span>,</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">m.threshold =</span> <span class="fl">0.1</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>cobalt<span class="sc">::</span><span class="fu">love.plot</span>(</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  m_raw,</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">abs =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">thresholds =</span> <span class="fu">c</span>(<span class="at">m =</span> <span class="fl">0.1</span>),</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">stars =</span> <span class="st">"raw"</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Quick overlap check:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>ps_fit <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  treat <span class="sc">~</span> age <span class="sc">+</span> educ <span class="sc">+</span> black <span class="sc">+</span> hisp <span class="sc">+</span> marr <span class="sc">+</span> nodegree <span class="sc">+</span> re74 <span class="sc">+</span> re75,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> obs_dat,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">binomial</span>()</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>obs_dat <span class="ot">&lt;-</span> obs_dat <span class="sc">|&gt;</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ps =</span> <span class="fu">predict</span>(ps_fit, <span class="at">type =</span> <span class="st">"response"</span>))</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(obs_dat, <span class="fu">aes</span>(<span class="at">x =</span> ps, <span class="at">fill =</span> <span class="fu">factor</span>(treat))) <span class="sc">+</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Estimated propensity score"</span>,</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Density"</span>,</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Treat"</span>,</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Propensity-score overlap: NSW treated versus CPS controls"</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>What to look for:</p>
+<ul>
+<li>large standardized mean differences before adjustment</li>
+<li>weak common support in the propensity-score distribution</li>
+<li>evidence that some treated units have no close untreated analogs in CPS</li>
+</ul>
+<p>This is the basic observational-data problem. The issue is not just omitted variables in theory. It is visible non-comparability in the realized sample.</p>
+</section>
+<section id="step-5-weighting-on-the-propensity-score" class="level2">
+<h2 class="anchored" data-anchor-id="step-5-weighting-on-the-propensity-score">Step 5: Weighting On The Propensity Score</h2>
+<p>Section <code>5.3.5</code> moves from matching to weighting. The idea is to reweight controls so they better resemble the treated group on observed covariates <span class="citation" data-cites="greifer2025weightit">(<a href="#ref-greifer2025weightit" role="doc-biblioref">Greifer 2025</a>)</span>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>w_att <span class="ot">&lt;-</span> <span class="fu">weightit</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  treat <span class="sc">~</span> age <span class="sc">+</span> educ <span class="sc">+</span> black <span class="sc">+</span> hisp <span class="sc">+</span> marr <span class="sc">+</span> nodegree <span class="sc">+</span> re74 <span class="sc">+</span> re75,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> obs_dat,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"ps"</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimand =</span> <span class="st">"ATT"</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(w_att)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>cobalt<span class="sc">::</span><span class="fu">bal.tab</span>(</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  w_att,</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">un =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">binary =</span> <span class="st">"std"</span>,</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">m.threshold =</span> <span class="fl">0.1</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>weighted_fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(outcome <span class="sc">~</span> treat, <span class="at">data =</span> obs_dat, <span class="at">weights =</span> w_att<span class="sc">$</span>weights)</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>weighted_est <span class="ot">&lt;-</span> <span class="fu">unname</span>(<span class="fu">coef</span>(weighted_fit)[<span class="st">"treat"</span>])</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(weighted_fit)</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>weighted_est</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Teaching point:</p>
+<ul>
+<li>weighting often keeps more units than strict matching</li>
+<li>but poor overlap shows up as extreme weights</li>
+<li>if a few control units receive huge weight, the design may still be fragile</li>
+</ul>
+</section>
+<section id="step-6-nearest-neighbor-matching" class="level2">
+<h2 class="anchored" data-anchor-id="step-6-nearest-neighbor-matching">Step 6: Nearest-Neighbor Matching</h2>
+<p>Section <code>5.3.6</code> turns to nearest-neighbor matching in its practical form. This is where operational choices such as replacement start to matter <span class="citation" data-cites="abadie2011biascorrected ho2011matchit">(<a href="#ref-abadie2011biascorrected" role="doc-biblioref">Abadie and Imbens 2011</a>; <a href="#ref-ho2011matchit" role="doc-biblioref">Ho et al. 2011</a>)</span>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>m_nearest <span class="ot">&lt;-</span> <span class="fu">matchit</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  treat <span class="sc">~</span> age <span class="sc">+</span> educ <span class="sc">+</span> black <span class="sc">+</span> hisp <span class="sc">+</span> marr <span class="sc">+</span> nodegree <span class="sc">+</span> re74 <span class="sc">+</span> re75,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> obs_dat,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"nearest"</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">distance =</span> <span class="st">"glm"</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimand =</span> <span class="st">"ATT"</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">replace =</span> <span class="cn">TRUE</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m_nearest, <span class="at">un =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>cobalt<span class="sc">::</span><span class="fu">bal.tab</span>(</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  m_nearest,</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">un =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">binary =</span> <span class="st">"std"</span>,</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">m.threshold =</span> <span class="fl">0.1</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>matched_nearest <span class="ot">&lt;-</span> <span class="fu">match.data</span>(m_nearest)</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>nearest_fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>  outcome <span class="sc">~</span> treat,</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> matched_nearest,</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">weights =</span> weights</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>nearest_est <span class="ot">&lt;-</span> <span class="fu">unname</span>(<span class="fu">coef</span>(nearest_fit)[<span class="st">"treat"</span>])</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(nearest_fit)</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>nearest_est</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>What nearest-neighbor matching teaches:</p>
+<ul>
+<li>the label “nearest” does not guarantee a good design</li>
+<li>matching with replacement usually improves match quality for hard-to-match treated cases</li>
+<li>balance diagnostics matter more than the algorithm name</li>
+</ul>
+</section>
+<section id="step-7-coarsened-exact-matching" class="level2">
+<h2 class="anchored" data-anchor-id="step-7-coarsened-exact-matching">Step 7: Coarsened Exact Matching</h2>
+<p>Section <code>5.3.7</code> presents coarsened exact matching as a more transparent compromise: exact matching, but on coarsened versions of the covariates <span class="citation" data-cites="iacus2012cem">(<a href="#ref-iacus2012cem" role="doc-biblioref">Iacus, King, and Porro 2012</a>)</span>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>m_cem <span class="ot">&lt;-</span> <span class="fu">matchit</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  treat <span class="sc">~</span> age <span class="sc">+</span> educ <span class="sc">+</span> black <span class="sc">+</span> hisp <span class="sc">+</span> marr <span class="sc">+</span> nodegree <span class="sc">+</span> re74 <span class="sc">+</span> re75,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> obs_dat,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"cem"</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimand =</span> <span class="st">"ATT"</span>,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">cutpoints =</span> <span class="fu">list</span>(</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">age =</span> <span class="fu">c</span>(<span class="dv">25</span>, <span class="dv">35</span>, <span class="dv">45</span>),</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">educ =</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">12</span>, <span class="dv">14</span>),</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">re74 =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">5000</span>, <span class="dv">10000</span>),</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">re75 =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">5000</span>, <span class="dv">10000</span>)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m_cem, <span class="at">un =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>cobalt<span class="sc">::</span><span class="fu">bal.tab</span>(</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  m_cem,</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">un =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">binary =</span> <span class="st">"std"</span>,</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">m.threshold =</span> <span class="fl">0.1</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>matched_cem <span class="ot">&lt;-</span> <span class="fu">match.data</span>(m_cem)</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>cem_fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>  outcome <span class="sc">~</span> treat,</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> matched_cem,</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">weights =</span> weights</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>cem_est <span class="ot">&lt;-</span> <span class="fu">unname</span>(<span class="fu">coef</span>(cem_fit)[<span class="st">"treat"</span>])</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cem_fit)</span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>cem_est</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>What CEM makes especially clear:</p>
+<ul>
+<li>coarsening is the design decision</li>
+<li>tighter bins improve comparability but can discard more treated units</li>
+<li>looser bins retain more data but may weaken balance</li>
+</ul>
+<p>That visibility is why CEM is often useful for teaching. The design tradeoff is much easier to see than in more opaque distance-based approaches.</p>
+</section>
+<section id="step-8-compare-every-observational-design-back-to-the-experiment" class="level2">
+<h2 class="anchored" data-anchor-id="step-8-compare-every-observational-design-back-to-the-experiment">Step 8: Compare Every Observational Design Back To The Experiment</h2>
+<p>The benchmark comparison is the whole point of the exercise.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>results_tbl <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">tibble</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="fu">c</span>(</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Experimental benchmark"</span>,</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Raw observational difference"</span>,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Propensity-score weighting"</span>,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Nearest-neighbor matching"</span>,</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Coarsened exact matching"</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimate =</span> <span class="fu">c</span>(</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    benchmark_est,</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    raw_est,</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    weighted_est,</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    nearest_est,</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    cem_est</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">benchmark_gap =</span> estimate <span class="sc">-</span> benchmark_est,</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">abs_benchmark_gap =</span> <span class="fu">abs</span>(benchmark_gap)</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>results_tbl</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>How to interpret the table:</p>
+<ul>
+<li>the experimental row is the target</li>
+<li>the raw observational row shows how misleading untreated observational comparisons can be</li>
+<li>the adjusted rows show whether design repair moved the estimate toward the randomized answer</li>
+<li>no method should be judged only by closeness to the benchmark; you still need to inspect balance, overlap, and sample retention</li>
+</ul>
+</section>
+<section id="the-main-lesson-about-observational-versus-experimental-data" class="level2">
+<h2 class="anchored" data-anchor-id="the-main-lesson-about-observational-versus-experimental-data">The Main Lesson About Observational Versus Experimental Data</h2>
+<p>The NSW example is useful because it separates two questions that often get blurred together.</p>
+<p>Question 1: Can I compute an adjusted observational estimate?</p>
+<p>Yes. Matching and weighting make that easy.</p>
+<p>Question 2: Can I defend that estimate as a credible stand-in for the experimental answer?</p>
+<p>Only sometimes, and only after checking:</p>
+<ul>
+<li>whether the treated and control groups overlap on relevant covariates</li>
+<li>whether balance actually improved after adjustment</li>
+<li>whether the adjusted design depends on a thin or unusual subset of controls</li>
+<li>whether the benchmark gap is small enough to inspire confidence</li>
+</ul>
+<p>The broader lesson from section <code>5.3.4</code> onward is not that one matching method “wins.” It is that observational estimators should be stress-tested against better evidence whenever a benchmark exists.</p>
+</section>
+<section id="short-takeaways-for-teaching" class="level2">
+<h2 class="anchored" data-anchor-id="short-takeaways-for-teaching">Short Takeaways For Teaching</h2>
+<ul>
+<li>Randomization is the benchmark because it creates comparability by design.</li>
+<li>Observational data start with a comparability problem, not just an estimation problem.</li>
+<li>Matching and weighting are design repairs based on observables, not substitutes for an experiment.</li>
+<li>A better-looking estimate is not enough; you need better balance and plausible overlap.</li>
+<li>The NSW example is powerful because it lets you compare observational methods against a known experimental reference rather than against vague plausibility.</li>
+</ul>
+</section>
+<section id="next-step-in-this-repo" class="level2">
+<h2 class="anchored" data-anchor-id="next-step-in-this-repo">Next Step In This Repo</h2>
+<p>If you want the fuller worksheet version with more diagnostics and a wider benchmark table, continue to the <a href="../labs/nsw_cps_benchmark_lab.html">NSW + CPS Benchmark Lab</a>.</p>
+
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-abadie2011biascorrected" class="csl-entry" role="listitem">
+Abadie, Alberto, and Guido W. Imbens. 2011. <span>“Bias-Corrected Matching Estimators for Average Treatment Effects.”</span> <em>Journal of Business &amp; Economic Statistics</em> 29 (1): 1–11. <a href="https://doi.org/10.1198/jbes.2009.07333">https://doi.org/10.1198/jbes.2009.07333</a>.
+</div>
+<div id="ref-cunningham2021subclassification" class="csl-entry" role="listitem">
+Cunningham, Scott. 2021. <span>“Matching and Subclassification.”</span> 2021. <a href="https://mixtape.scunning.com/05-matching_and_subclassification">https://mixtape.scunning.com/05-matching_and_subclassification</a>.
+</div>
+<div id="ref-dehejia1999causal" class="csl-entry" role="listitem">
+Dehejia, Rajeev H., and Sadek Wahba. 1999. <span>“Causal Effects in Non-Experimental Studies: Re-Evaluating the Evaluation of Training Programs.”</span> <em>Journal of the American Statistical Association</em> 94 (448): 1053–62. <a href="https://doi.org/10.1080/01621459.1999.10473858">https://doi.org/10.1080/01621459.1999.10473858</a>.
+</div>
+<div id="ref-greifer2025weightit" class="csl-entry" role="listitem">
+Greifer, Noah. 2025. <em>WeightIt: Weighting for Covariate Balance in Observational Studies</em>. <a href="https://doi.org/10.32614/CRAN.package.WeightIt">https://doi.org/10.32614/CRAN.package.WeightIt</a>.
+</div>
+<div id="ref-ho2011matchit" class="csl-entry" role="listitem">
+Ho, Daniel E., Kosuke Imai, Gary King, and Elizabeth A. Stuart. 2011. <span>“<span>MatchIt</span>: Nonparametric Preprocessing for Parametric Causal Inference.”</span> <em>Journal of Statistical Software</em> 42 (8): 1–28. <a href="https://doi.org/10.18637/jss.v042.i08">https://doi.org/10.18637/jss.v042.i08</a>.
+</div>
+<div id="ref-iacus2012cem" class="csl-entry" role="listitem">
+Iacus, Stefano M., Gary King, and Giuseppe Porro. 2012. <span>“Causal Inference Without Balance Checking: Coarsened Exact Matching.”</span> <em>Political Analysis</em> 20 (1): 1–24. <a href="https://doi.org/10.1093/pan/mpr013">https://doi.org/10.1093/pan/mpr013</a>.
+</div>
+<div id="ref-lalonde1986evaluating" class="csl-entry" role="listitem">
+LaLonde, Robert J. 1986. <span>“Evaluating the Econometric Evaluations of Training Programs with Experimental Data.”</span> <em>American Economic Review</em> 76 (4): 604–20.
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

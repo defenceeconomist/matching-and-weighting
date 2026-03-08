@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.8.26">
+
+  <meta name="author" content="Luke Heley">
+  <meta name="dcterms.date" content="2026-03-09">
+  <title>Matching and Weighting – Why We Do Matching</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+      margin-bottom: 0em;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-1010198faa610532781153167730e9a8.css">
+  <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Why We Do Matching</h1>
+  <p class="subtitle">A causal-inference deck on confounding, comparability, and design</p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Luke Heley 
+</div>
+</div>
+</div>
+
+  <p class="date">2026-03-09</p>
+</section>
+<section id="session-promise" class="slide level2">
+<h2>Session Promise</h2>
+<div class="kicker">
+<p>This short deck explains why matching exists before it explains any specific matching algorithm.</p>
+</div>
+<ul>
+<li>start from the counterfactual problem</li>
+<li>show how confounding distorts raw comparisons</li>
+<li>explain why matching is a design-stage attempt to improve comparability</li>
+<li>keep the limits explicit throughout <span class="citation" data-cites="cunningham2021mixtape huntingtonklein_matching">(<a href="#/closing-line" role="doc-biblioref" onclick="">Cunningham 2021a</a>; <a href="#/closing-line" role="doc-biblioref" onclick="">Huntington-Klein 2021</a>)</span></li>
+</ul>
+</section>
+<section id="minute-arc" class="slide level2">
+<h2>20-Minute Arc</h2>
+<table class="caption-top">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Time</th>
+<th>Segment</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>0-4</code></td>
+<td>Counterfactual problem</td>
+<td>Why causal inference needs a comparison group</td>
+</tr>
+<tr class="even">
+<td><code>4-8</code></td>
+<td>Benchmark comparison</td>
+<td>Why randomization is the clearest comparison</td>
+</tr>
+<tr class="odd">
+<td><code>8-12</code></td>
+<td>Confounding</td>
+<td>Why raw observational comparisons fail</td>
+</tr>
+<tr class="even">
+<td><code>12-16</code></td>
+<td>Matching logic</td>
+<td>What matching is trying to repair</td>
+</tr>
+<tr class="odd">
+<td><code>14-18</code></td>
+<td>Assumptions and limits</td>
+<td>What matching cannot do</td>
+</tr>
+<tr class="even">
+<td><code>18-20</code></td>
+<td>Practical takeaway</td>
+<td>How to use matching responsibly</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="start-with-the-fundamental-problem" class="slide level2">
+<h2>Start With The Fundamental Problem</h2>
+<ul>
+<li>each unit has a treated potential outcome and an untreated potential outcome</li>
+<li>we only observe one of them for any given unit</li>
+<li>the missing outcome is the counterfactual</li>
+<li>causal inference is the problem of constructing a credible stand-in for that missing outcome <span class="citation" data-cites="cunningham2021mixtape">(<a href="#/closing-line" role="doc-biblioref" onclick="">Cunningham 2021a</a>)</span></li>
+</ul>
+</section>
+<section id="why-we-need-a-comparison-group" class="slide level2">
+<h2>Why We Need A Comparison Group</h2>
+<div class="card-grid">
+<div class="mini-card">
+<p><strong>Observed outcome</strong></p>
+<p>What happened under the treatment state actually received.</p>
+</div>
+<div class="mini-card">
+<p><strong>Missing outcome</strong></p>
+<p>What would have happened under the alternative treatment state.</p>
+</div>
+<div class="mini-card">
+<p><strong>Design task</strong></p>
+<p>Build a comparison group that is credible enough to stand in for the missing outcome.</p>
+</div>
+</div>
+</section>
+<section id="best-benchmark-randomization" class="slide level2">
+<h2>Best Benchmark: Randomization</h2>
+<ul>
+<li>if treatment is randomized, the treated and untreated groups are comparable in expectation</li>
+<li>that is why <code>RCT</code>s are the clearest benchmark for causal comparison quality</li>
+<li>but <code>RCT</code>s are a benchmark, not magic: attrition, noncompliance, and external validity still matter <span class="citation" data-cites="heiss2026_randomization_matching_content">(<a href="#/closing-line" role="doc-biblioref" onclick="">Heiss 2026</a>)</span></li>
+</ul>
+</section>
+<section id="why-matching-enters-the-story" class="slide level2">
+<h2>Why Matching Enters The Story</h2>
+<ul>
+<li>in many policy settings, treatment was not randomized</li>
+<li>the comparison group is therefore not automatically credible</li>
+<li>matching matters because it is a second-best design repair when stronger design features are unavailable</li>
+<li>the job is to recover the best comparison the data can still defend <span class="citation" data-cites="cunningham2021mixtape huntingtonklein_matching">(<a href="#/closing-line" role="doc-biblioref" onclick="">Cunningham 2021a</a>; <a href="#/closing-line" role="doc-biblioref" onclick="">Huntington-Klein 2021</a>)</span></li>
+</ul>
+</section>
+<section id="dataset-we-use-lalonde" class="slide level2">
+<h2>Dataset We Use: <code>lalonde</code></h2>
+<ul>
+<li>the lab and report use <code>MatchIt::lalonde</code>, built from the National Supported Work training study with a non-experimental comparison group</li>
+<li>this dataset became a benchmark because LaLonde showed that many non-experimental estimators missed the experimental training effect <span class="citation" data-cites="lalonde1986evaluating">(<a href="#/closing-line" role="doc-biblioref" onclick="">LaLonde 1986</a>)</span></li>
+<li>Dehejia and Wahba made it a matching case study by showing that better design choices could recover more credible estimates <span class="citation" data-cites="dehejia1999causal">(<a href="#/closing-line" role="doc-biblioref" onclick="">Dehejia and Wahba 1999</a>)</span></li>
+<li>Abadie and Imbens kept it central in the matching literature because it is a disciplined test of how matching estimators behave when the benchmark is known <span class="citation" data-cites="abadie2011biascorrected">(<a href="#/closing-line" role="doc-biblioref" onclick="">Abadie and Imbens 2011</a>)</span></li>
+</ul>
+<div class="small-note">
+<p>We use <code>lalonde</code> because it is not just convenient. It is a benchmark dataset for asking whether an observational design can get back to something close to the experimental answer.</p>
+</div>
+</section>
+<section id="why-raw-comparisons-mislead" class="slide level2">
+<h2>Why Raw Comparisons Mislead</h2>
+<ul>
+<li>in observational data, treatment is usually related to prior characteristics</li>
+<li>the treated group may differ from the untreated group before treatment starts</li>
+<li>a raw difference in outcomes therefore combines:
+<ul>
+<li>the effect of treatment</li>
+<li>the effect of pre-existing differences</li>
+</ul></li>
+<li>that mixture is the basic confounding problem</li>
+</ul>
+</section>
+<section id="the-confounder-problem" class="slide level2">
+<h2>The Confounder Problem</h2>
+<ul>
+<li>a confounder is a common cause of treatment and outcome</li>
+<li>confounders create backdoor paths between treatment and outcome</li>
+<li>if those paths remain open, the observed association is not a clean causal effect <span class="citation" data-cites="cunningham2021mixtape huntingtonklein_matching">(<a href="#/closing-line" role="doc-biblioref" onclick="">Cunningham 2021a</a>; <a href="#/closing-line" role="doc-biblioref" onclick="">Huntington-Klein 2021</a>)</span></li>
+</ul>
+</section>
+<section id="backdoor-path" class="slide level2">
+<h2>Backdoor Path</h2>
+
+<img data-src="why_matching_files/figure-revealjs/fig-backdoor-path-1.png" id="fig-backdoor-path" class="quarto-figure quarto-figure-center r-stretch" style="width:78.0%"><p class="caption">
+Figure&nbsp;1
+</p><ul>
+<li>this is the core confounding case: <code>D &lt;- X -&gt; Y</code></li>
+<li><code>Prior need</code> is a common cause of treatment and outcome</li>
+<li>the raw treated-control gap mixes treatment effects with selection <span class="citation" data-cites="mixtape_sessions_unconfoundedness">(<a href="#/closing-line" role="doc-biblioref" onclick="">Cunningham, Scott 2025</a>)</span></li>
+</ul>
+</section>
+<section id="what-this-means-for-design" class="slide level2">
+<h2>What This Means For Design</h2>
+<ul>
+<li>if treated units differ from controls on <code>Prior need</code><sup>1</sup>, the raw outcome gap is confounded</li>
+<li>part of the observed gap then reflects pre-treatment selection, not just treatment</li>
+<li>the direction of bias depends on whether <code>Prior need</code> raises or lowers the outcome</li>
+<li>a credible design must block the backdoor path by conditioning on the right pre-treatment variables</li>
+<li>this is the bridge from causal logic to matching logic <span class="citation" data-cites="cunningham2021mixtape">(<a href="#/closing-line" role="doc-biblioref" onclick="">Cunningham 2021a</a>)</span></li>
+</ul>
+<aside><ol class="aside-footnotes"><li id="fn1"><p><code>Prior need</code> means baseline disadvantage or need that existed before treatment, such as poorer health, lower prior earnings, or higher case severity.</p></li></ol></aside></section>
+<section id="block-the-backdoor" class="slide level2">
+<h2>Block The Backdoor</h2>
+
+<img data-src="why_matching_files/figure-revealjs/fig-block-backdoor-1.png" id="fig-block-backdoor" class="quarto-figure quarto-figure-center r-stretch" style="width:78.0%"><p class="caption">
+Figure&nbsp;2
+</p><ul>
+<li>once the confounder is conditioned on, the remaining open path is the causal path from treatment to outcome</li>
+<li>regression, matching, subclassification, and weighting all aim at this same design goal</li>
+<li>the methods differ in implementation, not in the underlying causal target <span class="citation" data-cites="mixtape_sessions_unconfoundedness">(<a href="#/closing-line" role="doc-biblioref" onclick="">Cunningham, Scott 2025</a>)</span></li>
+</ul>
+</section>
+<section id="matching-in-one-sentence" class="slide level2">
+<h2>Matching In One Sentence</h2>
+<ul>
+<li>matching tries to compare treated units with untreated units that are similar on relevant observed pre-treatment covariates</li>
+<li>the aim is to make treatment status less entangled with baseline differences</li>
+<li>matching is therefore a design tool for reducing observed confounding, not a guarantee of identification</li>
+</ul>
+</section>
+<section id="why-match" class="slide level2">
+<h2>Why Match?</h2>
+<div class="signal">
+<p>Matching is useful because imbalance creates model dependence.</p>
+</div>
+<ul>
+<li>imbalance -&gt; model dependence -&gt; researcher discretion -&gt; bias</li>
+<li>raw mismatch forces the outcome model to extrapolate</li>
+<li>extrapolation creates analyst discretion about specification</li>
+<li>analyst discretion can move the estimate even when the causal story is unchanged</li>
+<li>matching trims or down-weights the least credible comparisons first <span class="citation" data-cites="heiss2026_randomization_matching_content ho2007matching">(<a href="#/closing-line" role="doc-biblioref" onclick="">Heiss 2026</a>; <a href="#/closing-line" role="doc-biblioref" onclick="">Ho et al. 2007</a>)</span></li>
+</ul>
+</section>
+<section id="why-matching-appeals-in-practice" class="slide level2">
+<h2>Why Matching Appeals In Practice</h2>
+<div class="card-grid">
+<div class="mini-card">
+<p><strong>Visible comparisons</strong></p>
+<p>The analyst has to show who is being compared to whom.</p>
+</div>
+<div class="mini-card">
+<p><strong>Less hidden extrapolation</strong></p>
+<p>The design leans less on functional-form assumptions alone.</p>
+</div>
+<div class="mini-card">
+<p><strong>Explicit diagnostics</strong></p>
+<p>Balance, overlap, retention, and weights become reportable design costs.</p>
+</div>
+</div>
+</section>
+<section id="design-in-two-steps" class="slide level2">
+<h2>Design In Two Steps</h2>
+<div class="lab-grid">
+<div class="lab-card">
+<p><strong>1. Preprocess the design</strong></p>
+<ul>
+<li>define the estimand</li>
+<li>choose covariates from the assignment story</li>
+<li>inspect imbalance and overlap</li>
+<li>match or weight before estimating</li>
+</ul>
+</div>
+<div class="lab-card">
+<p><strong>2. Estimate on the redesigned data</strong></p>
+<ul>
+<li>use the matched sample or weights as the design</li>
+<li>estimate the treatment effect after preprocessing</li>
+<li>report uncertainty that reflects the adjusted design</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="from-subclassification-to-matching" class="slide level2">
+<h2>From Subclassification To Matching</h2>
+<ul>
+<li>subclassification is the clearest starting point: compare treated and untreated units within the same covariate-defined strata</li>
+<li>exact matching is the strict version of that logic</li>
+<li>approximate matching relaxes exact equality when exact strata become too sparse</li>
+<li>the underlying idea stays the same: compare like with like <span class="citation" data-cites="cunningham2021subclassification">(<a href="#/closing-line" role="doc-biblioref" onclick="">Cunningham 2021b</a>)</span></li>
+</ul>
+</section>
+<section id="the-curse-of-dimensionality" class="slide level2">
+<h2>The Curse Of Dimensionality</h2>
+<ul>
+<li>once many covariates matter at once, exact strata proliferate</li>
+<li>some cells become tiny or empty</li>
+<li>overlap disappears for parts of the treated group</li>
+<li>matching methods exist because the causal logic is simple, but the data rarely support simple exact comparisons everywhere <span class="citation" data-cites="cunningham2021subclassification">(<a href="#/closing-line" role="doc-biblioref" onclick="">Cunningham 2021b</a>)</span></li>
+</ul>
+</section>
+<section id="good-controls-not-all-controls" class="slide level2">
+<h2>Good Controls, Not All Controls</h2>
+<ul>
+<li>matching should target plausible pre-treatment confounders</li>
+<li>not every available baseline variable belongs in the design</li>
+<li>the right question is causal: which variables help block confounding without opening new problems?</li>
+<li>this is where causal reasoning matters most</li>
+<li>a pre-treatment common cause belongs in the design</li>
+<li>a collider does not become safe just because it was measured before treatment</li>
+<li>a post-treatment mediator does not belong in the matching design <span class="citation" data-cites="mixtape_sessions_unconfoundedness">(<a href="#/closing-line" role="doc-biblioref" onclick="">Cunningham, Scott 2025</a>)</span></li>
+</ul>
+</section>
+<section id="collider-warning" class="slide level2">
+<h2>Collider Warning</h2>
+
+<img data-src="why_matching_files/figure-revealjs/fig-collider-warning-1.png" id="fig-collider-warning" class="quarto-figure quarto-figure-center r-stretch" style="width:78.0%"><p class="caption">
+Figure&nbsp;3
+</p><ul>
+<li>a collider is different from a confounder</li>
+<li>if you condition on <code>Movie star</code>, you can create a spurious association between <code>Talent</code> and <code>Beauty</code></li>
+<li>this is why not every pre-treatment variable belongs in the design <span class="citation" data-cites="mixtape_sessions_unconfoundedness">(<a href="#/closing-line" role="doc-biblioref" onclick="">Cunningham, Scott 2025</a>)</span></li>
+</ul>
+</section>
+<section id="what-matching-is-buying" class="slide level2">
+<h2>What Matching Is Buying</h2>
+<table class="caption-top">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Problem</th>
+<th>What matching tries to improve</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Baseline imbalance</td>
+<td>More comparable treated and control units</td>
+</tr>
+<tr class="even">
+<td>Opaque regression dependence</td>
+<td>A clearer comparison rule</td>
+</tr>
+<tr class="odd">
+<td>Weak visibility on overlap</td>
+<td>Explicit evidence on where support fails</td>
+</tr>
+<tr class="even">
+<td>Hidden design costs</td>
+<td>Retention and weighting costs that can be reported plainly</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="matching-and-weighting-are-siblings" class="slide level2">
+<h2>Matching And Weighting Are Siblings</h2>
+<ul>
+<li>both are design-stage responses to the same comparison problem</li>
+<li>matching changes who remains in the analytic sample</li>
+<li>weighting changes how much each unit counts in the final comparison</li>
+<li>many matching procedures can also be understood as weighted averages rather than as mysterious algorithms <span class="citation" data-cites="huntingtonklein_matching heiss2026_randomization_matching_content">(<a href="#/closing-line" role="doc-biblioref" onclick="">Huntington-Klein 2021</a>; <a href="#/closing-line" role="doc-biblioref" onclick="">Heiss 2026</a>)</span></li>
+</ul>
+</section>
+<section id="one-logic-several-implementations" class="slide level2">
+<h2>One Logic, Several Implementations</h2>
+<div class="card-grid">
+<div class="mini-card">
+<p><strong>Regression</strong></p>
+<p>Compares outcomes conditional on observed covariates.</p>
+</div>
+<div class="mini-card">
+<p><strong>Matching</strong></p>
+<p>Builds more comparable treated-control pairs or samples first.</p>
+</div>
+<div class="mini-card">
+<p><strong>Stratification and weights</strong></p>
+<p>Take within-cell differences and aggregate them with weights.</p>
+</div>
+</div>
+<div class="small-note">
+<p>All are trying to estimate causal contrasts after blocking backdoor paths with observed covariates.</p>
+</div>
+</section>
+<section id="matching-is-still-about-assumptions" class="slide level2">
+<h2>Matching Is Still About Assumptions</h2>
+<div class="metric-grid">
+<div class="metric-card">
+<p><strong>Conditional independence</strong></p>
+<p>No important unmeasured confounders remain after conditioning.</p>
+</div>
+<div class="metric-card">
+<p><strong>Common support</strong></p>
+<p>Comparable treated and untreated units must exist.</p>
+</div>
+<div class="metric-card">
+<p><strong>Balance</strong></p>
+<p>Observed covariates should actually look similar after adjustment.</p>
+</div>
+<div class="metric-card">
+<p><strong>Stable estimand</strong></p>
+<p>The design should still answer the question you started with.</p>
+</div>
+</div>
+</section>
+<section id="what-matching-cannot-do" class="slide level2">
+<h2>What Matching Cannot Do</h2>
+<ul>
+<li>it cannot fix omitted confounding</li>
+<li>it cannot rescue a design with no overlap</li>
+<li>it cannot justify bad controls</li>
+<li>it cannot turn observational data into randomized data</li>
+<li>it should not be the default when a stronger design is available</li>
+</ul>
+</section>
+<section id="when-not-to-match" class="slide level2">
+<h2>When Not To Match</h2>
+<ul>
+<li>do not default to matching when a credible <code>RDD</code>, <code>DiD</code>, or randomized design is available</li>
+<li>do not force matching when overlap is so weak that only severe pruning or extreme weights make the comparison work</li>
+<li>do not pretend a matched design answers the original question if the estimand has drifted to a narrower subgroup</li>
+</ul>
+</section>
+<section id="why-we-still-do-it" class="slide level2">
+<h2>Why We Still Do It</h2>
+<ul>
+<li>many important programme and policy questions are observational</li>
+<li>regression alone can hide the comparison problem rather than expose it</li>
+<li>matching forces the analyst to defend the counterfactual more directly</li>
+<li>even when imperfect, it can make a weak design more transparent and less model-dependent</li>
+</ul>
+</section>
+<section id="practical-standard" class="slide level2">
+<h2>Practical Standard</h2>
+<ul>
+<li>define the estimand first</li>
+<li>choose covariates from the assignment story</li>
+<li>inspect raw imbalance and overlap</li>
+<li>match or weight as a design step</li>
+<li>estimate only after the adjusted design is credible enough to defend</li>
+<li>follow the main design with uncertainty checks and sensitivity checks</li>
+<li>report the remaining limitations directly</li>
+</ul>
+</section>
+<section id="what-the-lab-focuses-on" class="slide level2">
+<h2>What The Lab Focuses On</h2>
+<div class="lab-grid">
+<div class="lab-card">
+<p><strong>We focus on</strong></p>
+<ul>
+<li>exact matching as the transparency benchmark</li>
+<li>coarsened exact matching as the main approximate matching method</li>
+<li>entropy balancing as the weighting comparison</li>
+</ul>
+</div>
+<div class="lab-card">
+<p><strong>We do not center</strong></p>
+<ul>
+<li>nearest-neighbor propensity-score matching in the core lab</li>
+<li>optimal, full, genetic, or other advanced matching variants</li>
+<li>the full <code>MatchIt</code> method menu on a first pass</li>
+</ul>
+</div>
+</div>
+<div class="small-note">
+<p>This narrower scope keeps the design rule visible. For the broader implementation menu, see the <a href="https://kosukeimai.github.io/MatchIt/">MatchIt documentation</a>.</p>
+</div>
+</section>
+<section id="closing-line" class="slide level2 smaller scrollable">
+<h2>Closing Line</h2>
+<div class="signal">
+<p>We do matching to reduce observed confounding by building a more credible comparison group, while remaining honest that causality still depends on assumptions the data cannot prove.</p>
+</div>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-abadie2011biascorrected" class="csl-entry" role="listitem">
+Abadie, Alberto, and Guido W. Imbens. 2011. <span>“Bias-Corrected Matching Estimators for Average Treatment Effects.”</span> <em>Journal of Business &amp; Economic Statistics</em> 29 (1): 1–11. <a href="https://doi.org/10.1198/jbes.2009.07333">https://doi.org/10.1198/jbes.2009.07333</a>.
+</div>
+<div id="ref-cunningham2021mixtape" class="csl-entry" role="listitem">
+Cunningham, Scott. 2021a. <em>Causal Inference: The Mixtape</em>. New Haven, CT: Yale University Press.
+</div>
+<div id="ref-cunningham2021subclassification" class="csl-entry" role="listitem">
+———. 2021b. <span>“Matching and Subclassification.”</span> 2021. <a href="https://mixtape.scunning.com/05-matching_and_subclassification">https://mixtape.scunning.com/05-matching_and_subclassification</a>.
+</div>
+<div id="ref-mixtape_sessions_unconfoundedness" class="csl-entry" role="listitem">
+Cunningham, Scott. 2025. <span>“Mixtape Sessions: Causal Inference 1 - Unconfoundedness.”</span> 2025. <a href="https://github.com/Mixtape-Sessions/Causal-Inference-1/blob/main/Slides/02-Unconfoundedness.pdf">https://github.com/Mixtape-Sessions/Causal-Inference-1/blob/main/Slides/02-Unconfoundedness.pdf</a>.
+</div>
+<div id="ref-dehejia1999causal" class="csl-entry" role="listitem">
+Dehejia, Rajeev H., and Sadek Wahba. 1999. <span>“Causal Effects in Non-Experimental Studies: Re-Evaluating the Evaluation of Training Programs.”</span> <em>Journal of the American Statistical Association</em> 94 (448): 1053–62. <a href="https://doi.org/10.1080/01621459.1999.10473858">https://doi.org/10.1080/01621459.1999.10473858</a>.
+</div>
+<div id="ref-heiss2026_randomization_matching_content" class="csl-entry" role="listitem">
+Heiss, Andrew. 2026. <span>“Randomization and Matching.”</span> 2026. <a href="https://evalsp26.classes.andrewheiss.com/content/07-content.html">https://evalsp26.classes.andrewheiss.com/content/07-content.html</a>.
+</div>
+<div id="ref-ho2007matching" class="csl-entry" role="listitem">
+Ho, Daniel E., Kosuke Imai, Gary King, and Elizabeth A. Stuart. 2007. <span>“Matching as Nonparametric Preprocessing for Reducing Model Dependence in Parametric Causal Inference.”</span> <em>Political Analysis</em> 15 (3): 199–236. <a href="https://doi.org/10.1093/pan/mpl013">https://doi.org/10.1093/pan/mpl013</a>.
+</div>
+<div id="ref-huntingtonklein_matching" class="csl-entry" role="listitem">
+Huntington-Klein, Nick. 2021. <span>“Chapter 14 - Matching.”</span> 2021. <a href="https://theeffectbook.net/ch-Matching.html">https://theeffectbook.net/ch-Matching.html</a>.
+</div>
+<div id="ref-lalonde1986evaluating" class="csl-entry" role="listitem">
+LaLonde, Robert J. 1986. <span>“Evaluating the Econometric Evaluations of Training Programs with Experimental Data.”</span> <em>American Economic Review</em> 76 (4): 604–20.
+</div>
+</div>
+</section>
+
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+<p><a href="../index.html">Back to site</a></p>
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="../site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': false,
+'previewLinksAuto': true,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'fade',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1400,
+
+        height: 850,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>

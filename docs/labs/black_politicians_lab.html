@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Lab: Black Politicians Training Aid – Matching and Weighting</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-b337f537912f5ab074b938eebad4c5d7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Matching and Weighting</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../NEWS.html"> 
+<span class="menu-text">News</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../articles/index.html"> 
+<span class="menu-text">Articles</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="../labs/index.html" aria-current="page"> 
+<span class="menu-text">Labs</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../slides/index.html"> 
+<span class="menu-text">Slides</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/defenceeconomist/matching-and-weighting/"> <i class="bi bi-github" role="img" aria-label="GitHub repository">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../labs/black_politicians_lab.html">Lab: Black Politicians Training Aid</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../labs/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Labs</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../labs/lalonde_main_report_lab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lab: LaLonde Main Report Walkthrough</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../labs/black_politicians_lab.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Lab: Black Politicians Training Aid</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../labs/hisp_ie_practice_lab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lab: HISP IE in Practice</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../labs/nsw_cps_benchmark_lab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lab: NSW + CPS Benchmark</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#how-to-use-this-page" id="toc-how-to-use-this-page" class="nav-link active" data-scroll-target="#how-to-use-this-page"><span class="header-section-number">1</span> How To Use This Page</a></li>
+  <li><a href="#training-goal" id="toc-training-goal" class="nav-link" data-scroll-target="#training-goal"><span class="header-section-number">2</span> Training Goal</a></li>
+  <li><a href="#dataset-at-a-glance" id="toc-dataset-at-a-glance" class="nav-link" data-scroll-target="#dataset-at-a-glance"><span class="header-section-number">3</span> Dataset At A Glance</a></li>
+  <li><a href="#core-design-choice-for-this-training-aid" id="toc-core-design-choice-for-this-training-aid" class="nav-link" data-scroll-target="#core-design-choice-for-this-training-aid"><span class="header-section-number">4</span> Core Design Choice For This Training Aid</a></li>
+  <li><a href="#suggested-session-flow" id="toc-suggested-session-flow" class="nav-link" data-scroll-target="#suggested-session-flow"><span class="header-section-number">5</span> Suggested Session Flow</a></li>
+  <li><a href="#step-1-load-the-data" id="toc-step-1-load-the-data" class="nav-link" data-scroll-target="#step-1-load-the-data"><span class="header-section-number">6</span> Step 1: Load The Data</a></li>
+  <li><a href="#step-2-describe-the-raw-comparison" id="toc-step-2-describe-the-raw-comparison" class="nav-link" data-scroll-target="#step-2-describe-the-raw-comparison"><span class="header-section-number">7</span> Step 2: Describe The Raw Comparison</a></li>
+  <li><a href="#step-3-baseline-balance-diagnostics" id="toc-step-3-baseline-balance-diagnostics" class="nav-link" data-scroll-target="#step-3-baseline-balance-diagnostics"><span class="header-section-number">8</span> Step 3: Baseline Balance Diagnostics</a></li>
+  <li><a href="#step-4-exact-matching-feasibility-check" id="toc-step-4-exact-matching-feasibility-check" class="nav-link" data-scroll-target="#step-4-exact-matching-feasibility-check"><span class="header-section-number">9</span> Step 4: Exact Matching Feasibility Check</a></li>
+  <li><a href="#step-5-build-a-cem-version" id="toc-step-5-build-a-cem-version" class="nav-link" data-scroll-target="#step-5-build-a-cem-version"><span class="header-section-number">10</span> Step 5: Build A CEM Version</a></li>
+  <li><a href="#step-6-try-entropy-balancing" id="toc-step-6-try-entropy-balancing" class="nav-link" data-scroll-target="#step-6-try-entropy-balancing"><span class="header-section-number">11</span> Step 6: Try Entropy Balancing</a></li>
+  <li><a href="#step-7-estimate-and-compare" id="toc-step-7-estimate-and-compare" class="nav-link" data-scroll-target="#step-7-estimate-and-compare"><span class="header-section-number">12</span> Step 7: Estimate And Compare</a></li>
+  <li><a href="#comparison-table-to-fill-in" id="toc-comparison-table-to-fill-in" class="nav-link" data-scroll-target="#comparison-table-to-fill-in"><span class="header-section-number">13</span> Comparison Table To Fill In</a></li>
+  <li><a href="#debrief-questions" id="toc-debrief-questions" class="nav-link" data-scroll-target="#debrief-questions"><span class="header-section-number">14</span> Debrief Questions</a></li>
+  <li><a href="#optional-extension" id="toc-optional-extension" class="nav-link" data-scroll-target="#optional-extension"><span class="header-section-number">15</span> Optional Extension</a></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="black_politicians_lab.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div><div class="quarto-code-links"><h2>Code Links</h2><ul><li><a href="black_politicians_lab_full_code.html"><i class="bi bi-link-45deg"></i>Full Code</a></li><li><a href="black_politicians_lab_evaluated_code.html"><i class="bi bi-link-45deg"></i>Evaluated Code</a></li><li><a href="black_politicians_lab_qa_log.html"><i class="bi bi-link-45deg"></i>QA Log</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Lab: Black Politicians Training Aid</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="how-to-use-this-page" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="how-to-use-this-page"><span class="header-section-number">1</span> How To Use This Page</h2>
+<p>Use this page as a guided worksheet rather than as a finished report.</p>
+<ul>
+<li>Read the short framing note for each step.</li>
+<li>Run the starter code in your own R session.</li>
+<li>Write down what you learn before moving to the next section.</li>
+<li>Fill in the comparison table near the end so you can compare designs side by side.</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The code is shown but not executed when the website is rendered. That keeps the page readable even if <code>causaldata</code> is not installed yet.</p>
+</div>
+</div>
+</section>
+<section id="training-goal" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="training-goal"><span class="header-section-number">2</span> Training Goal</h2>
+<p>Practice the design-first workflow from the main report on a second dataset:</p>
+<ol type="1">
+<li>define the estimand before choosing a method</li>
+<li>map treatment, outcome, and covariates clearly</li>
+<li>diagnose raw imbalance</li>
+<li>compare exact matching, CEM, and entropy balancing</li>
+<li>interpret the tradeoff between balance, retention, and weight concentration</li>
+</ol>
+</section>
+<section id="dataset-at-a-glance" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="dataset-at-a-glance"><span class="header-section-number">3</span> Dataset At A Glance</h2>
+<p><code>causaldata::black_politicians</code> comes from Broockman (2013), a U.S. field experiment on legislator responsiveness that is also used in the <em>Matching</em> chapter of <em>The Effect</em>.</p>
+<ul>
+<li>Observations: <code>5,593</code></li>
+<li>Variables: <code>14</code></li>
+<li>Unit of analysis: one email-to-legislator observation</li>
+<li>Built-in randomized factor: <code>treat_out</code> (whether the email was out-of-district)</li>
+</ul>
+<p>The important design feature is that this dataset contains both:</p>
+<ul>
+<li>an experimental component: <code>treat_out</code>, which was randomized in the original study</li>
+<li>an observational comparison: legislator characteristics such as <code>leg_black</code>, <code>leg_democrat</code>, and district composition</li>
+</ul>
+<p>That makes it useful for training because you can separate two different questions:</p>
+<ol type="1">
+<li>what the original experiment randomized</li>
+<li>what you are doing when you instead compare observed groups of legislators</li>
+</ol>
+<p>In this lab, we deliberately focus on the second question. We are <strong>not</strong> estimating the effect of the randomized out-of-district email treatment. Instead, we treat <code>leg_black</code> as the focal training comparison and ask whether Black and non-Black legislators can be made more comparable on a compact set of pre-outcome covariates.</p>
+<p>For this training version, we use:</p>
+<ul>
+<li>focal training comparison: <code>leg_black</code></li>
+<li>binary outcome: <code>responded</code></li>
+<li>core design covariates: <code>medianhhincom</code>, <code>blackpercent</code>, <code>leg_democrat</code></li>
+<li>extension covariates for later rounds: <code>leg_senator</code>, <code>south</code>, <code>urbanpercent</code>, <code>totalpop</code></li>
+</ul>
+<p>These variables work well for a matching lab because they mix:</p>
+<ul>
+<li>legislator attributes such as party and chamber</li>
+<li>district composition measures such as racial composition, income, population, and urbanicity</li>
+<li>an observable behavioral outcome, <code>responded</code></li>
+</ul>
+<p>That structure supports a clear design-first sequence: inspect raw imbalance, test whether literal exact matching is feasible, then compare CEM and entropy balancing under a shared <code>ATT</code> target.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This is best treated as a training example for matching logic, not as a literal policy treatment that could be assigned. <code>leg_black</code> is an observed attribute, so the main teaching value here is design transparency: what comparability would have to mean, where overlap is thin, and how the matched estimand changes as you tighten the design.</p>
+</div>
+</div>
+</section>
+<section id="core-design-choice-for-this-training-aid" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="core-design-choice-for-this-training-aid"><span class="header-section-number">4</span> Core Design Choice For This Training Aid</h2>
+<p>For a first pass, keep the exercise simple and explicit.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Role</th>
+<th>Variable</th>
+<th>Why it is used here</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Treatment</td>
+<td><code>leg_black</code></td>
+<td>Focal comparison for the matching exercise</td>
+</tr>
+<tr class="even">
+<td>Outcome</td>
+<td><code>responded</code></td>
+<td>Whether the legislator replied</td>
+</tr>
+<tr class="odd">
+<td>Estimand</td>
+<td><code>ATT</code></td>
+<td>Average difference for the Black-legislator group</td>
+</tr>
+<tr class="even">
+<td>Core covariates</td>
+<td><code>medianhhincom</code>, <code>blackpercent</code>, <code>leg_democrat</code></td>
+<td>Compact set that captures district resources, district racial composition, and party</td>
+</tr>
+<tr class="odd">
+<td>Extension covariates</td>
+<td><code>leg_senator</code>, <code>south</code>, <code>urbanpercent</code>, <code>totalpop</code></td>
+<td>Useful once the basic workflow is clear</td>
+</tr>
+<tr class="even">
+<td>Post-design modeling variable</td>
+<td><code>treat_out</code></td>
+<td>Part of the original study design; add it after you understand the basic matched comparison</td>
+</tr>
+</tbody>
+</table>
+<p>Why not start with every variable at once? Because this page is meant to train judgement, not to hide the design behind a long formula.</p>
+</section>
+<section id="suggested-session-flow" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="suggested-session-flow"><span class="header-section-number">5</span> Suggested Session Flow</h2>
+<p>If you are teaching this live, a simple <code>35-45</code> minute structure works well:</p>
+<ol type="1">
+<li><code>5 minutes</code>: frame the question and walk through the variable map</li>
+<li><code>10 minutes</code>: run raw descriptives and balance diagnostics</li>
+<li><code>5 minutes</code>: try exact matching and discuss why it struggles</li>
+<li><code>10 minutes</code>: run CEM and inspect the retention-versus-balance tradeoff</li>
+<li><code>10 minutes</code>: run entropy balancing and inspect effective sample size</li>
+<li><code>5 minutes</code>: compare designs and decide which one you would defend</li>
+</ol>
+</section>
+<section id="step-1-load-the-data" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="step-1-load-the-data"><span class="header-section-number">6</span> Step 1: Load The Data</h2>
+<p>Start by loading the packages, bringing in the data, and creating a compact analysis object.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>required_packages <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"causaldata"</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"MatchIt"</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"WeightIt"</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"cobalt"</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"dplyr"</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"ggplot2"</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>missing_packages <span class="ot">&lt;-</span> required_packages[<span class="sc">!</span><span class="fu">vapply</span>(</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  required_packages,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  requireNamespace,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">logical</span>(<span class="dv">1</span>),</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">quietly =</span> <span class="cn">TRUE</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>)]</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">length</span>(missing_packages) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">install.packages</span>(missing_packages, <span class="at">repos =</span> <span class="st">"https://cloud.r-project.org"</span>)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="fu">invisible</span>(<span class="fu">lapply</span>(required_packages, library, <span class="at">character.only =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> causaldata<span class="sc">::</span>black_politicians <span class="sc">|&gt;</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">treat =</span> <span class="fu">as.integer</span>(leg_black),</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">outcome =</span> <span class="fu">as.integer</span>(responded)</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>design_covariates <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"medianhhincom"</span>, <span class="st">"blackpercent"</span>, <span class="st">"leg_democrat"</span>)</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>dat <span class="sc">|&gt;</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(treat, outcome, treat_out, <span class="fu">all_of</span>(design_covariates)) <span class="sc">|&gt;</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glimpse</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Checkpoint:</p>
+<ul>
+<li>Is the treatment binary?</li>
+<li>Is the outcome binary?</li>
+<li>Are the matching covariates measured before the outcome?</li>
+</ul>
+</section>
+<section id="step-2-describe-the-raw-comparison" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="step-2-describe-the-raw-comparison"><span class="header-section-number">7</span> Step 2: Describe The Raw Comparison</h2>
+<p>Do not start with a matching algorithm. First check whether the untreated group looks remotely comparable to the treated group on the covariates you care about.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>raw_summary <span class="ot">&lt;-</span> dat <span class="sc">|&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(treat) <span class="sc">|&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">response_rate =</span> <span class="fu">mean</span>(outcome, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_income =</span> <span class="fu">mean</span>(medianhhincom, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_blackpercent =</span> <span class="fu">mean</span>(blackpercent, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">prop_democrat =</span> <span class="fu">mean</span>(leg_democrat <span class="sc">==</span> <span class="dv">1</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">group =</span> <span class="fu">if_else</span>(treat <span class="sc">==</span> <span class="dv">1</span>L, <span class="st">"Black legislators"</span>, <span class="st">"Non-Black legislators"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(group, n, response_rate, mean_income, mean_blackpercent, prop_democrat)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>raw_summary</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>What to look for:</p>
+<ul>
+<li>large differences in <code>medianhhincom</code></li>
+<li>large differences in <code>blackpercent</code></li>
+<li>major party imbalance on <code>leg_democrat</code></li>
+</ul>
+<p>If the raw groups are far apart, that does not mean matching will fail, but it does mean the burden on the design is real.</p>
+</section>
+<section id="step-3-baseline-balance-diagnostics" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="step-3-baseline-balance-diagnostics"><span class="header-section-number">8</span> Step 3: Baseline Balance Diagnostics</h2>
+<p>Use <code>MatchIt</code> with <code>method = NULL</code> to get a formal pre-adjustment balance benchmark.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>m_raw <span class="ot">&lt;-</span> <span class="fu">matchit</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  treat <span class="sc">~</span> medianhhincom <span class="sc">+</span> blackpercent <span class="sc">+</span> leg_democrat,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dat,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="cn">NULL</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimand =</span> <span class="st">"ATT"</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m_raw, <span class="at">un =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>cobalt<span class="sc">::</span><span class="fu">bal.tab</span>(m_raw, <span class="at">un =</span> <span class="cn">TRUE</span>, <span class="at">m.threshold =</span> <span class="fl">0.1</span>)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>cobalt<span class="sc">::</span><span class="fu">love.plot</span>(</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  m_raw,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">abs =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">thresholds =</span> <span class="fu">c</span>(<span class="at">m =</span> <span class="fl">0.1</span>),</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">stars =</span> <span class="st">"raw"</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Checkpoint:</p>
+<ul>
+<li>Which covariate is least balanced?</li>
+<li>Are any absolute standardized mean differences already below <code>0.1</code>?</li>
+<li>If balance is poor, is the problem modest or structural?</li>
+</ul>
+</section>
+<section id="step-4-exact-matching-feasibility-check" class="level2" data-number="9">
+<h2 data-number="9" class="anchored" data-anchor-id="step-4-exact-matching-feasibility-check"><span class="header-section-number">9</span> Step 4: Exact Matching Feasibility Check</h2>
+<p>Exact matching is easiest to explain, but it becomes restrictive quickly. Use a reduced discrete specification to show both its appeal and its limits.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>m_exact <span class="ot">&lt;-</span> <span class="fu">matchit</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  treat <span class="sc">~</span> leg_democrat <span class="sc">+</span> leg_senator <span class="sc">+</span> south,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dat,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"exact"</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimand =</span> <span class="st">"ATT"</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m_exact, <span class="at">un =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>exact_dat <span class="ot">&lt;-</span> <span class="fu">match.data</span>(m_exact)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>exact_dat <span class="sc">|&gt;</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(treat) <span class="sc">|&gt;</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">group =</span> <span class="fu">if_else</span>(treat <span class="sc">==</span> <span class="dv">1</span>L, <span class="st">"Treated"</span>, <span class="st">"Control"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>What to discuss:</p>
+<ul>
+<li>Exact matching is transparent because every retained comparison is literal on the chosen variables.</li>
+<li>It will usually ignore important continuous differences unless you bin them first.</li>
+<li>If many treated units are dropped, the estimand begins to drift toward “the treated units for whom exact matches exist.”</li>
+</ul>
+</section>
+<section id="step-5-build-a-cem-version" class="level2" data-number="10">
+<h2 data-number="10" class="anchored" data-anchor-id="step-5-build-a-cem-version"><span class="header-section-number">10</span> Step 5: Build A CEM Version</h2>
+<p>CEM relaxes exact matching by coarsening continuous covariates into bins. That usually improves feasibility while keeping the matching logic visible.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>create_even_breaks <span class="ot">&lt;-</span> <span class="cf">function</span>(x, n) {</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  min_x <span class="ot">&lt;-</span> <span class="fu">min</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  max_x <span class="ot">&lt;-</span> <span class="fu">max</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  min_x <span class="sc">+</span> ((<span class="dv">0</span><span class="sc">:</span>n) <span class="sc">/</span> n) <span class="sc">*</span> (max_x <span class="sc">-</span> min_x)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>cem_cutpoints <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">medianhhincom =</span> <span class="fu">quantile</span>(dat<span class="sc">$</span>medianhhincom, <span class="at">probs =</span> (<span class="dv">0</span><span class="sc">:</span><span class="dv">6</span>) <span class="sc">/</span> <span class="dv">6</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">blackpercent =</span> <span class="fu">create_even_breaks</span>(dat<span class="sc">$</span>blackpercent, <span class="dv">6</span>)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>m_cem <span class="ot">&lt;-</span> <span class="fu">matchit</span>(</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  treat <span class="sc">~</span> medianhhincom <span class="sc">+</span> blackpercent <span class="sc">+</span> leg_democrat <span class="sc">+</span> leg_senator <span class="sc">+</span> south,</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dat,</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"cem"</span>,</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimand =</span> <span class="st">"ATT"</span>,</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">cutpoints =</span> cem_cutpoints</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m_cem, <span class="at">un =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>cobalt<span class="sc">::</span><span class="fu">bal.tab</span>(m_cem, <span class="at">un =</span> <span class="cn">TRUE</span>, <span class="at">m.threshold =</span> <span class="fl">0.1</span>)</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>cobalt<span class="sc">::</span><span class="fu">love.plot</span>(</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  m_cem,</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">abs =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">thresholds =</span> <span class="fu">c</span>(<span class="at">m =</span> <span class="fl">0.1</span>),</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">stars =</span> <span class="st">"raw"</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Questions to answer after running it:</p>
+<ol type="1">
+<li>How much better is balance than in the raw sample?</li>
+<li>How many treated units are retained?</li>
+<li>Which binning choices matter most for the result?</li>
+</ol>
+</section>
+<section id="step-6-try-entropy-balancing" class="level2" data-number="11">
+<h2 data-number="11" class="anchored" data-anchor-id="step-6-try-entropy-balancing"><span class="header-section-number">11</span> Step 6: Try Entropy Balancing</h2>
+<p>Entropy balancing keeps the treated group intact and reweights the controls. That often gives excellent balance, but the price can be concentrated weights and a smaller effective control sample.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>w_ebal <span class="ot">&lt;-</span> <span class="fu">weightit</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  treat <span class="sc">~</span> medianhhincom <span class="sc">+</span> <span class="fu">I</span>(medianhhincom<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    blackpercent <span class="sc">+</span> <span class="fu">I</span>(blackpercent<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    leg_democrat <span class="sc">+</span> leg_senator <span class="sc">+</span> south,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dat,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"ebal"</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimand =</span> <span class="st">"ATT"</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(w_ebal)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>cobalt<span class="sc">::</span><span class="fu">bal.tab</span>(w_ebal, <span class="at">un =</span> <span class="cn">TRUE</span>, <span class="at">m.threshold =</span> <span class="fl">0.1</span>)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>cobalt<span class="sc">::</span><span class="fu">love.plot</span>(</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  w_ebal,</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">abs =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">thresholds =</span> <span class="fu">c</span>(<span class="at">m =</span> <span class="fl">0.1</span>),</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">stars =</span> <span class="st">"raw"</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>ess <span class="ot">&lt;-</span> <span class="cf">function</span>(w) {</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>  (<span class="fu">sum</span>(w)<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> <span class="fu">sum</span>(w<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>dat_ebal <span class="ot">&lt;-</span> dat <span class="sc">|&gt;</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">w =</span> w_ebal<span class="sc">$</span>weights)</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>dat_ebal <span class="sc">|&gt;</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(treat) <span class="sc">|&gt;</span></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">raw_n =</span> <span class="fu">n</span>(),</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">ess =</span> <span class="fu">ess</span>(w),</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">max_weight =</span> <span class="fu">max</span>(w),</span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_weight =</span> <span class="fu">mean</span>(w),</span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Interpretation prompt:</p>
+<ul>
+<li>If balance looks excellent but control-side ESS collapses, would you still prefer this design?</li>
+</ul>
+</section>
+<section id="step-7-estimate-and-compare" class="level2" data-number="12">
+<h2 data-number="12" class="anchored" data-anchor-id="step-7-estimate-and-compare"><span class="header-section-number">12</span> Step 7: Estimate And Compare</h2>
+<p>Keep the outcome model simple for the training version. The point is to compare designs, not to hide differences behind a complicated specification.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>raw_fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(outcome <span class="sc">~</span> treat, <span class="at">data =</span> dat)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>exact_fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(outcome <span class="sc">~</span> treat, <span class="at">data =</span> exact_dat, <span class="at">weights =</span> weights)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>cem_dat <span class="ot">&lt;-</span> <span class="fu">match.data</span>(m_cem)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>cem_fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(outcome <span class="sc">~</span> treat, <span class="at">data =</span> cem_dat, <span class="at">weights =</span> weights)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>ebal_fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(outcome <span class="sc">~</span> treat, <span class="at">data =</span> dat_ebal, <span class="at">weights =</span> w)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(<span class="fu">summary</span>(raw_fit))</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(<span class="fu">summary</span>(exact_fit))</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(<span class="fu">summary</span>(cem_fit))</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(<span class="fu">summary</span>(ebal_fit))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>You can stop here for an introductory session. If you want to connect the lab back to the original study design, add <code>treat_out</code> and relevant controls after the design stage rather than mixing everything together at the start.</p>
+</section>
+<section id="comparison-table-to-fill-in" class="level2" data-number="13">
+<h2 data-number="13" class="anchored" data-anchor-id="comparison-table-to-fill-in"><span class="header-section-number">13</span> Comparison Table To Fill In</h2>
+<p>Use this table as the main training record.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Design</th>
+<th>Worst abs. SMD</th>
+<th>Treated retained</th>
+<th>Control ESS</th>
+<th>Estimated effect</th>
+<th>Your judgement</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Raw sample</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>Exact matching</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>CEM</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>Entropy balancing</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="debrief-questions" class="level2" data-number="14">
+<h2 data-number="14" class="anchored" data-anchor-id="debrief-questions"><span class="header-section-number">14</span> Debrief Questions</h2>
+<ol type="1">
+<li>Which design gave the best balance on the covariates you actually care about?</li>
+<li>Which design preserved the clearest connection to the original <code>ATT</code>?</li>
+<li>Did better balance come from pruning observations, reweighting heavily, or both?</li>
+<li>If you had to explain your preferred design to a non-technical policy audience, which one would be easiest to defend?</li>
+</ol>
+</section>
+<section id="optional-extension" class="level2" data-number="15">
+<h2 data-number="15" class="anchored" data-anchor-id="optional-extension"><span class="header-section-number">15</span> Optional Extension</h2>
+<p>Once the core exercise is complete, extend the outcome model to reflect the original study more closely. This same interaction model is now included in the evaluated-code artifact so you can compare your local run with the QA checks directly.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>final_fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  outcome <span class="sc">~</span> treat <span class="sc">*</span> treat_out <span class="sc">+</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    nonblacknonwhite <span class="sc">+</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    black_medianhh <span class="sc">+</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    white_medianhh <span class="sc">+</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    statessquireindex <span class="sc">+</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    totalpop <span class="sc">+</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    urbanpercent,</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> cem_dat,</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">weights =</span> weights</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(final_fit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>This extension is useful because it separates two tasks:</p>
+<ul>
+<li>design the comparison first</li>
+<li>fit the richer substantive model second</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

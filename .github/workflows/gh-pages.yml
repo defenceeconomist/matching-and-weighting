@@ -75,6 +75,21 @@ jobs:
       - name: Render Quarto site (HTML only)
         run: quarto render docs --to html
 
+      - name: Render Quarto PDFs
+        shell: bash
+        run: |
+          set -euo pipefail
+          pdf_docs=()
+          while IFS= read -r doc; do
+            pdf_docs+=("${doc}")
+          done < <(grep -R -n -E '^[[:space:]]*pdf:[[:space:]]*$' docs | awk -F: '$1 ~ /\.qmd$/ {print $1}' | sort -u)
+          echo "Rendering ${#pdf_docs[@]} PDF documents"
+          for doc in "${pdf_docs[@]}"; do
+            echo "::group::quarto render ${doc} --to pdf"
+            quarto render "${doc}" --to pdf
+            echo "::endgroup::"
+          done
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
