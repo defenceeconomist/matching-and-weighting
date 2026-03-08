@@ -19,6 +19,7 @@ jobs:
     env:
       R_VERSION: "4.5.1"
       QUARTO_VERSION: "1.8.26"
+      QUARTO_CHROMIUM_ARGS: "--no-sandbox --disable-dev-shm-usage --disable-gpu"
 
     steps:
       - name: Check out repository
