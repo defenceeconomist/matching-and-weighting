@@ -13,7 +13,7 @@ format:
 
 ## Purpose
 
-This appendix gives background notes on why the `lalonde` dataset remains central in causal-inference teaching and matching practice. It is based primarily on *Comparing Experimental and Nonexperimental Methods: What Lessons Have We Learned Four Decades After LaLonde (1986)?* [@lalonde_four_decades], and is meant to help readers of the main report and labs understand why this dataset is not just a convenient package example.
+This appendix gives background notes on why the `lalonde` dataset remains central in causal-inference teaching and matching practice. It is based primarily on *Comparing Experimental and Nonexperimental Methods: What Lessons Have We Learned Four Decades After LaLonde (1986)?* [@imbens2025comparingexperimentalnonexperimentalmethods], and is meant to help readers of the main report and labs understand why this dataset is not just a convenient package example.
 
 ## Why LaLonde Still Matters
 
@@ -25,11 +25,11 @@ The `lalonde`-style benchmark matters because it combines three things:
 - observational comparison groups that create the harder design problem
 - public data that allow repeated methodological reanalysis
 
-That combination turned the LaLonde-Dehejia-Wahba setup into a benchmark case for evaluating matching, propensity-score adjustment, trimming, weighting, and validation exercises [@dehejia1999causal; @lalonde_four_decades].
+That combination turned the LaLonde-Dehejia-Wahba setup into a benchmark case for evaluating matching, propensity-score adjustment, trimming, weighting, and validation exercises [@dehejia1999causal; @imbens2025comparingexperimentalnonexperimentalmethods].
 
 ## The Basic Historical Arc
 
-The paper's historical story is straightforward [@lalonde_four_decades]:
+The paper's historical story is straightforward [@imbens2025comparingexperimentalnonexperimentalmethods]:
 
 1. LaLonde (1986) showed that many standard nonexperimental estimators performed poorly when compared with the experimental benchmark.
 2. Heckman and Hotz argued that specification tests and validation exercises could help diagnose when nonexperimental estimates were more credible.
@@ -40,7 +40,7 @@ This is why LaLonde remains useful in teaching. The dataset does not tell a stor
 
 ## What LaLonde Originally Showed
 
-LaLonde used the National Supported Work training experiment together with nonexperimental comparison groups and found that many regression-based observational estimators were unstable and often far from the experimental estimate [@lalonde1986evaluating; @lalonde_four_decades].
+LaLonde used the National Supported Work training experiment together with nonexperimental comparison groups and found that many regression-based observational estimators were unstable and often far from the experimental estimate [@lalonde1986evaluating; @imbens2025comparingexperimentalnonexperimentalmethods].
 
 The important lesson is not only that old estimators performed badly. The deeper lesson is that observational adjustment is fragile when treated and untreated groups are not naturally comparable, and when the analyst has too much modeling discretion.
 
@@ -48,7 +48,7 @@ That is exactly why the dataset fits this repo. The whole design-first workflow 
 
 ## Five Lessons Emphasized In The Recent Reassessment
 
-The 2024 reassessment organizes the post-LaLonde literature around five broad lessons [@lalonde_four_decades].
+The 2025 reassessment organizes the post-LaLonde literature around five broad lessons [@imbens2025comparingexperimentalnonexperimentalmethods].
 
 ### 1. Unconfoundedness Must Be Defended, Not Assumed
 
@@ -64,25 +64,25 @@ That is closely aligned with the main report's focus on retention, pruning, and 
 
 ### 3. Propensity Scores Help Summarize The Design Problem, But They Do Not Solve It Alone
 
-The reassessment treats propensity scores as useful tools for diagnosing overlap and structuring comparisons, not as magic balancing numbers [@lalonde_four_decades]. That is consistent with the repo's decision not to treat propensity-score matching as the core introductory method.
+The reassessment treats propensity scores as useful tools for diagnosing overlap and structuring comparisons, not as magic balancing numbers [@imbens2025comparingexperimentalnonexperimentalmethods]. That is consistent with the repo's decision not to treat propensity-score matching as the core introductory method.
 
 The key lesson is that propensity scores can help organize a design, but they still depend on covariate choice, overlap, and the plausibility of unconfoundedness.
 
 ### 4. Treatment Effects May Be Heterogeneous
 
-The paper highlights that the average treatment effect on the treated can hide meaningful variation across units. Later methods therefore look beyond a single average and examine conditional or subgroup effects when the design supports it [@lalonde_four_decades].
+The paper highlights that the average treatment effect on the treated can hide meaningful variation across units. Later methods therefore look beyond a single average and examine conditional or subgroup effects when the design supports it [@imbens2025comparingexperimentalnonexperimentalmethods].
 
 This matters for teaching because it stops matching from being framed as a single-number machine. A design can change the target population, and the estimand may drift as overlap restrictions tighten.
 
 ### 5. Validation Exercises Still Matter
 
-One of the paper's strongest messages is that modern estimators are not enough by themselves. Researchers still need validation exercises, including placebo outcomes, benchmark comparisons, and sensitivity checks, to assess whether the underlying identifying assumptions are plausible [@lalonde_four_decades].
+One of the paper's strongest messages is that modern estimators are not enough by themselves. Researchers still need validation exercises, including placebo outcomes, benchmark comparisons, and sensitivity checks, to assess whether the underlying identifying assumptions are plausible [@imbens2025comparingexperimentalnonexperimentalmethods].
 
 That point fits directly with the repo's broader workflow: diagnose first, estimate second, and then test how defensible the design really is.
 
 ## Reanalysis Themes Most Relevant To This Repo
 
-The paper's reanalysis emphasizes three themes that are especially useful for the materials here [@lalonde_four_decades].
+The paper's reanalysis emphasizes three themes that are especially useful for the materials here [@imbens2025comparingexperimentalnonexperimentalmethods].
 
 ### Overlap Improvement Reduces Model Dependence
 
@@ -110,7 +110,7 @@ The repo uses `MatchIt::lalonde` because it is an unusually good teaching datase
 - It supports discussion of exact matching, coarsened exact matching, weighting, overlap, pruning, and estimand drift.
 - It reminds readers that diagnostics are necessary but not sufficient.
 
-That last point matters most. The modern lesson from LaLonde is not simply "matching works" or "matching fails." The stronger lesson is that credibility depends on overlap, assignment knowledge, validation, and honest reporting of what the design can and cannot support [@lalonde_four_decades].
+That last point matters most. The modern lesson from LaLonde is not simply "matching works" or "matching fails." The stronger lesson is that credibility depends on overlap, assignment knowledge, validation, and honest reporting of what the design can and cannot support [@imbens2025comparingexperimentalnonexperimentalmethods].
 
 ## Practical Takeaways
 
@@ -130,4 +130,4 @@ For applied matching work, the appendix suggests five practical rules:
 
 ## Bottom Line
 
-Four decades after LaLonde, the core lesson is more nuanced than either optimism or pessimism about nonexperimental methods. Good observational adjustment is possible only when the design can make unconfoundedness plausible, overlap usable, and validation informative. The LaLonde benchmark remains valuable because it forces all three questions into the open [@lalonde1986evaluating; @dehejia1999causal; @abadie2011biascorrected; @lalonde_four_decades].
+Four decades after LaLonde, the core lesson is more nuanced than either optimism or pessimism about nonexperimental methods. Good observational adjustment is possible only when the design can make unconfoundedness plausible, overlap usable, and validation informative. The LaLonde benchmark remains valuable because it forces all three questions into the open [@lalonde1986evaluating; @dehejia1999causal; @abadie2011biascorrected; @imbens2025comparingexperimentalnonexperimentalmethods].
