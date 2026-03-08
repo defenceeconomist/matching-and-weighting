@@ -1704,30 +1704,32 @@ Use it when you need to decide whether a variable belongs in a matching or weigh
 This is the core backdoor case. A pre-treatment confounder affects both treatment assignment and the outcome, so conditioning on it is part of a credible design [@cunningham2021mixtape; @mixtape_sessions_unconfoundedness].
 
 ```{r fig.cap="Good control DAG: pre-treatment confounder blocks backdoor path when adjusted.", fig.width=7, fig.height=4}
-dag_good_control <- dagitty::dagitty("
-dag {
-  Prior_need [pos=\"0,1\"]
-  Treatment [pos=\"1,1\"]
-  Outcome [pos=\"2,1\"]
+dag_good_control <- ggdag::dagify(
+  outcome ~ treatment + prior_need,
+  treatment ~ prior_need,
+  exposure = "treatment",
+  outcome = "outcome",
+  labels = c(
+    prior_need = "Prior need",
+    treatment = "Treatment",
+    outcome = "Outcome"
+  ),
+  coords = list(
+    x = c(prior_need = 0, treatment = 1, outcome = 2),
+    y = c(prior_need = 1, treatment = 1, outcome = 1)
+  )
+)
 
-  Prior_need -> Treatment
-  Prior_need -> Outcome
-  Treatment -> Outcome
-}
-")
-
-ggdag::ggdag(dag_good_control, text = FALSE) +
+ggdag::ggdag(dag_good_control, text = FALSE, node = FALSE) +
   ggdag::geom_dag_point(
-    shape = 21,
-    fill = "grey92",
-    color = NA,
-    size = 18,
-    stroke = 0
+    shape = 16,
+    color = "#6FA8DC",
+    size = 14
   ) +
   ggdag::geom_dag_text_repel(
-    mapping = ggplot2::aes(label = name),
-    color = "black",
-    bg.color = "white",
+    mapping = ggplot2::aes(label = label),
+    color = "#111111",
+    bg.color = "#FFF7D6",
     point.padding = grid::unit(0.9, "lines"),
     box.padding = 0.2,
     seed = 123
@@ -1751,34 +1753,47 @@ What this means:
 This is the main warning from the Mixtape Sessions unconfoundedness lecture: a variable can be measured before treatment and still be a bad control if it is a collider [@mixtape_sessions_unconfoundedness].
 
 ```{r fig.cap="Collider case DAG: conditioning on application completion opens a non-causal path.", fig.width=7.5, fig.height=4.5}
-dag_collider_case <- dagitty::dagitty("
-dag {
-  Motivation [pos=\"0,2\"]
-  Treatment [pos=\"1,2\"]
-  Application_complete [pos=\"1,1\"]
-  Administrative_capacity [pos=\"2,2\"]
-  Outcome [pos=\"3,2\"]
+dag_collider_case <- ggdag::dagify(
+  treatment ~ motivation,
+  application_complete ~ motivation + administrative_capacity,
+  outcome ~ treatment + administrative_capacity,
+  exposure = "treatment",
+  outcome = "outcome",
+  labels = c(
+    motivation = "Motivation",
+    treatment = "Treatment",
+    application_complete = "Application complete",
+    administrative_capacity = "Administrative capacity",
+    outcome = "Outcome"
+  ),
+  coords = list(
+    x = c(
+      motivation = 0,
+      treatment = 1,
+      application_complete = 1,
+      administrative_capacity = 2,
+      outcome = 3
+    ),
+    y = c(
+      motivation = 2,
+      treatment = 2,
+      application_complete = 1,
+      administrative_capacity = 2,
+      outcome = 2
+    )
+  )
+)
 
-  Motivation -> Treatment
-  Motivation -> Application_complete
-  Administrative_capacity -> Application_complete
-  Administrative_capacity -> Outcome
-  Treatment -> Outcome
-}
-")
-
-ggdag::ggdag(dag_collider_case, text = FALSE) +
+ggdag::ggdag(dag_collider_case, text = FALSE, node = FALSE) +
   ggdag::geom_dag_point(
-    shape = 21,
-    fill = "grey92",
-    color = NA,
-    size = 18,
-    stroke = 0
+    shape = 16,
+    color = "#6FA8DC",
+    size = 14
   ) +
   ggdag::geom_dag_text_repel(
-    mapping = ggplot2::aes(label = name),
-    color = "black",
-    bg.color = "white",
+    mapping = ggplot2::aes(label = label),
+    color = "#111111",
+    bg.color = "#FFF7D6",
     point.padding = grid::unit(0.9, "lines"),
     box.padding = 0.2,
     seed = 123
@@ -1802,33 +1817,44 @@ What this means:
 This is the standard mediator problem. Once treatment has already changed a variable, that variable no longer belongs in the design stage [@cunningham2021mixtape; @mixtape_sessions_unconfoundedness].
 
 ```{r fig.cap="Post-treatment mediator DAG: conditioning on mediator changes estimand away from total effect.", fig.width=8, fig.height=4.5}
-dag_post_treatment <- dagitty::dagitty("
-dag {
-  Prior_need [pos=\"0,2\"]
-  Treatment [pos=\"1,2\"]
-  Skill_gain_after_programme [pos=\"2,1\"]
-  Outcome [pos=\"3,2\"]
+dag_post_treatment <- ggdag::dagify(
+  treatment ~ prior_need,
+  skill_gain_after_programme ~ treatment,
+  outcome ~ treatment + prior_need + skill_gain_after_programme,
+  exposure = "treatment",
+  outcome = "outcome",
+  labels = c(
+    prior_need = "Prior need",
+    treatment = "Treatment",
+    skill_gain_after_programme = "Skill gain after programme",
+    outcome = "Outcome"
+  ),
+  coords = list(
+    x = c(
+      prior_need = 0,
+      treatment = 1,
+      skill_gain_after_programme = 2,
+      outcome = 3
+    ),
+    y = c(
+      prior_need = 2,
+      treatment = 2,
+      skill_gain_after_programme = 1,
+      outcome = 2
+    )
+  )
+)
 
-  Prior_need -> Treatment
-  Prior_need -> Outcome
-  Treatment -> Skill_gain_after_programme
-  Skill_gain_after_programme -> Outcome
-  Treatment -> Outcome
-}
-")
-
-ggdag::ggdag(dag_post_treatment, text = FALSE) +
+ggdag::ggdag(dag_post_treatment, text = FALSE, node = FALSE) +
   ggdag::geom_dag_point(
-    shape = 21,
-    fill = "grey92",
-    color = NA,
-    size = 18,
-    stroke = 0
+    shape = 16,
+    color = "#6FA8DC",
+    size = 14
   ) +
   ggdag::geom_dag_text_repel(
-    mapping = ggplot2::aes(label = name),
-    color = "black",
-    bg.color = "white",
+    mapping = ggplot2::aes(label = label),
+    color = "#111111",
+    bg.color = "#FFF7D6",
     point.padding = grid::unit(0.9, "lines"),
     box.padding = 0.2,
     seed = 123
