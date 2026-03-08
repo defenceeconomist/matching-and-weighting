@@ -85,8 +85,8 @@ jobs:
           done < <(grep -R -n -E '^[[:space:]]*pdf:[[:space:]]*$' docs | awk -F: '$1 ~ /\.qmd$/ {print $1}' | sort -u)
           echo "Rendering ${#pdf_docs[@]} PDF documents"
           for doc in "${pdf_docs[@]}"; do
-            echo "::group::quarto render ${doc} --to pdf"
-            quarto render "${doc}" --to pdf
+            echo "::group::quarto render ${doc} --to pdf --log-level debug"
+            quarto render "${doc}" --to pdf --log-level debug
             echo "::endgroup::"
           done
 
