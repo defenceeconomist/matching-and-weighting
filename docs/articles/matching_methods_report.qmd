@@ -28,7 +28,8 @@ execute:
 ## Executive Summary
 
 - This report compares exact matching, coarsened exact matching (CEM), and entropy balancing as design-stage tools for estimating an `ATT` from observational data.
-- In the `lalonde` worked example, all three adjusted designs produce a positive programme-effect estimate, but they do so with different tradeoffs in transparency, covariate balance, and retained information.
+- The report anchors the observational estimates to the NSW experimental benchmark from `causaldata::nsw_mixtape` while estimating the adjustment methods on `MatchIt::lalonde`, which replaces the NSW controls with a PSID comparison sample.
+- In the `lalonde` worked example, all three adjusted designs produce a positive programme-effect estimate, but they do so with different tradeoffs in transparency, covariate balance, retained information, and agreement with the experimental benchmark.
 - Exact matching is the most transparent design, but it remains a partial solution here because feasible exact constraints leave residual imbalance on prior earnings.
 - The report's tuned CEM specification is the strongest matched-sample compromise: it brings all reported covariates below the conventional absolute standardized-difference threshold of `0.1`, but it does so by pruning the treated sample from `185` units to `81`.
 - Entropy balancing achieves the strongest observed mean balance and preserves all treated units, but the weighted comparison depends on a much smaller effective control sample, so the gain in balance comes with concentrated weights rather than explicit sample loss.
@@ -184,19 +185,23 @@ Randomized trials are still the most useful benchmark for thinking about compara
 
 ## Data and Study Design
 
-### Example Dataset
+### Example Datasets
 
-For the first worked example, this report uses `lalonde`, the demonstration dataset distributed with `MatchIt`. The data combine participants in the National Supported Work training programme with an observational comparison group and are widely used to teach matching because the treated and untreated groups are visibly different before adjustment [@ho2011matchit].
+For this worked example, the report uses two related datasets that play different roles. The observational design is estimated on `lalonde`, the demonstration dataset distributed with `MatchIt`, while the experimental benchmark comes from `causaldata::nsw_mixtape`. That distinction is important. `causaldata::nsw_mixtape` contains the NSW treated and randomized control groups only, whereas `MatchIt::lalonde` keeps the NSW treated group but pairs it with a non-experimental PSID comparison sample [@ho2011matchit].
+
+The datasets also encode similar covariates differently. `causaldata::nsw_mixtape` stores race and ethnicity as separate `black` and `hisp` indicators and uses `marr` for marital status. `MatchIt::lalonde` collapses race into a single `race` factor and uses `married`. In the code below, the report standardizes those differences enough to discuss the datasets side by side while still fitting the matching and weighting designs on the `MatchIt` sample that the rest of the report has been using.
 
 In this application:
 
+- the benchmark dataset is `causaldata::nsw_mixtape`
+- the observational dataset is `MatchIt::lalonde`
 - `treat` indicates participation in the training programme
 - `re78` is 1978 earnings and serves as the post-treatment outcome
 - the pre-treatment covariates are `age`, `educ`, `race`, `married`, `nodegree`, `re74`, and `re75`
 - the target estimand is the `ATT`
 - the focal group is the treated sample, that is, units with `treat = 1`
 
-This is a useful teaching dataset because it mirrors a common evaluator problem: a programme has already been delivered, a comparison group exists in the data, but the comparison is not credible without careful design work on observed pre-treatment characteristics.
+This is a useful teaching setup because it mirrors a common evaluator problem: a programme has already been delivered, a comparison group exists in the data, but the comparison is not credible without careful design work on observed pre-treatment characteristics. Keeping the NSW experiment in view at the same time makes it possible to judge the observational estimates against a known benchmark rather than only against one another.
 
 ### Evaluation Use Case
 
@@ -223,6 +228,7 @@ required_packages <- c(
   "MatchIt",
   "WeightIt",
   "cobalt",
+  "causaldata",
   "dplyr",
   "ggplot2"
 )
@@ -248,10 +254,27 @@ invisible(lapply(required_packages, library, character.only = TRUE))
 ### Data Preparation
 
 ```{r}
-# Load the built-in demonstration dataset from MatchIt.
+# Load the NSW experimental benchmark and the observational MatchIt sample.
 data("lalonde", package = "MatchIt")
 
-# Standardize variable types and create a single outcome alias used throughout.
+# Standardize the NSW experiment while retaining its original package columns.
+benchmark_dat <- causaldata::nsw_mixtape |>
+  mutate(
+    treat = as.integer(treat),
+    outcome = re78,
+    race = factor(
+      case_when(
+        black == 1L ~ "black",
+        hisp == 1L ~ "hispan",
+        TRUE ~ "white"
+      ),
+      levels = c("black", "hispan", "white")
+    ),
+    married = factor(marr, levels = c(0, 1), labels = c("not_married", "married")),
+    nodegree = factor(nodegree, levels = c(0, 1), labels = c("has_degree", "no_degree"))
+  )
+
+# Standardize the MatchIt observational sample used for the adjustment methods.
 dat <- lalonde |>
   mutate(
     treat = as.integer(treat),
@@ -265,11 +288,64 @@ design_covariates <- c(
   "age", "educ", "race", "married", "nodegree", "re74", "re75"
 )
 
+# Summarize how the two package datasets are being used in this report.
+dataset_roles <- tibble(
+  dataset = c("causaldata::nsw_mixtape", "MatchIt::lalonde"),
+  role_in_report = c("Experimental benchmark", "Observational design sample"),
+  treated_units = c(sum(benchmark_dat$treat == 1L), sum(dat$treat == 1L)),
+  control_units = c(sum(benchmark_dat$treat == 0L), sum(dat$treat == 0L)),
+  control_group = c("NSW randomized controls", "PSID comparison sample"),
+  covariate_coding = c("black/hisp + marr", "race factor + married")
+)
+
+dataset_roles
+
 # Quick schema check for treatment, outcome, and all design covariates.
 dat |>
   select(treat, outcome, all_of(design_covariates)) |>
   glimpse()
 ```
+
+The dataset-role table is not a technical footnote. It explains why the benchmark and the observational design should not be collapsed into one object. The experimental effect must be estimated using only NSW treated units and NSW randomized controls in `causaldata::nsw_mixtape`. The matching and weighting designs below instead use `MatchIt::lalonde`, where the same treated sample is compared against a PSID control pool.
+
+### Experimental Benchmark
+
+```{r}
+# Estimate the NSW experimental benchmark using treated and randomized controls only.
+benchmark_fit <- lm(outcome ~ treat, data = benchmark_dat)
+benchmark_att <- coef(summary(benchmark_fit))["treat", ]
+experimental_estimate <- unname(benchmark_att["Estimate"])
+
+# Summarize the randomized treated and control groups for later comparison.
+benchmark_summary <- benchmark_dat |>
+  group_by(treat) |>
+  summarise(
+    n = n(),
+    mean_re78 = mean(outcome, na.rm = TRUE),
+    mean_re74 = mean(re74, na.rm = TRUE),
+    mean_re75 = mean(re75, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  mutate(group = if_else(treat == 1L, "NSW treated", "NSW controls")) |>
+  select(group, n, mean_re78, mean_re74, mean_re75) |>
+  mutate(across(-c(group, n), ~ round(.x, 3)))
+
+benchmark_effect <- tibble(
+  design = "Experimental benchmark (NSW RCT)",
+  estimate = unname(benchmark_att["Estimate"]),
+  std_error = unname(benchmark_att["Std. Error"]),
+  t_value = unname(benchmark_att["t value"]),
+  p_value = unname(benchmark_att["Pr(>|t|)"])
+) |>
+  mutate(across(c(estimate, std_error, t_value, p_value), ~ round(.x, 3)))
+
+benchmark_summary
+benchmark_effect
+```
+
+The benchmark estimate is positive: the randomized NSW contrast in `causaldata::nsw_mixtape` implies an earnings gain of about `r benchmark_effect$estimate[1]` dollars, with standard error `r benchmark_effect$std_error[1]`. This is the reference point for the rest of the report. It is not estimated with the PSID controls from `MatchIt::lalonde`; it comes only from the NSW experiment.
+
+That benchmark also clarifies what the observational design is trying to do. `MatchIt::lalonde` keeps the same `185` treated NSW participants, but it replaces the `260` NSW experimental controls with `429` PSID controls. The matching and weighting sections therefore ask a narrower and harder question than the experimental benchmark: whether an observational comparison built from the PSID sample can recover something close to the randomized NSW result after design adjustment.
 
 ## Pre-Match Diagnostics
 
@@ -302,7 +378,7 @@ pre_match_summary <- dat |>
 pre_match_summary
 ```
 
-The descriptive table is useful because it makes the substantive differences easy to see. The treated sample is younger on average, much less likely to be married, somewhat more likely to lack a degree, and has substantially lower earnings in both 1974 and 1975. Those are not minor baseline differences; they suggest that the untreated group is not yet a credible counterfactual for the treated group. The next step is therefore to move from raw descriptives to formal balance diagnostics on a common scale.
+The descriptive table is useful because it makes the substantive differences easy to see. The treated sample is younger on average, much less likely to be married, somewhat more likely to lack a degree, and has substantially lower earnings in both 1974 and 1975. Those are not minor baseline differences; they suggest that the untreated group is not yet a credible counterfactual for the treated group. Relative to the NSW experimental controls, the PSID controls in `MatchIt::lalonde` also begin from a much stronger earnings history: mean `re74` is `r pre_match_summary$mean_re74[pre_match_summary$group == "Control"]` in the observational sample versus `r benchmark_summary$mean_re74[benchmark_summary$group == "NSW controls"]` in the randomized NSW controls, and mean `re75` is `r pre_match_summary$mean_re75[pre_match_summary$group == "Control"]` versus `r benchmark_summary$mean_re75[benchmark_summary$group == "NSW controls"]`. That is exactly why keeping the experimental benchmark visible is useful. The next step is therefore to move from raw descriptives to formal balance diagnostics on a common scale.
 
 ### Balance Diagnostics Before Adjustment
 
@@ -1286,17 +1362,20 @@ extract_treat_effect <- function(model, method) {
 
 # Bind method-specific effect rows and append design-context metadata.
 treatment_effect_summary <- bind_rows(
+  extract_treat_effect(benchmark_fit, "Experimental benchmark (NSW RCT)"),
   extract_treat_effect(fit_exact, "Exact matching"),
   extract_treat_effect(fit_cem, "Coarsened exact matching"),
   extract_treat_effect(fit_ebal, "Entropy balancing")
 ) |>
   mutate(
     treated_units_used = c(
+      sum(benchmark_dat$treat == 1),
       sum(matched_exact$treat == 1),
       sum(matched_cem$treat == 1),
       sum(dat$treat == 1)
     ),
     control_basis = c(
+      paste(sum(benchmark_dat$treat == 0), "NSW randomized controls"),
       paste(sum(matched_exact$treat == 0), "matched controls"),
       paste(sum(matched_cem$treat == 0), "matched controls"),
       paste(
@@ -1306,12 +1385,14 @@ treatment_effect_summary <- bind_rows(
       )
     ),
     design_note = c(
+      "Estimated on causaldata::nsw_mixtape only",
       "Residual imbalance remains on re74",
       "Best balance among matched samples, but strongest pruning",
       "Preserves all treated units, but relies on concentrated control weights"
-    )
+    ),
+    gap_vs_benchmark = estimate - experimental_estimate
   ) |>
-  mutate(across(c(estimate, std_error, conf_low, conf_high, p_value), ~ round(.x, 3)))
+  mutate(across(c(estimate, std_error, conf_low, conf_high, p_value, gap_vs_benchmark), ~ round(.x, 3)))
 
 treatment_effect_summary |>
   rename(
@@ -1321,14 +1402,15 @@ treatment_effect_summary |>
     `P-value` = p_value,
     `Treated units used` = treated_units_used,
     `Control basis` = control_basis,
-    `Design note` = design_note
+    `Design note` = design_note,
+    `Gap vs benchmark` = gap_vs_benchmark
   ) |>
   knitr::kable()
 ```
 
-All three adjusted designs yield positive point estimates for the `ATT`, which is reassuring at the level of direction. Exact matching produces the smallest estimated gain at `r treatment_effect_summary$estimate[treatment_effect_summary$method == "Exact matching"]`, the custom CEM design is somewhat larger at `r treatment_effect_summary$estimate[treatment_effect_summary$method == "Coarsened exact matching"]`, and entropy balancing produces the largest at `r treatment_effect_summary$estimate[treatment_effect_summary$method == "Entropy balancing"]`.
+The benchmark row changes the comparison. The NSW experiment in `causaldata::nsw_mixtape` implies an `ATT` of `r treatment_effect_summary$estimate[treatment_effect_summary$method == "Experimental benchmark (NSW RCT)"]`. The observational designs estimated on `MatchIt::lalonde` remain positive, but they do not recover that benchmark equally closely: exact matching differs from the benchmark by `r treatment_effect_summary$gap_vs_benchmark[treatment_effect_summary$method == "Exact matching"]`, the custom CEM design by `r treatment_effect_summary$gap_vs_benchmark[treatment_effect_summary$method == "Coarsened exact matching"]`, and entropy balancing by `r treatment_effect_summary$gap_vs_benchmark[treatment_effect_summary$method == "Entropy balancing"]` dollars.
 
-But the table also shows why the treatment-effect comparison cannot be separated from the design diagnostics. The CEM estimate is attached to a much narrower treated population because only `r treatment_effect_summary$treated_units_used[treatment_effect_summary$method == "Coarsened exact matching"]` treated units remain after pruning. Exact matching retains far more treated units, but it does so with a weaker design on the full covariate set because imbalance remains on `re74`. Entropy balancing preserves all treated units, yet its comparison rests on a weighted control sample with effective sample size `r round(ebal_summary$effective.sample.size["Weighted", "Control"], 3)`, so the estimate depends on a concentrated subset of controls rather than on the full raw control pool in any substantive sense.
+But the table also shows why the treatment-effect comparison cannot be separated from the design diagnostics. The observational estimates are not just different estimators; they are built on a different control pool from the benchmark itself. The CEM estimate is attached to a much narrower treated population because only `r treatment_effect_summary$treated_units_used[treatment_effect_summary$method == "Coarsened exact matching"]` treated units remain after pruning. Exact matching retains far more treated units, but it does so with a weaker design on the full covariate set because imbalance remains on `re74`. Entropy balancing preserves all treated units, yet its comparison rests on a weighted PSID control sample with effective sample size `r round(ebal_summary$effective.sample.size["Weighted", "Control"], 3)`, so the estimate depends on a concentrated subset of controls rather than on the full raw control pool in any substantive sense.
 
 The appropriate evaluator-facing conclusion is therefore qualified rather than categorical. In this worked example, the sign of the estimated programme effect is stable across methods, but the magnitude and represented population are not. If preserving the original treated population is the priority, entropy balancing gives the most defensible summary estimate. If the priority is an auditable matched sample with all reported mean imbalance below a conventional threshold, the report's main CEM specification provides a defensible matched-sample result. Either way, the report should present the treatment effect together with the retention or weighting costs that make that estimate possible.
 

@@ -4,6 +4,7 @@ required_packages <- c(
   "MatchIt",
   "WeightIt",
   "cobalt",
+  "causaldata",
   "dplyr",
   "ggplot2"
 )
@@ -26,10 +27,27 @@ invisible(lapply(required_packages, library, character.only = TRUE))
 
 
 # ---- chunk 2 ----
-# Load the built-in demonstration dataset from MatchIt.
+# Load the NSW experimental benchmark and the observational MatchIt sample.
 data("lalonde", package = "MatchIt")
 
-# Standardize variable types and create a single outcome alias used throughout.
+# Standardize the NSW experiment while retaining its original package columns.
+benchmark_dat <- causaldata::nsw_mixtape |>
+  mutate(
+    treat = as.integer(treat),
+    outcome = re78,
+    race = factor(
+      case_when(
+        black == 1L ~ "black",
+        hisp == 1L ~ "hispan",
+        TRUE ~ "white"
+      ),
+      levels = c("black", "hispan", "white")
+    ),
+    married = factor(marr, levels = c(0, 1), labels = c("not_married", "married")),
+    nodegree = factor(nodegree, levels = c(0, 1), labels = c("has_degree", "no_degree"))
+  )
+
+# Standardize the MatchIt observational sample used for the adjustment methods.
 dat <- lalonde |>
   mutate(
     treat = as.integer(treat),
@@ -43,12 +61,56 @@ design_covariates <- c(
   "age", "educ", "race", "married", "nodegree", "re74", "re75"
 )
 
+# Summarize how the two package datasets are being used in this report.
+dataset_roles <- tibble(
+  dataset = c("causaldata::nsw_mixtape", "MatchIt::lalonde"),
+  role_in_report = c("Experimental benchmark", "Observational design sample"),
+  treated_units = c(sum(benchmark_dat$treat == 1L), sum(dat$treat == 1L)),
+  control_units = c(sum(benchmark_dat$treat == 0L), sum(dat$treat == 0L)),
+  control_group = c("NSW randomized controls", "PSID comparison sample"),
+  covariate_coding = c("black/hisp + marr", "race factor + married")
+)
+
+dataset_roles
+
 # Quick schema check for treatment, outcome, and all design covariates.
 dat |>
   select(treat, outcome, all_of(design_covariates)) |>
   glimpse()
 
 # ---- chunk 3 ----
+# Estimate the NSW experimental benchmark using treated and randomized controls only.
+benchmark_fit <- lm(outcome ~ treat, data = benchmark_dat)
+benchmark_att <- coef(summary(benchmark_fit))["treat", ]
+experimental_estimate <- unname(benchmark_att["Estimate"])
+
+# Summarize the randomized treated and control groups for later comparison.
+benchmark_summary <- benchmark_dat |>
+  group_by(treat) |>
+  summarise(
+    n = n(),
+    mean_re78 = mean(outcome, na.rm = TRUE),
+    mean_re74 = mean(re74, na.rm = TRUE),
+    mean_re75 = mean(re75, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  mutate(group = if_else(treat == 1L, "NSW treated", "NSW controls")) |>
+  select(group, n, mean_re78, mean_re74, mean_re75) |>
+  mutate(across(-c(group, n), ~ round(.x, 3)))
+
+benchmark_effect <- tibble(
+  design = "Experimental benchmark (NSW RCT)",
+  estimate = unname(benchmark_att["Estimate"]),
+  std_error = unname(benchmark_att["Std. Error"]),
+  t_value = unname(benchmark_att["t value"]),
+  p_value = unname(benchmark_att["Pr(>|t|)"])
+) |>
+  mutate(across(c(estimate, std_error, t_value, p_value), ~ round(.x, 3)))
+
+benchmark_summary
+benchmark_effect
+
+# ---- chunk 4 ----
 # Summarize baseline group differences before any adjustment is applied.
 pre_match_summary <- dat |>
   group_by(treat) |>
@@ -787,17 +849,20 @@ extract_treat_effect <- function(model, method) {
 
 # Bind method-specific effect rows and append design-context metadata.
 treatment_effect_summary <- bind_rows(
+  extract_treat_effect(benchmark_fit, "Experimental benchmark (NSW RCT)"),
   extract_treat_effect(fit_exact, "Exact matching"),
   extract_treat_effect(fit_cem, "Coarsened exact matching"),
   extract_treat_effect(fit_ebal, "Entropy balancing")
 ) |>
   mutate(
     treated_units_used = c(
+      sum(benchmark_dat$treat == 1),
       sum(matched_exact$treat == 1),
       sum(matched_cem$treat == 1),
       sum(dat$treat == 1)
     ),
     control_basis = c(
+      paste(sum(benchmark_dat$treat == 0), "NSW randomized controls"),
       paste(sum(matched_exact$treat == 0), "matched controls"),
       paste(sum(matched_cem$treat == 0), "matched controls"),
       paste(
@@ -807,12 +872,14 @@ treatment_effect_summary <- bind_rows(
       )
     ),
     design_note = c(
+      "Estimated on causaldata::nsw_mixtape only",
       "Residual imbalance remains on re74",
       "Best balance among matched samples, but strongest pruning",
       "Preserves all treated units, but relies on concentrated control weights"
-    )
+    ),
+    gap_vs_benchmark = estimate - experimental_estimate
   ) |>
-  mutate(across(c(estimate, std_error, conf_low, conf_high, p_value), ~ round(.x, 3)))
+  mutate(across(c(estimate, std_error, conf_low, conf_high, p_value, gap_vs_benchmark), ~ round(.x, 3)))
 
 treatment_effect_summary |>
   rename(
@@ -822,11 +889,11 @@ treatment_effect_summary |>
     `P-value` = p_value,
     `Treated units used` = treated_units_used,
     `Control basis` = control_basis,
-    `Design note` = design_note
+    `Design note` = design_note,
+    `Gap vs benchmark` = gap_vs_benchmark
   ) |>
   knitr::kable()
 
 # ---- chunk 36 ----
 # Capture the R session state for reproducibility.
 sessionInfo()
-
