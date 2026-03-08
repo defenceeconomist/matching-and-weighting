@@ -55,6 +55,7 @@ ENV/
 # Project outputs that should stay untracked
 _site/
 docs/.quarto/
+docs/_freeze/
 docs/**/*.quarto_ipynb
 
 # Do not track project data

@@ -63,5 +63,6 @@ format:
     number-sections: true
 
 execute:
+  freeze: auto
   warning: false
   message: false
