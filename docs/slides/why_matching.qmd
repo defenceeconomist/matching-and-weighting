@@ -130,8 +130,9 @@ matching_palette <- c(
   `Adjusted confounder` = "#7F6000",
   Treatment = "#275D8A",
   Outcome = "#4B7F52",
-  Trait = "#6B5C7A",
-  Collider = "#A43D63"
+  `Background factor` = "#6B5C7A",
+  Collider = "#A43D63",
+  Mediator = "#B65A1E"
 )
 
 slide_plot_background <- "#f7f1e8"
@@ -226,15 +227,39 @@ blocked_backdoor_dag <- dagify(
 )
 
 collider_dag <- dagify(
-  movie_star ~ talent + beauty,
+  earnings ~ programme + admin_capacity,
+  application_complete ~ motivation + admin_capacity,
+  programme ~ motivation,
+  exposure = "programme",
+  outcome = "earnings",
   labels = c(
-    talent = "Talent",
-    movie_star = "Movie star",
-    beauty = "Beauty"
+    motivation = "Motivation",
+    programme = "Programme",
+    application_complete = "Application complete",
+    admin_capacity = "Administrative capacity",
+    earnings = "Earnings"
   ),
   coords = list(
-    x = c(talent = 1, movie_star = 2, beauty = 3),
-    y = c(talent = 1, movie_star = 2, beauty = 1)
+    x = c(motivation = 1, programme = 2, application_complete = 2, admin_capacity = 3, earnings = 4),
+    y = c(motivation = 2, programme = 2, application_complete = 1, admin_capacity = 2, earnings = 2)
+  )
+)
+
+mediator_dag <- dagify(
+  earnings ~ programme + prior_need + skill_gain,
+  programme ~ prior_need,
+  skill_gain ~ programme,
+  exposure = "programme",
+  outcome = "earnings",
+  labels = c(
+    prior_need = "Prior need",
+    programme = "Programme",
+    skill_gain = "Skill gain after programme",
+    earnings = "Earnings"
+  ),
+  coords = list(
+    x = c(prior_need = 1, programme = 2, skill_gain = 3, earnings = 4),
+    y = c(prior_need = 2, programme = 2, skill_gain = 1, earnings = 2)
   )
 )
 ```
@@ -400,20 +425,64 @@ Balance, overlap, retention, and weights become reportable design costs.
 plot_matching_dag(
   collider_dag,
   roles = c(
-    talent = "Trait",
-    movie_star = "Collider",
-    beauty = "Trait"
+    motivation = "Background factor",
+    programme = "Treatment",
+    application_complete = "Collider",
+    admin_capacity = "Background factor",
+    earnings = "Outcome"
   ),
-  label_x = c(talent = 1.00, movie_star = 2.00, beauty = 3.00),
-  label_y = c(talent = 0.76, movie_star = 2.22, beauty = 0.76),
-  xlim = c(0.7, 3.3),
-  ylim = c(0.55, 2.45)
+  label_x = c(
+    motivation = 1.00,
+    programme = 2.05,
+    application_complete = 2.08,
+    admin_capacity = 3.00,
+    earnings = 4.02
+  ),
+  label_y = c(
+    motivation = 2.32,
+    programme = 2.30,
+    application_complete = 0.76,
+    admin_capacity = 2.32,
+    earnings = 2.30
+  ),
+  xlim = c(0.7, 4.3),
+  ylim = c(0.55, 2.55)
 )
 ```
 
 - a collider is different from a confounder
-- if you condition on `Movie star`, you can create a spurious association between `Talent` and `Beauty`
+- if you condition on `Application complete`, you can open a non-causal path between treatment and outcome through upstream factors
 - this is why not every pre-treatment variable belongs in the design [@mixtape_sessions_unconfoundedness]
+
+## Post-Treatment Mediator Warning
+
+```{r}
+#| label: fig-mediator-warning
+#| echo: false
+#| eval: true
+#| warning: false
+#| fig-width: 7.6
+#| fig-height: 3.9
+#| out-width: 78%
+#| fig-align: center
+plot_matching_dag(
+  mediator_dag,
+  roles = c(
+    prior_need = "Confounder",
+    programme = "Treatment",
+    skill_gain = "Mediator",
+    earnings = "Outcome"
+  ),
+  label_x = c(prior_need = 1.00, programme = 2.06, skill_gain = 3.02, earnings = 4.00),
+  label_y = c(prior_need = 2.32, programme = 2.30, skill_gain = 0.74, earnings = 2.30),
+  xlim = c(0.7, 4.3),
+  ylim = c(0.55, 2.55)
+)
+```
+
+- if you condition on a post-treatment mediator, you block part of the treatment effect
+- that changes the estimand away from the total programme effect
+- mediators therefore do not belong in the design stage when the target is a total causal effect
 
 ## What Matching Is Buying
 

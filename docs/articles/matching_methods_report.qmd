@@ -871,32 +871,6 @@ plot(
 )
 ```
 
-```{r fig.height=4.8, fig.width=7.5}
-# Compare unmatched and matched empirical CDFs for the same covariates.
-plot(
-  m_cem,
-  type = "ecdf",
-  interactive = FALSE,
-  which.xs = c("age", "educ", "re74", "re75")
-)
-```
-
-```{r}
-# Compact cobalt balance table for the final custom CEM design.
-cem_balance$Balance |>
-  as.data.frame() |>
-  tibble::rownames_to_column("Covariate") |>
-  mutate(across(where(is.numeric), ~ round(.x, 3))) |>
-  select(any_of(c("Covariate", "Type", "Diff.Un", "Diff.Adj", "V.Ratio.Un", "V.Ratio.Adj", "M.Threshold.Adj"))) |>
-  rename(any_of(c(
-    `Std. mean diff. (unadjusted)` = "Diff.Un",
-    `Std. mean diff. (adjusted)` = "Diff.Adj",
-    `Variance ratio (unadjusted)` = "V.Ratio.Un",
-    `Variance ratio (adjusted)` = "V.Ratio.Adj",
-    `Threshold check (adjusted)` = "M.Threshold.Adj"
-  ))) |>
-  knitr::kable(caption = "Final CEM balance diagnostics from cobalt.")
-```
 
 The diagnostics support a clear conclusion. The default CEM design is not invalid, but it is too restrictive for the substantive goal here because it achieves its balance partly by narrowing the treated sample too sharply. The custom specification still improves balance markedly relative to the raw data, keeps every reported adjusted standardized mean difference under `0.1`, and preserves more treated units. It is retained as the report's main CEM illustration because it keeps the coarsening choices explicit while delivering an acceptable balance-retention compromise, though the robustness section later shows that nearby cutpoint choices can also be defensible.
 
@@ -1538,15 +1512,18 @@ That transparency is useful in evaluator training and in commissioned work where
 
 ### When CEM Is Appropriate
 
-CEM is often the strongest option when the evaluator wants to preserve the logic and audit trail of matching but exact matching is too restrictive for the available data [@iacus2012cem; @ho2011matchit]. It is particularly useful when the design includes both discrete and continuous covariates and when the analyst can define substantively defensible bins for the continuous variables. In practice, that makes CEM attractive for many government and programme evaluations, because variables such as age, prior earnings, deprivation score, or prior service use can be grouped into categories that are both policy-legible and analytically workable.
-
-Its main advantage is that the tradeoff between balance and retention remains explicit. The evaluator can show how coarsening choices affect which treated units remain comparable to which controls, and can revise those choices in response to diagnostics rather than hiding the problem inside a black-box algorithm. That said, CEM is only as credible as the coarsening rules. If the bins are arbitrary, too coarse to preserve meaningful similarity, or so tight that the treated sample collapses, the method loses its value. CEM is therefore best used when the analyst can defend the bins in substantive terms and is willing to report how sensitive retention and balance are to those choices.
+CEM is often strongest when exact matching is too restrictive but the evaluator
+still needs an auditable matched design [@iacus2012cem; @ho2011matchit]. It is
+most defensible when coarsening rules are substantively justified and
+sensitivity to nearby cutpoints is reported.
 
 ### When Entropy Balancing Is Appropriate
 
-Entropy balancing is most appropriate when the evaluation priority is to preserve the focal population, usually the treated group under an ATT, while imposing very strong observed balance on selected covariate moments [@hainmueller2012entropy; @greifer2025weightit]. It is especially useful when discarding treated units would weaken the policy relevance of the estimate, but a sufficiently rich pool of controls is available to be reweighted into a credible comparison. In those circumstances, entropy balancing can improve observed design quality much more aggressively than a matched-sample approach without forcing the analyst to redefine the treated population through pruning.
-
-The caution is that the design cost appears in the weights rather than in the row count. For evaluator-facing work, entropy balancing should only be used when weight dispersion, effective sample size, and overlap diagnostics remain credible [@greifer2025weightit]. A weighted control group that contains all original units can still behave like a much smaller sample if a few observations receive very large weights. Entropy balancing is therefore strongest when overlap is already reasonably good and the evaluator is prepared to explain the resulting weighted comparison transparently, not when it is being used to rescue a fundamentally weak support problem.
+Entropy balancing is often strongest when preserving the treated population is
+the priority and the control pool is rich enough to support stable reweighting
+[@hainmueller2012entropy; @greifer2025weightit]. It should be used with clear
+weight-distribution and effective-sample-size diagnostics, because apparent
+row-level retention can still mask a highly concentrated comparison.
 
 ### Reporting Recommendations
 
@@ -1682,15 +1659,20 @@ The worked example also clarifies the tradeoffs among the methods. Exact matchin
 
 For evaluator practice, the practical implication is straightforward. Matching and weighting should be used when they are the strongest defensible option within the wider quasi-experimental toolkit, not as the default response to non-randomized data [@govuk_qed_slides]. When acceptable balance requires severe pruning, unstable weights, or major drift from the original estimand, the right conclusion may be that the available data do not support the policy question cleanly enough. That is not a failure of the workflow; it is one of its main virtues. Used well, these methods improve evaluation not by manufacturing certainty, but by making the limits of the available comparison explicit.
 
-## Appendices 
+## Appendices {.toc}
 
-## Appendix A: DAG and Bad Controls Companion {.appendix .unnumbered} 
+::: {.appendix}
+
+## Appendix A: DAG and Bad Controls Companion {.unnumbered}
 
 #### Purpose {.unnumbered} 
 
 This appendix gives a compact visual bridge from the report's covariate-selection guidance to the control-selection logic emphasized in *Causal Inference: The Mixtape* and the Mixtape Sessions unconfoundedness lecture [@cunningham2021mixtape; @mixtape_sessions_unconfoundedness].
 
 Use it when you need to decide whether a variable belongs in a matching or weighting design, or when you need to explain to a training audience why "measured before treatment" does not automatically mean "safe to control for."
+
+The plotting and adjustment-visualization pattern used in these DAG examples
+follows the `ggdag` introduction to DAG workflows [@ggdag_intro_dags].
 
 #### Fast Rule {.unnumbered} 
 
@@ -1703,107 +1685,171 @@ Use it when you need to decide whether a variable belongs in a matching or weigh
 
 This is the core backdoor case. A pre-treatment confounder affects both treatment assignment and the outcome, so conditioning on it is part of a credible design [@cunningham2021mixtape; @mixtape_sessions_unconfoundedness].
 
-```{r fig.cap="Good control DAG: pre-treatment confounder blocks backdoor path when adjusted.", fig.width=7, fig.height=4}
-dag_good_control <- ggdag::dagify(
-  outcome ~ treatment + prior_need,
-  treatment ~ prior_need,
-  exposure = "treatment",
-  outcome = "outcome",
-  labels = c(
-    prior_need = "Prior need",
-    treatment = "Treatment",
-    outcome = "Outcome"
-  ),
-  coords = list(
-    x = c(prior_need = 0, treatment = 1, outcome = 2),
-    y = c(prior_need = 1, treatment = 1, outcome = 1)
+```{r fig.cap="Good control DAG: adjusting for prior need blocks confounding in programme effect estimation.", fig.width=8, fig.height=5}
+draw_edges <- function(data, color = "black", linetype = 1, linewidth = 1) {
+  ggplot2::geom_segment(
+    data = dplyr::filter(data, !is.na(xend), !is.na(yend)),
+    mapping = ggplot2::aes(x = x, y = y, xend = xend, yend = yend),
+    inherit.aes = FALSE,
+    color = color,
+    linetype = linetype,
+    linewidth = linewidth,
+    arrow = grid::arrow(length = grid::unit(5, "pt"), type = "closed")
   )
+}
+
+dag_good_control <- dagitty::dagitty("
+dag {
+  PriorNeed -> Programme
+  PriorNeed -> Earnings
+  Programme -> Earnings
+}
+")
+
+dagitty::coordinates(dag_good_control) <- list(
+  x = c(PriorNeed = 0, Programme = 1, Earnings = 2),
+  y = c(PriorNeed = 1, Programme = 0, Earnings = 0)
 )
 
-ggdag::ggdag(dag_good_control, text = FALSE, node = FALSE) +
+td_conf_tidy <- ggdag::tidy_dagitty(dag_good_control)
+td_conf_adj <- ggdag::adjust_for(td_conf_tidy, "PriorNeed")
+td_conf <- td_conf_adj$data
+td_conf$node_type <- ifelse(td_conf$adjusted == "adjusted", "Adjusted confounder", "Other node")
+
+edge_causal <- dplyr::filter(td_conf, name == "Programme", to == "Earnings")
+edge_backdoor_1 <- dplyr::filter(td_conf, name == "PriorNeed", to == "Programme")
+edge_backdoor_2 <- dplyr::filter(td_conf, name == "PriorNeed", to == "Earnings")
+
+ggplot2::ggplot() +
+  draw_edges(edge_causal, color = "black", linetype = 1, linewidth = 1.1) +
+  draw_edges(edge_backdoor_1, color = "red3", linetype = 2, linewidth = 1.1) +
+  draw_edges(edge_backdoor_2, color = "red3", linetype = 2, linewidth = 1.1) +
   ggdag::geom_dag_point(
-    shape = 16,
-    color = "#6FA8DC",
+    data = td_conf,
+    mapping = ggplot2::aes(x = x, y = y, color = node_type),
     size = 14
   ) +
-  ggdag::geom_dag_text_repel(
-    mapping = ggplot2::aes(label = label),
-    color = "#111111",
-    bg.color = "#FFF7D6",
-    point.padding = grid::unit(0.9, "lines"),
-    box.padding = 0.2,
+  ggdag::geom_dag_label_repel(
+    data = td_conf,
+    mapping = ggplot2::aes(x = x, y = y, label = name),
+    color = "#1B1B1B",
+    fill = "white",
+    size = 4,
+    box.padding = 0.25,
+    point.padding = 0.8,
     seed = 123
   ) +
+  ggplot2::annotate(
+    "text",
+    x = 1.05, y = 0.55,
+    label = "Backdoor path:\nProgramme <- PriorNeed -> Earnings\nBlocked by adjusting for PriorNeed",
+    color = "red3",
+    size = 4
+  ) +
+  ggplot2::annotate(
+    "text",
+    x = 1.60, y = -0.18,
+    label = "Causal path: Programme -> Earnings",
+    color = "black",
+    size = 4
+  ) +
+  ggplot2::scale_color_manual(
+    values = c("Adjusted confounder" = "tomato", "Other node" = "grey50")
+  ) +
+  ggplot2::labs(
+    title = "Confounder example: programme impact",
+    subtitle = "Adjusting for prior need blocks confounding in estimated programme effect.",
+    color = NULL
+  ) +
   ggdag::theme_dag() +
-  ggplot2::theme(
-    text = ggplot2::element_text(color = "black"),
-    plot.background = ggplot2::element_rect(fill = "white", color = NA),
-    panel.background = ggplot2::element_rect(fill = "white", color = NA)
-  )
+  ggplot2::theme(legend.position = "bottom")
 ```
 
 What this means:
 
 - `Prior need` is a confounder because it helps determine both programme participation and the later outcome.
-- The backdoor path `Treatment <- Prior need -> Outcome` is open before adjustment.
+- The arrow `Prior need -> Outcome` is still part of the causal graph.
+- With `adjust_for = "prior_need"`, the backdoor path
+  `Treatment <- Prior need -> Outcome` is shown as blocked (shadowed) rather
+  than active.
 - Matching, subclassification, or weighting should target variables like this when they are measured before treatment and supported by the assignment story.
 
 #### Case 2: Bad Control Because It Is a Collider {.unnumbered} 
 
 This is the main warning from the Mixtape Sessions unconfoundedness lecture: a variable can be measured before treatment and still be a bad control if it is a collider [@mixtape_sessions_unconfoundedness].
 
-```{r fig.cap="Collider case DAG: conditioning on application completion opens a non-causal path.", fig.width=7.5, fig.height=4.5}
-dag_collider_case <- ggdag::dagify(
-  treatment ~ motivation,
-  application_complete ~ motivation + administrative_capacity,
-  outcome ~ treatment + administrative_capacity,
-  exposure = "treatment",
-  outcome = "outcome",
-  labels = c(
-    motivation = "Motivation",
-    treatment = "Treatment",
-    application_complete = "Application complete",
-    administrative_capacity = "Administrative capacity",
-    outcome = "Outcome"
-  ),
-  coords = list(
-    x = c(
-      motivation = 0,
-      treatment = 1,
-      application_complete = 1,
-      administrative_capacity = 2,
-      outcome = 3
-    ),
-    y = c(
-      motivation = 2,
-      treatment = 2,
-      application_complete = 1,
-      administrative_capacity = 2,
-      outcome = 2
-    )
-  )
+```{r fig.cap="Collider case DAG: conditioning on application completion opens a non-causal path.", fig.width=8.5, fig.height=5}
+dag_collider_case <- dagitty::dagitty("
+dag {
+  Motivation -> Programme
+  Motivation -> ApplicationComplete
+  AdminCapacity -> ApplicationComplete
+  AdminCapacity -> Earnings
+  Programme -> Earnings
+}
+")
+
+dagitty::coordinates(dag_collider_case) <- list(
+  x = c(Motivation = 0, Programme = 1, ApplicationComplete = 1, AdminCapacity = 2, Earnings = 3),
+  y = c(Motivation = 2, Programme = 2, ApplicationComplete = 1, AdminCapacity = 2, Earnings = 2)
 )
 
-ggdag::ggdag(dag_collider_case, text = FALSE, node = FALSE) +
+td_col_tidy <- ggdag::tidy_dagitty(dag_collider_case)
+td_col_adj <- ggdag::adjust_for(td_col_tidy, "ApplicationComplete")
+td_col <- td_col_adj$data
+td_col$node_type <- ifelse(td_col$adjusted == "adjusted", "Collider (do not adjust)", "Other node")
+
+edge_causal_col <- dplyr::filter(td_col, name == "Programme", to == "Earnings")
+edge_open_1 <- dplyr::filter(td_col, name == "Motivation", to == "ApplicationComplete")
+edge_open_2 <- dplyr::filter(td_col, name == "AdminCapacity", to == "ApplicationComplete")
+edge_open_3 <- dplyr::filter(td_col, name == "Motivation", to == "Programme")
+edge_open_4 <- dplyr::filter(td_col, name == "AdminCapacity", to == "Earnings")
+
+ggplot2::ggplot() +
+  draw_edges(edge_causal_col, color = "black", linetype = 1, linewidth = 1.1) +
+  draw_edges(edge_open_1, color = "red3", linetype = 2, linewidth = 1.1) +
+  draw_edges(edge_open_2, color = "red3", linetype = 2, linewidth = 1.1) +
+  draw_edges(edge_open_3, color = "red3", linetype = 2, linewidth = 1.1) +
+  draw_edges(edge_open_4, color = "red3", linetype = 2, linewidth = 1.1) +
   ggdag::geom_dag_point(
-    shape = 16,
-    color = "#6FA8DC",
+    data = td_col,
+    mapping = ggplot2::aes(x = x, y = y, color = node_type),
     size = 14
   ) +
-  ggdag::geom_dag_text_repel(
-    mapping = ggplot2::aes(label = label),
-    color = "#111111",
-    bg.color = "#FFF7D6",
-    point.padding = grid::unit(0.9, "lines"),
-    box.padding = 0.2,
+  ggdag::geom_dag_label_repel(
+    data = td_col,
+    mapping = ggplot2::aes(x = x, y = y, label = name),
+    color = "#1B1B1B",
+    fill = "white",
+    size = 4,
+    box.padding = 0.25,
+    point.padding = 0.8,
     seed = 123
   ) +
+  ggplot2::annotate(
+    "text",
+    x = 1.45, y = 0.45,
+    label = "Conditioning on collider ApplicationComplete opens\nProgramme <- Motivation -> ApplicationComplete <- AdminCapacity -> Earnings",
+    color = "red3",
+    size = 3.3
+  ) +
+  ggplot2::annotate(
+    "text",
+    x = 2.70, y = 1.65,
+    label = "Causal path: Programme -> Earnings",
+    color = "black",
+    size = 4
+  ) +
+  ggplot2::scale_color_manual(
+    values = c("Collider (do not adjust)" = "tomato", "Other node" = "grey50")
+  ) +
+  ggplot2::labs(
+    title = "Collider example: application-screening bias",
+    subtitle = "Adjusting for application completion induces a non-causal path.",
+    color = NULL
+  ) +
   ggdag::theme_dag() +
-  ggplot2::theme(
-    text = ggplot2::element_text(color = "black"),
-    plot.background = ggplot2::element_rect(fill = "white", color = NA),
-    panel.background = ggplot2::element_rect(fill = "white", color = NA)
-  )
+  ggplot2::theme(legend.position = "bottom")
 ```
 
 What this means:
@@ -1816,55 +1862,78 @@ What this means:
 
 This is the standard mediator problem. Once treatment has already changed a variable, that variable no longer belongs in the design stage [@cunningham2021mixtape; @mixtape_sessions_unconfoundedness].
 
-```{r fig.cap="Post-treatment mediator DAG: conditioning on mediator changes estimand away from total effect.", fig.width=8, fig.height=4.5}
-dag_post_treatment <- ggdag::dagify(
-  treatment ~ prior_need,
-  skill_gain_after_programme ~ treatment,
-  outcome ~ treatment + prior_need + skill_gain_after_programme,
-  exposure = "treatment",
-  outcome = "outcome",
-  labels = c(
-    prior_need = "Prior need",
-    treatment = "Treatment",
-    skill_gain_after_programme = "Skill gain after programme",
-    outcome = "Outcome"
-  ),
-  coords = list(
-    x = c(
-      prior_need = 0,
-      treatment = 1,
-      skill_gain_after_programme = 2,
-      outcome = 3
-    ),
-    y = c(
-      prior_need = 2,
-      treatment = 2,
-      skill_gain_after_programme = 1,
-      outcome = 2
-    )
-  )
+```{r fig.cap="Post-treatment mediator DAG: conditioning on mediator changes estimand away from the total effect.", fig.width=8.5, fig.height=5}
+dag_post_treatment <- dagitty::dagitty("
+dag {
+  PriorNeed -> Programme
+  PriorNeed -> Earnings
+  Programme -> SkillGainAfterProgramme
+  SkillGainAfterProgramme -> Earnings
+  Programme -> Earnings
+}
+")
+
+dagitty::coordinates(dag_post_treatment) <- list(
+  x = c(PriorNeed = 0, Programme = 1, SkillGainAfterProgramme = 2, Earnings = 3),
+  y = c(PriorNeed = 2, Programme = 2, SkillGainAfterProgramme = 1, Earnings = 2)
 )
 
-ggdag::ggdag(dag_post_treatment, text = FALSE, node = FALSE) +
+td_med_tidy <- ggdag::tidy_dagitty(dag_post_treatment)
+td_med_adj <- ggdag::adjust_for(td_med_tidy, "SkillGainAfterProgramme")
+td_med <- td_med_adj$data
+td_med$node_type <- ifelse(td_med$adjusted == "adjusted", "Post-treatment mediator", "Other node")
+
+edge_direct <- dplyr::filter(td_med, name == "Programme", to == "Earnings")
+edge_mediator_1 <- dplyr::filter(td_med, name == "Programme", to == "SkillGainAfterProgramme")
+edge_mediator_2 <- dplyr::filter(td_med, name == "SkillGainAfterProgramme", to == "Earnings")
+edge_background_1 <- dplyr::filter(td_med, name == "PriorNeed", to == "Programme")
+edge_background_2 <- dplyr::filter(td_med, name == "PriorNeed", to == "Earnings")
+
+ggplot2::ggplot() +
+  draw_edges(edge_direct, color = "black", linetype = 1, linewidth = 1.1) +
+  draw_edges(edge_mediator_1, color = "red3", linetype = 2, linewidth = 1.1) +
+  draw_edges(edge_mediator_2, color = "red3", linetype = 2, linewidth = 1.1) +
+  draw_edges(edge_background_1, color = "grey50", linetype = 1, linewidth = 0.9) +
+  draw_edges(edge_background_2, color = "grey50", linetype = 1, linewidth = 0.9) +
   ggdag::geom_dag_point(
-    shape = 16,
-    color = "#6FA8DC",
+    data = td_med,
+    mapping = ggplot2::aes(x = x, y = y, color = node_type),
     size = 14
   ) +
-  ggdag::geom_dag_text_repel(
-    mapping = ggplot2::aes(label = label),
-    color = "#111111",
-    bg.color = "#FFF7D6",
-    point.padding = grid::unit(0.9, "lines"),
-    box.padding = 0.2,
+  ggdag::geom_dag_label_repel(
+    data = td_med,
+    mapping = ggplot2::aes(x = x, y = y, label = name),
+    color = "#1B1B1B",
+    fill = "white",
+    size = 4,
+    box.padding = 0.25,
+    point.padding = 0.8,
     seed = 123
   ) +
+  ggplot2::annotate(
+    "text",
+    x = 2.00, y = 0.45,
+    label = "Adjusting for SkillGainAfterProgramme\nblocks part of Programme -> Earnings",
+    color = "red3",
+    size = 3.7
+  ) +
+  ggplot2::annotate(
+    "text",
+    x = 2.85, y = 2.32,
+    label = "Direct path: Programme -> Earnings",
+    color = "black",
+    size = 3.6
+  ) +
+  ggplot2::scale_color_manual(
+    values = c("Post-treatment mediator" = "tomato", "Other node" = "grey50")
+  ) +
+  ggplot2::labs(
+    title = "Mediator example: post-treatment adjustment bias",
+    subtitle = "Conditioning on a mediator changes the estimand away from the total effect.",
+    color = NULL
+  ) +
   ggdag::theme_dag() +
-  ggplot2::theme(
-    text = ggplot2::element_text(color = "black"),
-    plot.background = ggplot2::element_rect(fill = "white", color = NA),
-    panel.background = ggplot2::element_rect(fill = "white", color = NA)
-  )
+  ggplot2::theme(legend.position = "bottom")
 ```
 
 What this means:
@@ -1893,7 +1962,7 @@ What this means:
 
 The design question is not "what variables do we have?" It is "which variables help block confounding without opening new problems?" That is the control-selection logic shared by *The Mixtape*, the Mixtape Sessions lecture, and this report's design-first workflow [@cunningham2021mixtape; @mixtape_sessions_unconfoundedness].
 
-## Appendix B: Propensity-Score Weighting Companion {.appendix .unnumbered}
+## Appendix B: Propensity-Score Weighting Companion {.unnumbered}
 
 #### Purpose {.unnumbered} 
 
@@ -2005,7 +2074,7 @@ If you want the shortest practical route through the repo, use this order:
 
 Propensity-score weighting belongs in this repo, but not as the first teaching move. The main report is right to prioritize more inspectable design rules at the start. This appendix exists so that readers can add the standard propensity-score extension without losing the repo's core discipline: design first, diagnostics before claims, and constant attention to what population the estimate actually represents.
 
-## Glossary {.appendix .unnumbered}
+## Glossary {.unnumbered}
 
 ATC  
 Average treatment effect on the controls: the average effect the intervention would have had for units that did not receive treatment.
@@ -2091,8 +2160,16 @@ Summary features of a distribution, usually the mean and sometimes the variance 
 `Natural experiment`  
 A setting where an external rule, shock, or administrative process creates treatment variation that is plausibly closer to random assignment.
 
+`National Supported Work (NSW)`  
+The U.S. programme dataset used as the experimental benchmark in this report,
+accessed through `causaldata::nsw_mixtape`.
+
 `No unmeasured confounding`  
 The assumption that all important common causes of treatment assignment and outcomes are observed and conditioned on in the design.
+
+`Panel Study of Income Dynamics (PSID)`  
+The non-experimental comparison sample used in `MatchIt::lalonde` for the
+observational benchmarking exercise.
 
 `Outcome model`  
 The statistical model used after the design stage to estimate the treatment effect.
@@ -2124,6 +2201,10 @@ A non-randomized design used for causal inference that relies on comparison stru
 `Regression discontinuity`  
 A design that estimates causal effects by comparing units just above and just below a policy cutoff or eligibility threshold.
 
+`Randomized controlled trial (RCT)`  
+An experimental design in which treatment assignment is random; used here as
+the main benchmark for causal identification.
+
 `Standardized mean difference`  
 A scale-free measure of covariate imbalance commonly used to assess whether adjustment improved comparability.
 
@@ -2142,11 +2223,13 @@ A balance diagnostic for continuous covariates defined as treated-group variance
 `Weighting`  
 An adjustment approach that assigns units analytic weights so one group better represents a target population or matches another group on observed covariates.
 
-## Session Information {.appendix .unnumbered}
+## Session Information {.unnumbered}
 
 ```{r}
 # Capture the R session state for reproducibility.
 sessionInfo()
 ```
+
+:::
 
 ## References
