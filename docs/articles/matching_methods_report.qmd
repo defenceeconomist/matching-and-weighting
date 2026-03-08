@@ -42,7 +42,7 @@ This report examines three design-stage adjustment methods for causal inference 
 
 The methods should also be assessed critically rather than taught as a menu of equivalent options. Exact matching is highly transparent, but it often becomes unusable once the covariate set contains several variables or any meaningful granularity. CEM is usually more workable because it relaxes exact matching through binning, but the analyst's coarsening choices can materially change who is retained and what "similarity" means. Entropy balancing can exactly balance the included covariate moments, but when overlap is limited the resulting weights may become highly variable and reduce effective sample size, so balance tables should be interpreted alongside overlap and weight-dispersion diagnostics.^[In plain English, the method can make the treated and untreated groups look very similar on paper, but only by giving a lot of influence to a small number of cases. If the groups were not really comparable to begin with, those large weights can make the results fragile and easy to distort, even when the balance statistics look good.] [@hainmueller2012entropy; @ho2011matchit]. The point of comparing these methods is therefore to make those tradeoffs explicit, not to identify a universal best practice.
 
-The report does not use propensity score matching as the main teaching example. That omission is deliberate. Propensity scores remain widely used, but in an introductory evaluation setting they can compress the design problem into a single modeled quantity^[A propensity score is the estimated probability of receiving treatment given the observed background variables. In plain English, it turns many characteristics into one score, which can make the design easier to run but harder to inspect.] and can distract attention from whether specific covariates are actually balanced. For evaluator training, the selected methods better expose the relationship between covariate balance, sample retention, and the target population [@ho2011matchit; @govuk_qed_slides]. A short companion note on where propensity-score weighting fits is provided in [Propensity-Score Weighting Companion](propensity_score_weighting_companion.qmd).
+The report does not use propensity score matching as the main teaching example. That omission is deliberate. Propensity scores remain widely used, but in an introductory evaluation setting they can compress the design problem into a single modeled quantity^[A propensity score is the estimated probability of receiving treatment given the observed background variables. In plain English, it turns many characteristics into one score, which can make the design easier to run but harder to inspect.] and can distract attention from whether specific covariates are actually balanced. For evaluator training, the selected methods better expose the relationship between covariate balance, sample retention, and the target population [@ho2011matchit; @govuk_qed_slides]. A short extension on where propensity-score weighting fits is included in [Appendix B: Propensity-Score Weighting Companion](#appendix-b-propensity-score-weighting-companion).
 
 The report is written for an evaluation training context, with particular relevance for programme and policy evaluation in government. That framing matters. The Evaluation Task Force presents matching as one option within a wider quasi-experimental toolkit^[A quasi-experimental design estimates causal effects without random assignment, usually by exploiting timing, thresholds, policy rules, or carefully constructed comparison groups.] that also includes difference-in-differences, regression discontinuity, synthetic control, and interrupted time-series analysis^[In plain English: difference-in-differences compares changes over time, regression discontinuity uses an eligibility cutoff, synthetic control builds a weighted comparison case, and interrupted time-series tracks outcomes before and after a change.] [@govuk_evaluation_academy_resources; @govuk_qed_slides]. A good methods report should therefore do more than explain how matching works; it should also explain when matching is the strongest available design, when it is a second-best compromise, and when it should be rejected in favour of a more credible alternative.
 
@@ -139,7 +139,7 @@ For matching and weighting, the default target should be pre-treatment common ca
 
 The same logic implies a clear exclusion rule. Variables changed by treatment should not be used in the design, because they are mediators or descendants of treatment rather than pre-treatment confounders. Nor is kitchen-sink adjustment automatically safer. Conditioning on a collider or other bad control can open a spurious path rather than close one, producing a design that looks statistically sophisticated but is causally less credible. The practical standard is therefore not "include everything observed"; it is "include the variables that make the treatment assignment story more credible and exclude variables that treatment could have changed or that would induce new bias if conditioned on" [@cunningham2021mixtape].
 
-For a compact visual version of that rule, see the [DAG and Bad Controls Appendix](dag_bad_controls_appendix.qmd).
+For a compact visual version of that rule, see [Appendix A: DAG and Bad Controls Companion](#appendix-a-dag-and-bad-controls-companion).
 
 ### Subclassification as a Motivating Strategy
 
@@ -163,7 +163,7 @@ That distinction matters for evaluation practice. Matching often provides a clea
 
 Propensity-score methods are part of the matching and weighting toolkit, but this report does not treat them as the main entry point. The reason is pedagogic rather than doctrinal. In evaluator training, a single balancing score can make it too easy to discuss model fit or score overlap without ever becoming concrete about which baseline covariates matter, which treated units are being trimmed away, or how the target population is changing after adjustment [@ho2011matchit].
 
-That does not mean propensity-score methods are unimportant. They remain useful high-dimensional design tools, especially when direct matching on the full covariate vector is impractical. The point is narrower: for a first report that is trying to make design consequences legible, exact matching, CEM, and entropy balancing expose the balance-retention-overlap tradeoff more directly. Readers who want the propensity-score weighting extension can use the companion note [Propensity-Score Weighting Companion](propensity_score_weighting_companion.qmd), which anchors the discussion in *The Effect*'s weighting-first framing.
+That does not mean propensity-score methods are unimportant. They remain useful high-dimensional design tools, especially when direct matching on the full covariate vector is impractical. The point is narrower: for a first report that is trying to make design consequences legible, exact matching, CEM, and entropy balancing expose the balance-retention-overlap tradeoff more directly. Readers who want the propensity-score weighting extension can use [Appendix B: Propensity-Score Weighting Companion](#appendix-b-propensity-score-weighting-companion), which anchors the discussion in *The Effect*'s weighting-first framing.
 
 ## Positioning Matching Among QEDs
 
@@ -1328,7 +1328,7 @@ Within that narrower choice set, exact matching is best when interpretability is
 
 This report does not use propensity score matching as the main teaching route for a reason. In evaluator training, propensity scores can encourage analysts to focus on the estimated score rather than on the covariates, overlap, and retained population that actually determine design quality. The more transparent path is to teach exact matching and CEM as explicit design tools and entropy balancing as a weighting method with direct balance constraints [@govuk_qed_slides; @ho2011matchit]. Propensity score methods still exist within the broader toolkit, but they should not be treated as the automatic entry point for applied evaluation.
 
-For readers who do need that extension, the shortest bridge from this report is the [Propensity-Score Weighting Companion](propensity_score_weighting_companion.qmd). For a benchmark application that maps more directly onto *The Mixtape*'s NSW discussion, the next repo stop is the [NSW + CPS Benchmark Lab](../labs/nsw_cps_benchmark_lab.qmd).
+For readers who do need that extension, the shortest bridge from this report is [Appendix B: Propensity-Score Weighting Companion](#appendix-b-propensity-score-weighting-companion). For a benchmark application that maps more directly onto *The Mixtape*'s NSW discussion, the next repo stop is the [NSW + CPS Benchmark Lab](../labs/nsw_cps_benchmark_lab.qmd).
 
 ## Treatment Effect Summary
 
@@ -1439,6 +1439,208 @@ The worked example also clarifies the tradeoffs among the methods. Exact matchin
 For evaluator practice, the practical implication is straightforward. Matching and weighting should be used when they are the strongest defensible option within the wider quasi-experimental toolkit, not as the default response to non-randomized data [@govuk_qed_slides]. When acceptable balance requires severe pruning, unstable weights, or major drift from the original estimand, the right conclusion may be that the available data do not support the policy question cleanly enough. That is not a failure of the workflow; it is one of its main virtues. Used well, these methods improve evaluation not by manufacturing certainty, but by making the limits of the available comparison explicit.
 
 ## Appendix
+
+### Appendix A: DAG and Bad Controls Companion
+
+#### Purpose
+
+This appendix gives a compact visual bridge from the report's covariate-selection guidance to the control-selection logic emphasized in *Causal Inference: The Mixtape* and the Mixtape Sessions unconfoundedness lecture [@cunningham2021mixtape; @mixtape_sessions_unconfoundedness].
+
+Use it when you need to decide whether a variable belongs in a matching or weighting design, or when you need to explain to a training audience why "measured before treatment" does not automatically mean "safe to control for."
+
+#### Fast Rule
+
+1. Control for plausible pre-treatment common causes of treatment and outcome.
+2. Do not control for variables changed by treatment.
+3. Do not assume every pre-treatment variable is safe; colliders can still be bad controls.
+4. If you cannot explain a variable's role in the assignment process, do not let software include it by default.
+
+#### Case 1: Good Control
+
+This is the core backdoor case. A pre-treatment confounder affects both treatment assignment and the outcome, so conditioning on it is part of a credible design [@cunningham2021mixtape; @mixtape_sessions_unconfoundedness].
+
+```{mermaid}
+flowchart LR
+  X[Prior need] --> D[Treatment]
+  X --> Y[Outcome]
+  D --> Y
+```
+
+What this means:
+
+- `Prior need` is a confounder because it helps determine both programme participation and the later outcome.
+- The backdoor path `Treatment <- Prior need -> Outcome` is open before adjustment.
+- Matching, subclassification, or weighting should target variables like this when they are measured before treatment and supported by the assignment story.
+
+#### Case 2: Bad Control Because It Is a Collider
+
+This is the main warning from the Mixtape Sessions unconfoundedness lecture: a variable can be measured before treatment and still be a bad control if it is a collider [@mixtape_sessions_unconfoundedness].
+
+```{mermaid}
+flowchart LR
+  A[Motivation] --> D[Treatment]
+  A --> C[Application complete]
+  B[Administrative capacity] --> C
+  B --> Y[Outcome]
+  D --> Y
+```
+
+What this means:
+
+- `Application complete` is influenced by two upstream factors, so it is a collider on the path `Treatment <- Motivation -> Application complete <- Administrative capacity -> Outcome`.
+- If you condition on `Application complete`, you open a non-causal path that was previously blocked.
+- The practical lesson is that "baseline" is a timing rule, not a causal rule. Pre-treatment variables still need a causal justification before they enter the design.
+
+#### Case 3: Bad Control Because It Is Post-Treatment
+
+This is the standard mediator problem. Once treatment has already changed a variable, that variable no longer belongs in the design stage [@cunningham2021mixtape; @mixtape_sessions_unconfoundedness].
+
+```{mermaid}
+flowchart LR
+  X[Prior need] --> D[Treatment]
+  X --> Y[Outcome]
+  D --> M[Skill gain after programme]
+  M --> Y[Outcome]
+  D --> Y
+```
+
+What this means:
+
+- `Skill gain after programme` is caused by treatment, so it is post-treatment.
+- Conditioning on it blocks part of the treatment effect and changes the estimand away from the total programme effect.
+- In practice, any variable only observed after enrolment, service receipt, or programme completion should be treated as excluded from the matching or weighting design unless the estimand explicitly requires something else.
+
+#### Compact Control Checklist
+
+| Variable role | Put it in the design? | Why |
+|---|---|---|
+| Pre-treatment common cause of treatment and outcome | Usually yes | Blocks a backdoor path and improves comparability. |
+| Strong pre-treatment predictor of the untreated outcome | Sometimes yes | Can improve precision if it does not create new bias and fits the assignment story. |
+| Pre-treatment collider | No | Conditioning can open a spurious path. |
+| Post-treatment mediator or descendant of treatment | No | Conditioning changes the causal question and can block part of the effect. |
+| Variable with no clear causal role | Not by default | Availability is not a sufficient reason to include it. |
+
+#### How To Use This Appendix In The Repo
+
+- Use this appendix alongside the covariate-selection sections above when specifying design covariates.
+- Use the [NSW + CPS Benchmark Lab](../labs/nsw_cps_benchmark_lab.qmd) for a benchmarked observational case that applies the same design-first logic in a fuller observational setting.
+- Use this appendix as a compact visual explanation for why the repo excludes post-treatment variables and warns against kitchen-sink covariate selection.
+
+#### Bottom Line
+
+The design question is not "what variables do we have?" It is "which variables help block confounding without opening new problems?" That is the control-selection logic shared by *The Mixtape*, the Mixtape Sessions lecture, and this report's design-first workflow [@cunningham2021mixtape; @mixtape_sessions_unconfoundedness].
+
+### Appendix B: Propensity-Score Weighting Companion
+
+#### Purpose
+
+This appendix is a short extension to the main report. It explains where propensity-score weighting fits, why it is not the main teaching route in this report, and how to use it without turning the design into a black box.
+
+Its conceptual anchor is the repo's note on [*The Effect*: Matching](effectbook_matching_notes.qmd), especially the chapter's emphasis that many matching procedures are easiest to understand as weighting designs.
+
+#### Why This Sits Beside The Main Report
+
+The main report deliberately centers:
+
+- exact matching
+- coarsened exact matching
+- entropy balancing
+
+That choice is useful for evaluator training because those methods make the design rule and the balance-retention tradeoff easier to inspect directly. But propensity-score weighting still matters because it is one of the standard ways to handle many covariates at once when exact or near-exact matching becomes impractical.
+
+This appendix therefore fills a specific gap: it does not replace the report's design-first logic, but it adds the missing bridge to a method family that both *The Effect* and *The Mixtape* treat as important.
+
+#### What Propensity-Score Weighting Does
+
+Propensity-score weighting starts by estimating each unit's probability of treatment given observed baseline covariates. Those estimated probabilities are then turned into weights so that the weighted treated and untreated groups look more comparable on the observed assignment profile.
+
+The attraction is dimensional reduction:
+
+- instead of matching directly on every covariate
+- the analyst summarizes the observed assignment process in one balancing score
+- the resulting design can target `ATT`, `ATE`, or another estimand depending on the weighting scheme
+
+The risk is also clear:
+
+- a well-fitting treatment model is not the same thing as a good causal design
+- extreme estimated probabilities produce extreme weights
+- the weighted pseudo-population can drift away from the population the analyst thinks is being studied
+
+#### Why The Effect Is The Right Anchor
+
+*The Effect* is especially useful here because it treats weighting as a unifying language rather than as a separate technical niche.
+
+That framing helps with three practical points:
+
+1. Propensity-score weighting is not magic; it is one way of constructing a weighted comparison.
+2. Diagnostics still matter more than the treatment model itself.
+3. The estimand question remains central because different weights imply different target populations.
+
+This is also why the report's preference for transparent design rules and *The Effect*'s weighting-first logic are compatible rather than opposed.
+
+#### When To Use It
+
+Propensity-score weighting is most useful when:
+
+- the adjustment set is too high-dimensional for exact matching to remain feasible
+- the evaluator wants to preserve more rows than a tightly pruned matched design would allow
+- the design target is clear, especially `ATT` or `ATE`
+- overlap is good enough that the resulting weights do not become extreme
+
+In practice, it is a reasonable next step after the main report if the analyst finds that:
+
+- exact matching is too sparse
+- CEM requires unacceptable pruning
+- entropy balancing feels too dependent on hand-chosen balance constraints
+
+#### When Not To Use It
+
+Propensity-score weighting is a poor fallback when the design problem is actually about weak overlap, missing confounders, or the availability of a stronger quasi-experimental design.
+
+It should not be used as a rescue move when:
+
+- treated and untreated units barely overlap
+- assignment depends heavily on unobserved judgment or motivation
+- baseline outcomes exist and matched DiD would be stronger
+- the problem is aggregate and better suited to synthetic control
+
+In those settings, the weights may look mathematical while the underlying design remains weak.
+
+#### Minimum Diagnostic Standard
+
+Any evaluator-facing use of propensity-score weighting should report at least:
+
+- the estimand and the weighting scheme
+- the baseline covariates used in the treatment model
+- overlap in the estimated score distribution
+- covariate balance after weighting
+- the weight distribution, especially any very large weights
+- effective sample size after weighting
+- whether trimming or stabilization changed the represented population
+
+This is the point where the appendix reconnects directly to the main report. The report's repeated emphasis on balance, overlap, retention, and effective sample size still applies here. The only difference is that support problems show up more through unstable weights than through visibly discarded rows.
+
+#### How It Relates To Entropy Balancing
+
+Propensity-score weighting and entropy balancing are both weighting designs, but they solve the balance problem differently.
+
+- Propensity-score weighting first models treatment assignment and then derives weights from the estimated score.
+- Entropy balancing chooses weights directly to satisfy balance constraints on selected covariate moments.
+
+That means propensity-score weighting is usually closer to standard textbook practice, while entropy balancing is often more transparent about the balance target it is imposing. The main report prefers entropy balancing for the core teaching comparison for exactly that reason.
+
+#### Recommended Repo Sequence
+
+If you want the shortest practical route through the repo, use this order:
+
+1. Read the main sections of this report for the design-first comparison.
+2. Read the [*The Effect* notes](effectbook_matching_notes.qmd) for the weighting-first conceptual frame.
+3. Use this appendix to connect that frame back to evaluator practice.
+4. If you want a benchmarked observational case, continue to the [NSW + CPS Benchmark Lab](../labs/nsw_cps_benchmark_lab.qmd).
+
+#### Bottom Line
+
+Propensity-score weighting belongs in this repo, but not as the first teaching move. The main report is right to prioritize more inspectable design rules at the start. This appendix exists so that readers can add the standard propensity-score extension without losing the repo's core discipline: design first, diagnostics before claims, and constant attention to what population the estimate actually represents.
 
 ### Glossary
 

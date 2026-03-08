@@ -52,9 +52,7 @@ If you are new to the site, the recommended sequence is:
 The main report bundle is:
 
 - [Matching Methods Report](articles/matching_methods_report.qmd)
-- [DAG and Bad Controls Appendix](articles/dag_bad_controls_appendix.qmd)
 - [Synthesis Report: Main Report versus *The Mixtape*, *The Effect*, and Gertler Chapter 8](articles/matching_synthesis_report.qmd)
-- [Propensity-Score Weighting Companion](articles/propensity_score_weighting_companion.qmd)
 - [Notes on *The Effect*: Matching](articles/effectbook_matching_notes.qmd)
 - [Notes on *The Mixtape*: Matching and Subclassification](articles/mixtape_matching_subclassification_notes.qmd)
 - [Notes on Gertler et al.: Matching](articles/gertler_matching_notes.qmd)

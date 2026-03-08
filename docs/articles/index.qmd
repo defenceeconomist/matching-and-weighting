@@ -8,9 +8,7 @@ title: "Articles"
 |---|---|---|
 | Matching Methods Report | Main report on exact matching, coarsened exact matching, and entropy balancing for causal inference. | [Article](matching_methods_report.qmd) · [Full code](matching_methods_report_full_code.qmd) · [QA log](matching_methods_report_qa_log.qmd) |
 | LaLonde Background Appendix | Compact background notes on why the LaLonde benchmark still matters for matching and observational causal inference. | [Article](lalonde_background_appendix.qmd) |
-| DAG and Bad Controls Appendix | Compact visual appendix on confounders, colliders, and post-treatment bad controls for design-stage covariate selection. | [Article](dag_bad_controls_appendix.qmd) |
 | Synthesis Report | Comparative synthesis of the main report against *The Mixtape*, *The Effect*, and Gertler chapter 8. | [Article](matching_synthesis_report.qmd) |
-| Propensity-Score Weighting Companion | Short extension explaining where propensity-score weighting fits alongside the main report's design-first workflow. | [Article](propensity_score_weighting_companion.qmd) |
 | Mixtape NSW Benchmark Notes | Compact notes from section `5.3.4` onward of *The Mixtape*, focused on observational versus experimental comparisons with runnable R code. | [Article](mixtape_nsw_benchmark_notes.qmd) |
 | Notes on *The Effect*: Matching | Scaffolded chapter notes for *The Effect*, Chapter 14, organized for later synthesis and repo cross-walk work. | [Article](effectbook_matching_notes.qmd) |
 | Notes on *The Mixtape*: Matching and Subclassification | Scaffolded chapter notes for *The Mixtape*, Chapter 5, organized for later study-note expansion and repo cross-walk work. | [Article](mixtape_matching_subclassification_notes.qmd) |
@@ -22,9 +20,9 @@ title: "Articles"
 |---|---|---|
 | Design-first comparison of exact matching, CEM, and entropy balancing | [Matching Methods Report](matching_methods_report.qmd) | [LaLonde Main Report Lab](../labs/lalonde_main_report_lab.qmd) · [Full code](matching_methods_report_full_code.qmd) · [QA log](matching_methods_report_qa_log.qmd) |
 | Historical background on why `lalonde` is a benchmark dataset | [LaLonde Background Appendix](lalonde_background_appendix.qmd) | [LaLonde Main Report Lab](../labs/lalonde_main_report_lab.qmd) |
-| DAG-based covariate selection and bad-controls mistakes | [DAG and Bad Controls Appendix](dag_bad_controls_appendix.qmd) | [Matching Methods Report](matching_methods_report.qmd) |
+| DAG-based covariate selection and bad-controls mistakes | [Matching Methods Report (Appendix A)](matching_methods_report.qmd#appendix-a-dag-and-bad-controls-companion) | [Matching Methods Report](matching_methods_report.qmd) |
 | Compare the main report against *The Mixtape*, *The Effect*, and Gertler chapter 8 | [Synthesis Report](matching_synthesis_report.qmd) | [Articles hub](index.qmd) |
-| Propensity-score weighting as a compact extension to the main report | [Propensity-Score Weighting Companion](propensity_score_weighting_companion.qmd) | [Notes on *The Effect*: Matching](effectbook_matching_notes.qmd) |
+| Propensity-score weighting as a compact extension to the main report | [Matching Methods Report (Appendix B)](matching_methods_report.qmd#appendix-b-propensity-score-weighting-companion) | [Notes on *The Effect*: Matching](effectbook_matching_notes.qmd) |
 | Mixtape section `5.3.4` onward with runnable NSW benchmark code | [Mixtape NSW Benchmark Notes](mixtape_nsw_benchmark_notes.qmd) | [NSW + CPS Benchmark Lab](../labs/nsw_cps_benchmark_lab.qmd) |
 | Subclassification as the conceptual precursor to matching | [Notes on *The Mixtape*: Matching and Subclassification](mixtape_matching_subclassification_notes.qmd) | [Notes on *The Mixtape*: Matching and Subclassification](mixtape_matching_subclassification_notes.qmd) |
 | NSW benchmark logic for observational adjustment | [Notes on *The Mixtape*: Matching and Subclassification](mixtape_matching_subclassification_notes.qmd) | [NSW + CPS Benchmark Lab](../labs/nsw_cps_benchmark_lab.qmd) |

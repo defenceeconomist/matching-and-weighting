@@ -10,8 +10,8 @@ format:
         href: why_matching.html
       - text: Presenter script
         href: why_matching_script.html
-      - text: DAG appendix
-        href: ../articles/dag_bad_controls_appendix.html
+      - text: DAG appendix section
+        href: ../articles/matching_methods_report.html#appendix-a-dag-and-bad-controls-companion
       - text: Main report
         href: ../articles/matching_methods_report.html
 execute:
@@ -26,7 +26,7 @@ Use this page as the prompt-style facilitator notes for the shorter concept deck
 - Keep it open beside the deck if you do not want presenter view.
 - Use the presenter script if you want fuller wording rather than prompts.
 - Use it as a `20-25` minute conceptual opener before the workshop deck or before a lab.
-- Open the DAG appendix separately if you want a longer detour on good and bad controls.
+- Open the main report appendix section if you want a longer detour on good and bad controls.
 
 ## Recommended Setup
 
@@ -34,7 +34,7 @@ Open these pages before the session starts:
 
 - [Why We Do Matching deck](why_matching.html)
 - [Presenter script](why_matching_script.html)
-- [DAG and Bad Controls Appendix](../articles/dag_bad_controls_appendix.html)
+- [DAG and Bad Controls Companion (Appendix A)](../articles/matching_methods_report.html#appendix-a-dag-and-bad-controls-companion)
 - [Matching Methods Report](../articles/matching_methods_report.html)
 
 ## 20-Minute Run Of Show
