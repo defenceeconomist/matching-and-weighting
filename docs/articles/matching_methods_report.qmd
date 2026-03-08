@@ -1703,11 +1703,40 @@ Use it when you need to decide whether a variable belongs in a matching or weigh
 
 This is the core backdoor case. A pre-treatment confounder affects both treatment assignment and the outcome, so conditioning on it is part of a credible design [@cunningham2021mixtape; @mixtape_sessions_unconfoundedness].
 
-```{mermaid}
-flowchart LR
-  X[Prior need] --> D[Treatment]
-  X --> Y[Outcome]
-  D --> Y
+```{r fig.cap="Good control DAG: pre-treatment confounder blocks backdoor path when adjusted.", fig.width=7, fig.height=4}
+dag_good_control <- dagitty::dagitty("
+dag {
+  Prior_need [pos=\"0,1\"]
+  Treatment [pos=\"1,1\"]
+  Outcome [pos=\"2,1\"]
+
+  Prior_need -> Treatment
+  Prior_need -> Outcome
+  Treatment -> Outcome
+}
+")
+
+ggdag::ggdag(dag_good_control, text = FALSE) +
+  ggdag::geom_dag_point(
+    shape = 21,
+    fill = "grey92",
+    color = NA,
+    size = 18,
+    stroke = 0
+  ) +
+  ggdag::geom_dag_text_repel(
+    color = "black",
+    bg.color = "white",
+    point.padding = grid::unit(0.9, "lines"),
+    box.padding = 0.2,
+    seed = 123
+  ) +
+  ggdag::theme_dag() +
+  ggplot2::theme(
+    text = ggplot2::element_text(color = "black"),
+    plot.background = ggplot2::element_rect(fill = "white", color = NA),
+    panel.background = ggplot2::element_rect(fill = "white", color = NA)
+  )
 ```
 
 What this means:
@@ -1720,13 +1749,44 @@ What this means:
 
 This is the main warning from the Mixtape Sessions unconfoundedness lecture: a variable can be measured before treatment and still be a bad control if it is a collider [@mixtape_sessions_unconfoundedness].
 
-```{mermaid}
-flowchart LR
-  A[Motivation] --> D[Treatment]
-  A --> C[Application complete]
-  B[Administrative capacity] --> C
-  B --> Y[Outcome]
-  D --> Y
+```{r fig.cap="Collider case DAG: conditioning on application completion opens a non-causal path.", fig.width=7.5, fig.height=4.5}
+dag_collider_case <- dagitty::dagitty("
+dag {
+  Motivation [pos=\"0,2\"]
+  Treatment [pos=\"1,2\"]
+  Application_complete [pos=\"1,1\"]
+  Administrative_capacity [pos=\"2,2\"]
+  Outcome [pos=\"3,2\"]
+
+  Motivation -> Treatment
+  Motivation -> Application_complete
+  Administrative_capacity -> Application_complete
+  Administrative_capacity -> Outcome
+  Treatment -> Outcome
+}
+")
+
+ggdag::ggdag(dag_collider_case, text = FALSE) +
+  ggdag::geom_dag_point(
+    shape = 21,
+    fill = "grey92",
+    color = NA,
+    size = 18,
+    stroke = 0
+  ) +
+  ggdag::geom_dag_text_repel(
+    color = "black",
+    bg.color = "white",
+    point.padding = grid::unit(0.9, "lines"),
+    box.padding = 0.2,
+    seed = 123
+  ) +
+  ggdag::theme_dag() +
+  ggplot2::theme(
+    text = ggplot2::element_text(color = "black"),
+    plot.background = ggplot2::element_rect(fill = "white", color = NA),
+    panel.background = ggplot2::element_rect(fill = "white", color = NA)
+  )
 ```
 
 What this means:
@@ -1739,13 +1799,43 @@ What this means:
 
 This is the standard mediator problem. Once treatment has already changed a variable, that variable no longer belongs in the design stage [@cunningham2021mixtape; @mixtape_sessions_unconfoundedness].
 
-```{mermaid}
-flowchart LR
-  X[Prior need] --> D[Treatment]
-  X --> Y[Outcome]
-  D --> M[Skill gain after programme]
-  M --> Y[Outcome]
-  D --> Y
+```{r fig.cap="Post-treatment mediator DAG: conditioning on mediator changes estimand away from total effect.", fig.width=8, fig.height=4.5}
+dag_post_treatment <- dagitty::dagitty("
+dag {
+  Prior_need [pos=\"0,2\"]
+  Treatment [pos=\"1,2\"]
+  Skill_gain_after_programme [pos=\"2,1\"]
+  Outcome [pos=\"3,2\"]
+
+  Prior_need -> Treatment
+  Prior_need -> Outcome
+  Treatment -> Skill_gain_after_programme
+  Skill_gain_after_programme -> Outcome
+  Treatment -> Outcome
+}
+")
+
+ggdag::ggdag(dag_post_treatment, text = FALSE) +
+  ggdag::geom_dag_point(
+    shape = 21,
+    fill = "grey92",
+    color = NA,
+    size = 18,
+    stroke = 0
+  ) +
+  ggdag::geom_dag_text_repel(
+    color = "black",
+    bg.color = "white",
+    point.padding = grid::unit(0.9, "lines"),
+    box.padding = 0.2,
+    seed = 123
+  ) +
+  ggdag::theme_dag() +
+  ggplot2::theme(
+    text = ggplot2::element_text(color = "black"),
+    plot.background = ggplot2::element_rect(fill = "white", color = NA),
+    panel.background = ggplot2::element_rect(fill = "white", color = NA)
+  )
 ```
 
 What this means:
