@@ -41,7 +41,6 @@ jobs:
           path: |
             docs/.quarto
             docs/_freeze
-            docs/_site
           key: ${{ runner.os }}-quarto-project-${{ env.QUARTO_VERSION }}-${{ hashFiles('docs/_quarto.yml', 'docs/**/*.qmd', 'docs/**/*.md', 'docs/**/*.R', 'docs/**/*.py', 'docs/**/*.css', 'docs/**/*.scss', 'docs/**/*.yml', 'docs/**/*.yaml') }}
           restore-keys: |
             ${{ runner.os }}-quarto-project-${{ env.QUARTO_VERSION }}-
@@ -73,8 +72,8 @@ jobs:
             any::boot
             any::nlme
 
-      - name: Render Quarto site
-        run: quarto render docs
+      - name: Render Quarto site (HTML only)
+        run: quarto render docs --to html
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
