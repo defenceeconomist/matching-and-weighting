@@ -11,6 +11,8 @@ format:
         href: lalonde_main_report_lab_evaluated_code.html
       - text: QA Log
         href: ../articles/matching_methods_report_qa_log.html
+  pdf:
+    toc: true
 execute:
   echo: true
   eval: false

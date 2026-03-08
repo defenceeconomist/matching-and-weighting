@@ -9,6 +9,8 @@ format:
         href: nsw_cps_benchmark_lab_evaluated_code.html
       - text: QA Log
         href: nsw_cps_benchmark_lab_qa_log.html
+  pdf:
+    toc: true
 execute:
   echo: true
   eval: false

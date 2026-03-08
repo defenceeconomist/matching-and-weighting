@@ -9,6 +9,8 @@ format:
         href: hisp_ie_practice_lab_evaluated_code.html
       - text: QA Log
         href: hisp_ie_practice_lab_qa_log.html
+  pdf:
+    toc: true
 execute:
   echo: true
   eval: false
