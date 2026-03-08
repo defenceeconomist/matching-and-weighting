@@ -1725,6 +1725,7 @@ ggdag::ggdag(dag_good_control, text = FALSE) +
     stroke = 0
   ) +
   ggdag::geom_dag_text_repel(
+    mapping = ggplot2::aes(label = name),
     color = "black",
     bg.color = "white",
     point.padding = grid::unit(0.9, "lines"),
@@ -1775,6 +1776,7 @@ ggdag::ggdag(dag_collider_case, text = FALSE) +
     stroke = 0
   ) +
   ggdag::geom_dag_text_repel(
+    mapping = ggplot2::aes(label = name),
     color = "black",
     bg.color = "white",
     point.padding = grid::unit(0.9, "lines"),
@@ -1824,6 +1826,7 @@ ggdag::ggdag(dag_post_treatment, text = FALSE) +
     stroke = 0
   ) +
   ggdag::geom_dag_text_repel(
+    mapping = ggplot2::aes(label = name),
     color = "black",
     bg.color = "white",
     point.padding = grid::unit(0.9, "lines"),
