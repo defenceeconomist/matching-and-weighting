@@ -36,15 +36,11 @@ jobs:
           r-version: ${{ env.R_VERSION }}
           use-public-rspm: true
 
-      - name: Restore Quarto build cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            docs/.quarto
-            docs/_freeze
-          key: ${{ runner.os }}-quarto-project-${{ env.QUARTO_VERSION }}-${{ hashFiles('docs/_quarto.yml', 'docs/**/*.qmd', 'docs/**/*.md', 'docs/**/*.R', 'docs/**/*.py', 'docs/**/*.css', 'docs/**/*.scss', 'docs/**/*.yml', 'docs/**/*.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-quarto-project-${{ env.QUARTO_VERSION }}-
+      - name: Clean Quarto build artifacts
+        run: |
+          rm -rf docs/_site
+          rm -rf docs/.quarto
+          rm -rf docs/_freeze
 
       - name: Set up TinyTeX
         uses: r-lib/actions/setup-tinytex@v2
@@ -74,7 +70,7 @@ jobs:
             any::nlme
 
       - name: Render Quarto site
-        run: quarto render docs
+        run: quarto render docs --cache-refresh
 
       - name: Render Quarto PDFs
         shell: bash
