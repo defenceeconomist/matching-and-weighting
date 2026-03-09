@@ -73,8 +73,8 @@ jobs:
             any::boot
             any::nlme
 
-      - name: Render Quarto site (HTML only)
-        run: quarto render docs --to html
+      - name: Render Quarto site
+        run: quarto render docs
 
       - name: Render Quarto PDFs
         shell: bash
