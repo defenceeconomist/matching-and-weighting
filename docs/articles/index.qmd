@@ -7,6 +7,7 @@ title: "Articles"
 | Report | Description | Links |
 |---|---|---|
 | Matching Methods Report | Main report on exact matching, coarsened exact matching, and entropy balancing for causal inference. | [Article](matching_methods_report.qmd) · [Full code](matching_methods_report_full_code.qmd) · [QA log](matching_methods_report_qa_log.qmd) |
+| WeightIt Entropy Balancing Notes | Detailed notes on what entropy-based weighting is, how `method = "ebal"` works in `WeightIt`, and how to tune `moments`, `int`, `quantile`, and diagnostics. | [Article](weightit_entropy_balancing_notes.html) |
 | LaLonde Background Appendix | Compact background notes on why the LaLonde benchmark still matters for matching and observational causal inference. | [Article](lalonde_background_appendix.qmd) |
 | Synthesis Report | Comparative synthesis of the main report against *The Mixtape*, *The Effect*, and Gertler chapter 8. | [Article](matching_synthesis_report.qmd) |
 | Mixtape NSW Benchmark Notes | Compact notes from section `5.3.4` onward of *The Mixtape*, focused on observational versus experimental comparisons with runnable R code. | [Article](mixtape_nsw_benchmark_notes.qmd) |
@@ -19,6 +20,7 @@ title: "Articles"
 | Source or need | Best entry point | Supporting repo item |
 |---|---|---|
 | Design-first comparison of exact matching, CEM, and entropy balancing | [Matching Methods Report](matching_methods_report.qmd) | [LaLonde Main Report Lab](../labs/lalonde_main_report_lab.qmd) · [Full code](matching_methods_report_full_code.qmd) · [QA log](matching_methods_report_qa_log.qmd) |
+| Detailed WeightIt guide for entropy balancing and parameter tuning | [WeightIt Entropy Balancing Notes](weightit_entropy_balancing_notes.html) | [Matching Methods Report](matching_methods_report.qmd) · [LaLonde Main Report Lab](../labs/lalonde_main_report_lab.qmd) |
 | Historical background on why `lalonde` is a benchmark dataset | [LaLonde Background Appendix](lalonde_background_appendix.qmd) | [LaLonde Main Report Lab](../labs/lalonde_main_report_lab.qmd) |
 | DAG-based covariate selection and bad-controls mistakes | [Matching Methods Report (Appendix A)](matching_methods_report.qmd#appendix-a-dag-and-bad-controls-companion) | [Matching Methods Report](matching_methods_report.qmd) |
 | Compare the main report against *The Mixtape*, *The Effect*, and Gertler chapter 8 | [Synthesis Report](matching_synthesis_report.qmd) | [Articles hub](index.qmd) |

@@ -2,6 +2,19 @@
 title: "News"
 ---
 
+## Version 1.0.1
+
+Released: 16 March 2026
+
+This update adds a dedicated article on entropy-based weighting in `WeightIt` and fixes article-hub routing so the new note resolves to the rendered HTML page in the website build.
+
+### Update Summary
+
+- Added a new article on entropy balancing in `WeightIt`, with detailed notes on `method = "ebal"` and parameter tuning
+- Updated the Articles hub to include the new note
+- Added the new article to the Quarto website render list so it is built into the site output
+- Corrected the Articles hub link target so the new page loads as rendered HTML rather than the source `.qmd`
+
 ## Version 1.0.0
 
 Released: 9 March 2026
